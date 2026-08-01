@@ -1,0 +1,1781 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self' 'unsafe-inline' data: https:;">
+    <title>SENSI VIP SYSTEM</title>
+    <style>
+        /* --- RENDERIZADO VISUAL Y ACELERACIÓN POR HARDWARE OPTIMIZADA --- */
+        html {
+            -webkit-text-size-adjust: 100%;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            text-rendering: optimizeSpeed;
+        }
+
+        *, *::before, *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            -webkit-tap-highlight-color: transparent;
+            touch-action: manipulation;
+        }
+
+        body {
+            background-color: #000000;
+            color: #ffffff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 10px;
+            contain: content;
+        }
+
+        .app-card {
+            background: #050505;
+            border: 1.8px solid #ff0033;
+            border-radius: 12px;
+            width: 100%;
+            max-width: 552px;
+            padding: 16px;
+            transform: translateZ(0);
+            backface-visibility: hidden;
+            box-shadow: 0 0 28px rgba(255, 0, 51, 0.28);
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+            padding-bottom: 8px;
+            border-bottom: 1.5px solid rgba(255, 0, 51, 0.45);
+        }
+
+        .title {
+            color: #ff0033;
+            font-weight: 900;
+            font-size: 1.1rem;
+            letter-spacing: 0.6px;
+            display: flex;
+            align-items: center;
+            gap: 7px;
+            text-shadow: 0 0 10px rgba(255, 0, 51, 0.5);
+        }
+
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .perf-monitor {
+            background: #000000;
+            border: 1px solid #00ff66;
+            color: #00ff66;
+            padding: 4px 8px;
+            border-radius: 6px;
+            font-size: 0.76rem;
+            font-weight: 800;
+            font-family: monospace;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            box-shadow: 0 0 8px rgba(0, 255, 102, 0.2);
+            contain: layout style paint;
+        }
+
+        .perf-item {
+            display: flex;
+            align-items: center;
+            gap: 2px;
+        }
+
+        .perf-divider {
+            color: #333333;
+        }
+
+        .btn-icon {
+            background: #000000;
+            border: 1.5px solid #ff0033;
+            color: #ffffff;
+            width: 38px;
+            height: 38px;
+            border-radius: 7px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: transform 0.1s ease;
+        }
+
+        .btn-icon:active {
+            opacity: 0.75;
+            transform: scale(0.92);
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+            margin-bottom: 10px;
+            contain: layout style paint;
+        }
+
+        .field {
+            display: flex;
+            flex-direction: column;
+            gap: 3px;
+        }
+
+        label {
+            font-size: 0.75rem;
+            color: #eeeeee;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.4px;
+        }
+
+        select, input {
+            background: #0a0a0a;
+            color: #ffffff;
+            border: 1.2px solid #ff0033;
+            padding: 8px 10px;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            outline: none;
+            width: 100%;
+        }
+
+        select:focus, input:focus {
+            border-color: #00ff66;
+            box-shadow: 0 0 8px rgba(0, 255, 102, 0.35);
+        }
+
+        .mode-hint-box {
+            background: rgba(10, 10, 10, 0.95);
+            border: 1.2px solid #ff0033;
+            color: #ffffff;
+            padding: 8px 12px;
+            border-radius: 7px;
+            font-size: 0.82rem;
+            margin-bottom: 10px;
+            line-height: 1.4;
+            box-shadow: 0 2px 10px rgba(255, 0, 51, 0.2);
+            contain: layout style paint;
+        }
+
+        .hint-header {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 0.84rem;
+            font-weight: 900;
+            color: #ff3344;
+            text-transform: uppercase;
+            margin-bottom: 4px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+            padding-bottom: 3px;
+        }
+
+        .hint-list {
+            margin: 0;
+            padding-left: 16px;
+            color: #ffffff;
+        }
+
+        .hint-list li {
+            margin-bottom: 3px;
+            font-weight: 500;
+        }
+
+        .hint-highlight {
+            color: #00ff66;
+            font-weight: 800;
+        }
+
+        .input-eye-wrapper {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+
+        .input-eye-wrapper input {
+            padding-right: 72px;
+        }
+
+        .btn-action-input {
+            position: absolute;
+            background: none;
+            border: none;
+            color: #ffffff;
+            cursor: pointer;
+            padding: 5px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .btn-group {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+            margin-bottom: 10px;
+        }
+
+        .btn {
+            padding: 11px;
+            border-radius: 7px;
+            border: 1.5px solid #ff0033;
+            font-weight: 900;
+            font-size: 0.9rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+            transition: transform 0.05s linear;
+        }
+
+        .btn:active {
+            opacity: 0.75;
+            transform: scale(0.98);
+        }
+
+        .btn-std {
+            background: #000000;
+            color: #ffffff;
+        }
+
+        .btn-ai {
+            background: #ff0033;
+            color: #000000;
+            font-weight: 900;
+            box-shadow: 0 0 12px rgba(255, 0, 51, 0.4);
+        }
+
+        .btn-sm {
+            padding: 7px 12px;
+            font-size: 0.82rem;
+        }
+
+        .btn:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+        }
+
+        .custom-note-box {
+            display: none;
+            background: #000000;
+            border: 1.2px solid #00ff66;
+            color: #00ff66;
+            padding: 8px 10px;
+            border-radius: 6px;
+            font-size: 0.8rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+            line-height: 1.3;
+        }
+
+        .error-box {
+            display: none;
+            background: #0a0000;
+            border: 1.2px solid #ff0033;
+            color: #ff4d4d;
+            padding: 9px;
+            border-radius: 6px;
+            font-size: 0.83rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+            line-height: 1.35;
+            word-break: break-word;
+        }
+
+        .results {
+            background: #000000;
+            border: 1.5px solid #ff0033;
+            border-radius: 8px;
+            padding: 8px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 6px;
+            box-shadow: inset 0 0 10px rgba(255, 0, 51, 0.15);
+            contain: layout style paint;
+        }
+
+        .res-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #080808;
+            padding: 7px 9px;
+            border-radius: 5px;
+            font-size: 0.85rem;
+            border-left: 3.5px solid #ff0033;
+        }
+
+        .res-label {
+            color: #ffffff;
+            font-weight: 700;
+        }
+        .res-val {
+            font-weight: 900;
+            color: #ff0033;
+            font-size: 1rem;
+            text-shadow: 0 0 8px rgba(255, 0, 51, 0.4);
+        }
+
+        /* --- FOOTER CRÉDITOS --- */
+        .footer-credits {
+            margin-top: 12px;
+            padding-top: 10px;
+            border-top: 1px solid rgba(255, 255, 255, 0.12);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.82rem;
+            color: #ffffff;
+            font-weight: 700;
+            letter-spacing: 0.3px;
+            contain: layout style paint;
+        }
+
+        .footer-credits .creator-label {
+            color: #ffffff;
+        }
+
+        .footer-credits .creator-name {
+            color: #ffffff;
+            font-weight: 900;
+        }
+
+        .footer-credits .tiktok-link {
+            color: #00ff66;
+            text-decoration: none;
+            font-weight: 800;
+            transition: color 0.2s ease, opacity 0.2s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .footer-credits .tiktok-link:hover,
+        .footer-credits .tiktok-link:active {
+            color: #33ff88;
+            text-decoration: underline;
+            opacity: 0.9;
+        }
+
+        .modal {
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.94);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 99;
+            padding: 14px;
+            transform: translateZ(0);
+        }
+
+        .modal-box {
+            background: #050505;
+            border: 1.8px solid #ff0033;
+            padding: 16px;
+            border-radius: 10px;
+            width: 100%;
+            max-width: 500px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            max-height: 88vh;
+            overflow-y: auto;
+            box-shadow: 0 0 35px rgba(255, 0, 51, 0.35);
+        }
+
+        .modal-box::-webkit-scrollbar {
+            width: 5px;
+        }
+        .modal-box::-webkit-scrollbar-thumb {
+            background: #ff0033;
+            border-radius: 4px;
+        }
+
+        .modal-title {
+            color: #ff0033;
+            font-size: 1rem;
+            font-weight: 900;
+            text-transform: uppercase;
+            letter-spacing: 0.6px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            border-bottom: 1px solid rgba(255, 0, 51, 0.35);
+            padding-bottom: 8px;
+        }
+
+        /* --- SELECTOR DE IDIOMA CONFIGURACIÓN --- */
+        .lang-modal-wrapper {
+            background: linear-gradient(135deg, rgba(255, 0, 51, 0.12) 0%, rgba(10, 10, 10, 0.95) 100%);
+            border: 1.5px solid #ff0033;
+            border-radius: 8px;
+            padding: 10px 12px;
+            box-shadow: 0 0 15px rgba(255, 0, 51, 0.2);
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .lang-select-styled {
+            background: #000000;
+            color: #00ff66;
+            border: 1.5px solid #ff0033;
+            font-weight: 800;
+            font-size: 0.95rem;
+            border-radius: 6px;
+            padding: 9px 12px;
+            cursor: pointer;
+            box-shadow: 0 0 10px rgba(0, 255, 102, 0.2);
+            transition: border-color 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .lang-select-styled:focus {
+            border-color: #00ff66;
+            box-shadow: 0 0 12px rgba(0, 255, 102, 0.4);
+        }
+
+        .setting-toggle-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: #0a0a0a;
+            border: 1px solid #222222;
+            padding: 8px 10px;
+            border-radius: 6px;
+        }
+
+        .setting-toggle-label {
+            font-size: 0.78rem;
+            color: #ffffff;
+            font-weight: 600;
+        }
+
+        .setting-toggle-row input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            accent-color: #ff0033;
+            cursor: pointer;
+        }
+
+        .status-badge {
+            font-size: 0.75rem;
+            padding: 3px 6px;
+            border-radius: 4px;
+            display: inline-block;
+            font-weight: bold;
+        }
+
+        .status-success {
+            background: #000;
+            color: #00ff66;
+            border: 1px solid #00ff66;
+        }
+        .status-error {
+            background: #000;
+            color: #ff0033;
+            border: 1px solid #ff0033;
+        }
+
+        /* --- LOADER OVERLAY FUTURISTA CYBERNEÓN --- */
+        .loader-modal {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.96);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 999;
+            padding: 16px;
+            backdrop-filter: blur(8px);
+            transform: translateZ(0);
+        }
+
+        .loader-box {
+            background: #030303;
+            border: 2px solid #ff0033;
+            border-radius: 12px;
+            padding: 24px;
+            width: 100%;
+            max-width: 360px;
+            text-align: center;
+            box-shadow: 0 0 40px rgba(255, 0, 51, 0.4);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .loader-box::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255, 0, 51, 0.15) 0%, transparent 60%);
+            animation: pulseGlow 2s infinite linear;
+            pointer-events: none;
+        }
+
+        @keyframes pulseGlow {
+            0%, 100% {
+                transform: scale(0.9);
+                opacity: 0.6;
+            }
+            50% {
+                transform: scale(1.1);
+                opacity: 1;
+            }
+        }
+
+        .loader-status {
+            color: #ffffff;
+            font-size: 0.88rem;
+            font-weight: 900;
+            text-transform: uppercase;
+            margin-bottom: 12px;
+            letter-spacing: 1px;
+            text-shadow: 0 0 8px rgba(255, 255, 255, 0.4);
+            position: relative;
+            z-index: 2;
+        }
+
+        .loader-percent {
+            color: #ff0033;
+            font-size: 2.8rem;
+            font-weight: 900;
+            margin-bottom: 12px;
+            font-family: monospace;
+            text-shadow: 0 0 16px rgba(255, 0, 51, 0.7);
+            position: relative;
+            z-index: 2;
+        }
+
+        .progress-bar-bg {
+            background: #0c0c0c;
+            border: 1.2px solid #ff0033;
+            border-radius: 8px;
+            height: 16px;
+            width: 100%;
+            overflow: hidden;
+            box-shadow: inset 0 0 8px rgba(255, 0, 51, 0.3);
+            position: relative;
+            z-index: 2;
+        }
+
+        .progress-bar-fill {
+            background: linear-gradient(90deg, #ff0033 0%, #00ff66 100%);
+            height: 100%;
+            width: 0%;
+            box-shadow: 0 0 12px rgba(0, 255, 102, 0.8);
+            transition: width 0.03s ease-out;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="app-card" id="mainApp">
+        <div class="header">
+            <div class="title" data-i18n="title">
+                SENSI VIP SYSTEM
+            </div>
+            <div class="header-actions">
+                <div class="perf-monitor" id="perfMonitorBox" title="Estado del sistema">
+                    <div class="perf-item">
+                        <span id="fpsValue">0</span>FPS
+                    </div>
+                    <div class="perf-divider">
+                        |
+                    </div>
+                    <div class="perf-item">
+                        C:<span id="cpuValue">0%</span>
+                    </div>
+                    <div class="perf-divider">
+                        |
+                    </div>
+                    <div class="perf-item">
+                        G:<span id="gpuValue">0%</span>
+                    </div>
+                </div>
+
+                <button class="btn-icon" onclick="abrirConfiguracion()" title="Configuración de IA y Sistema">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#ff0033" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6z" />
+                        <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z" />
+                    </svg>
+                </button>
+            </div>
+        </div>
+
+        <div class="grid">
+            <div class="field">
+                <label for="phoneBrand" data-i18n="phoneBrand">Marca Teléfono</label>
+                <select id="phoneBrand" onchange="evaluarSugerenciaEnTiempoReal()">
+                    <option value="Samsung" selected>Samsung</option>
+                    <option value="Xiaomi / POCO">Xiaomi / POCO</option>
+                    <option value="Apple (iPhone)">Apple (iPhone)</option>
+                    <option value="Motorola">Motorola</option>
+                    <option value="Huawei">Huawei</option>
+                    <option value="Honor">Honor</option>
+                    <option value="Realme">Realme</option>
+                    <option value="OPPO">OPPO</option>
+                    <option value="vivo">vivo</option>
+                    <option value="Infinix">Infinix</option>
+                    <option value="TECNO">TECNO</option>
+                    <option value="REDMI">REDMI</option>
+                    <option value="Nokia">Nokia</option>
+                    <option value="OnePlus">OnePlus</option>
+                    <option value="ASUS (ROG)">ASUS (ROG)</option>
+                    <option value="ZTE / RedMagic">ZTE / RedMagic</option>
+                    <option value="Google Pixel">Google Pixel</option>
+                    <option value="Otra Marca" data-i18n="brandOther">Otra Marca</option>
+                </select>
+            </div>
+
+            <div class="field">
+                <label for="phoneModel" data-i18n="phoneModel">Modelo Exacto</label>
+                <input type="text" id="phoneModel" placeholder="Ej: Poco X3, S23..." data-i18n-ph="placeholderModel" maxlength="30">
+            </div>
+
+            <div class="field">
+                <label for="sensiType" data-i18n="sensiType">Nivel Sensi</label>
+                <select id="sensiType">
+                    <option value="Baja (130-145)" data-i18n="optSensiBaja">Baja (130-145)</option>
+                    <option value="Media (165-180)" data-i18n="optSensiMedia" selected>Media (165-180)</option>
+                    <option value="Alta (188-197)" data-i18n="optSensiAlta">Alta (188-197)</option>
+                </select>
+            </div>
+
+            <div class="field">
+                <label for="gameMode" data-i18n="gameMode">Modo de Juego</label>
+                <select id="gameMode" onchange="evaluarSugerenciaEnTiempoReal()">
+                    <option value="PVP Todo Rojo" data-i18n="optPvp" selected>PVP Todo Rojo</option>
+                    <option value="Battle Royale (BR)" data-i18n="optBr">Battle Royale (BR)</option>
+                    <option value="Duelo de Escuadras (DE)" data-i18n="optDe">Duelo de Escuadras (DE)</option>
+                    <option value="Lobo Solitario" data-i18n="optLobo">Lobo Solitario</option>
+                </select>
+            </div>
+
+            <div class="field">
+                <label for="useDpi" data-i18n="useDpi">DPI Pantalla</label>
+                <select id="useDpi">
+                    <option value="Con DPI (Máximo 593)" data-i18n="optDpiCon">Con DPI (Máx 593)</option>
+                    <option value="Sin DPI (Stock)" data-i18n="optDpiSin">Sin DPI (Stock)</option>
+                </select>
+            </div>
+
+            <div class="field">
+                <label for="useBtn" data-i18n="useBtn">Botón de Disparo</label>
+                <select id="useBtn">
+                    <option value="Pequeño" data-i18n="optBtnP">Pequeño</option>
+                    <option value="Medio" data-i18n="optBtnM" selected>Medio</option>
+                    <option value="Grande" data-i18n="optBtnG">Grande</option>
+                    <option value="Omitir Botón" data-i18n="optBtnO">Omitir Botón</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="mode-hint-box" id="modeHintBox"></div>
+
+        <div class="btn-group">
+            <button class="btn btn-std" id="btnGenLocal" onclick="ejecutarBotonGenerar(false)" data-i18n="btnGenLocal">Generar</button>
+            <button class="btn btn-ai" id="btnAi" onclick="ejecutarBotonGenerar(true)" data-i18n="btnAi">Generar con IA</button>
+        </div>
+
+        <div class="custom-note-box" id="customNoteBox" data-i18n="customNote">
+            🎯 <strong>Calibración Pro:</strong> Sensibilidad calculada con algoritmos de precisión táctil para mira directa a la cabeza.
+        </div>
+
+        <div class="error-box" id="errorBox">
+            <div id="errorMsg"></div>
+        </div>
+
+        <div class="results">
+            <div class="res-item">
+                <span class="res-label" data-i18n="resGen">General:</span><span class="res-val" id="r_gen">--</span>
+            </div>
+            <div class="res-item">
+                <span class="res-label" data-i18n="resRed">Mira Roja:</span><span class="res-val" id="r_red">--</span>
+            </div>
+            <div class="res-item">
+                <span class="res-label" data-i18n="res2x">Mira 2x:</span><span class="res-val" id="r_2x">--</span>
+            </div>
+            <div class="res-item">
+                <span class="res-label" data-i18n="res4x">Mira 4x:</span><span class="res-val" id="r_4x">--</span>
+            </div>
+            <div class="res-item">
+                <span class="res-label" data-i18n="resAwm">AWM (Franco):</span><span class="res-val" id="r_awm">--</span>
+            </div>
+            <div class="res-item">
+                <span class="res-label" data-i18n="resCam">Cámara 360:</span><span class="res-val" id="r_cam">--</span>
+            </div>
+            <div class="res-item">
+                <span class="res-label" data-i18n="resDpi">DPI Rec.:</span><span class="res-val" id="r_dpi">--</span>
+            </div>
+            <div class="res-item">
+                <span class="res-label" data-i18n="resBtn">Botón Disparo:</span><span class="res-val" id="r_btn">--</span>
+            </div>
+        </div>
+
+        <div class="footer-credits" style="font-family: system-ui, -apple-system, sans-serif; font-size: 14px; color: #ff3b30; line-height: 1.6; text-align: center;">
+            <div>
+                <span class="creator-label" style="opacity: 0.8; font-weight: 400;">Creador:</span>
+                <span class="creator-name" style="font-weight: 700; letter-spacing: 0.5px;">SENSI VIP SYSTEM</span>
+            </div>
+            <div>
+                <span style="opacity: 0.8;">TikTok:</span>
+                <a href="https://www.tiktok.com/@sensivipsystem" target="_blank" rel="noopener noreferrer" class="tiktok-link" style="color: #ff3b30; font-weight: 600; text-decoration: none; border-bottom: 1.5px solid #ff3b30;">@sensivipsystem</a>
+            </div>
+        </div>
+
+
+        <!-- MODAL CONFIGURACIÓN IA Y SISTEMA -->
+        <div class="modal" id="aiModal">
+            <div class="modal-box">
+                <div class="modal-title" data-i18n="modalTitle">
+                    Configuración del Sistema e IA
+                </div>
+
+                <div class="lang-modal-wrapper">
+                    <label for="langSelect" data-i18n="language" style="color:#00ff66; font-size:0.8rem; font-weight:900;">🌐 Idioma del Sistema</label>
+                    <select id="langSelect" class="lang-select-styled" onchange="cambiarIdiomaConAnimacion(this.value)">
+                        <option value="es" selected>Español</option>
+                        <option value="en">English</option>
+                        <option value="pt">Português</option>
+                        <option value="id">Bahasa Indonesia</option>
+                        <option value="vi">Tiếng Việt</option>
+                        <option value="th">ไทย (Thai)</option>
+                        <option value="hi">हिन्दी (Hindi)</option>
+                        <option value="ar">العربية (Arabic)</option>
+                        <option value="ru">Русский (Russian)</option>
+                        <option value="tr">Türkçe (Turkish)</option>
+                        <option value="zh-TW">繁體中文 (Traditional Chinese)</option>
+                        <option value="fr">Français (French)</option>
+                        <option value="de">Deutsch (German)</option>
+                    </select>
+                </div>
+
+                <div class="field">
+                    <label for="aiProvider" data-i18n="aiProvider">Proveedor de IA</label>
+                    <select id="aiProvider" onchange="alCambiarProveedor()">
+                        <option value="gemini">Google Gemini</option>
+                        <option value="openai">OpenAI (ChatGPT)</option>
+                        <option value="grok">Grok (xAI)</option>
+                        <option value="deepseek">DeepSeek</option>
+                        <option value="anthropic">Anthropic (Claude)</option>
+                        <option value="groq">Groq (Llama 3 Ultra Fast)</option>
+                        <option value="mistral">Mistral AI</option>
+                        <option value="openrouter">OpenRouter AI</option>
+                    </select>
+                </div>
+
+                <div class="field">
+                    <label for="apiKeyInput" data-i18n="apiKeyLabel">Clave API / API Key</label>
+                    <div class="input-eye-wrapper">
+                        <input type="password" id="apiKeyInput" placeholder="Pega tu clave API..." data-i18n-ph="placeholderApiKey" autocomplete="off">
+                        <button type="button" class="btn-action-input" onclick="copiarApiKey()" style="right:36px;">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2">
+                                <rect x="9" y="9" width="13" height="13" rx="2"></rect>
+                                <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                            </svg>
+                        </button>
+                        <button type="button" class="btn-action-input" onclick="toggleApiKeyVisibilidad()" style="right:6px;">
+                            <svg id="svgEyeOpen" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2">
+                                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" /><circle cx="12" cy="12" r="3" />
+                            </svg>
+                            <svg id="svgEyeClosed" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#ff0033" stroke-width="2" style="display:none;">
+                                <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24" /><line x1="1" y1="1" x2="23" y2="23" />
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+
+                <button class="btn btn-std btn-sm" id="btnTestConn" onclick="cargarModelosRealesAPI()" data-i18n="btnTestConn">Cargar Modelos API</button>
+                <div id="modalConnStatus"></div>
+
+                <div class="field" id="modelSelectContainer" style="display:none;">
+                    <label for="aiModelSelect" data-i18n="selectedModel">Modelo Seleccionado</label>
+                    <select id="aiModelSelect"></select>
+                </div>
+
+                <hr style="border: 0.5px solid #222; margin: 2px 0;">
+                <label style="color:#ff0033; font-size:0.75rem;" data-i18n="perfOptions">Opciones de Rendimiento y Sistema:</label>
+
+                <div class="setting-toggle-row">
+                    <span class="setting-toggle-label" data-i18n="gpuAccel">⚡ Aceleración por Hardware (GPU Render)</span>
+                    <input type="checkbox" id="gpuAccelToggle" checked>
+                </div>
+
+                <div class="setting-toggle-row">
+                    <span class="setting-toggle-label" data-i18n="vibration">Respuesta Háptica (Vibración)</span>
+                    <input type="checkbox" id="vibrationToggle" checked>
+                </div>
+
+                <div class="setting-toggle-row">
+                    <span class="setting-toggle-label" data-i18n="sound">Efectos de Sonido Táctiles</span>
+                    <input type="checkbox" id="soundToggle" checked>
+                </div>
+
+                <div class="setting-toggle-row">
+                    <span class="setting-toggle-label" data-i18n="autoCopy">Copiar resultados automáticamente</span>
+                    <input type="checkbox" id="autoCopyToggle">
+                </div>
+
+                <div class="setting-toggle-row">
+                    <span class="setting-toggle-label" data-i18n="batterySaver">Modo Ahorro Batería y CPU Extremo</span>
+                    <input type="checkbox" id="batterySaverToggle" onchange="aplicarModoAhorro()">
+                </div>
+
+                <button class="btn btn-ai" onclick="guardarConfigIA()" data-i18n="btnSave">Guardar Ajustes</button>
+                <button class="btn btn-std" onclick="toggleModal(false)" data-i18n="btnCancel">Cancelar</button>
+            </div>
+        </div>
+
+        <!-- MODAL CARGA PORCENTAJE FUTURISTA HD -->
+        <div class="loader-modal" id="loaderModal">
+            <div class="loader-box">
+                <div class="loader-status" id="loaderStatusText">
+                    ⚡ PROCESANDO...
+                </div>
+                <div class="loader-percent" id="loaderPercentText">
+                    0%
+                </div>
+                <div class="progress-bar-bg">
+                    <div class="progress-bar-fill" id="loaderProgressBarFill"></div>
+                </div>
+            </div>
+        </div>
+
+        <script>
+            /* --- PUENTE DE COMUNICACIÓN CON JAVA --- */
+            const JavaBridge = {
+                enviar: function(action, payload) {
+                    const jsonMessage = JSON.stringify({
+                        action: action, payload: payload
+                    });
+                    if (window.Android && typeof window.Android.onDataFromWeb === 'function') {
+                        window.Android.onDataFromWeb(jsonMessage);
+                    } else if (window.JavaBridge && typeof window.JavaBridge.postMessage === 'function') {
+                        window.JavaBridge.postMessage(jsonMessage);
+                    } else if (window.webkit && window.webkit.messageHandlers && window.webkit.messageHandlers.javaBridge) {
+                        window.webkit.messageHandlers.javaBridge.postMessage(jsonMessage);
+                    }
+                }
+            };
+
+            window.recibirDeJava = function(jsonString) {
+                try {
+                    const data = typeof jsonString === 'string' ? JSON.parse(jsonString): jsonString;
+                    if (data.action === 'generarSensibilidad') {
+                        ejecutarBotonGenerar(!!data.useAI);
+                    } else if (data.action === 'cambiarIdioma') {
+                        cambiarIdiomaConAnimacion(data.lang);
+                    } else if (data.action === 'cargarConfiguracion') {
+                        window.configurarDesdeJava(data.config);
+                    }
+                } catch(e) {
+                    console.error("Error Java:", e);
+                }
+            };
+
+            window.actualizarDesdeJava = function(datos) {
+                if (datos) actualizarUI(datos, DOM.sensiType ? DOM.sensiType.value: 'Media');
+            };
+
+            window.configurarDesdeJava = function(cfg) {
+                if (!cfg) return;
+                if (cfg.brand && DOM.phoneBrand) DOM.phoneBrand.value = cfg.brand;
+                if (cfg.model && DOM.phoneModel) DOM.phoneModel.value = cfg.model;
+                if (cfg.sensiType && DOM.sensiType) DOM.sensiType.value = cfg.sensiType;
+                if (cfg.gameMode && DOM.gameMode) DOM.gameMode.value = cfg.gameMode;
+                if (cfg.useDpi && DOM.useDpi) DOM.useDpi.value = cfg.useDpi;
+                if (cfg.useBtn && DOM.useBtn) DOM.useBtn.value = cfg.useBtn;
+                evaluarSugerenciaEnTiempoReal();
+            };
+
+            /* --- CACHE DE ELEMENTOS DOM --- */
+            const DOM = {};
+
+            function initDOMCache() {
+                const ids = [
+                    'fpsValue',
+                    'cpuValue',
+                    'gpuValue',
+                    'phoneBrand',
+                    'phoneModel',
+                    'sensiType',
+                    'gameMode',
+                    'useDpi',
+                    'useBtn',
+                    'modeHintBox',
+                    'customNoteBox',
+                    'errorBox',
+                    'errorMsg',
+                    'r_gen',
+                    'r_red',
+                    'r_2x',
+                    'r_4x',
+                    'r_awm',
+                    'r_cam',
+                    'r_dpi',
+                    'r_btn',
+                    'aiModal',
+                    'aiProvider',
+                    'apiKeyInput',
+                    'svgEyeOpen',
+                    'svgEyeClosed',
+                    'modalConnStatus',
+                    'btnTestConn',
+                    'modelSelectContainer',
+                    'aiModelSelect',
+                    'gpuAccelToggle',
+                    'vibrationToggle',
+                    'soundToggle',
+                    'autoCopyToggle',
+                    'batterySaverToggle',
+                    'loaderModal',
+                    'loaderStatusText',
+                    'loaderPercentText',
+                    'loaderProgressBarFill',
+                    'perfMonitorBox',
+                    'mainApp',
+                    'langSelect'
+                ];
+                ids.forEach(id => DOM[id] = document.getElementById(id));
+            }
+
+            /* --- TRADUCCIÓN DINÁMICA CON FALLBACK SILENCIOSO --- */
+            let translationsData = null;
+            let currentLang = 'es';
+
+            async function cargarTraduccionesJSON() {
+                try {
+                    const response = await fetch('translations.json');
+                    if (response.ok) {
+                        translationsData = await response.json();
+                    }
+                } catch (error) {}
+            }
+
+            function obtenerTextoTraducido(key, fallbackStr) {
+                if (translationsData && translationsData[currentLang] && translationsData[currentLang][key]) {
+                    return translationsData[currentLang][key];
+                }
+                return fallbackStr;
+            }
+
+            async function cambiarIdiomaConAnimacion(lang) {
+                ejecutarVibracion();
+                ejecutarSonidoUI('select');
+
+                if (!translationsData) {
+                    await cargarTraduccionesJSON();
+                }
+
+                const langText = obtenerTextoTraducido('loaderLang', "TRADUCIENDO SISTEMA...");
+
+                let progreso = 0;
+                DOM.loaderStatusText.textContent = langText;
+                DOM.loaderPercentText.textContent = "0%";
+                DOM.loaderProgressBarFill.style.width = "0%";
+                DOM.loaderModal.style.display = 'flex';
+
+                const animInterval = setInterval(() => {
+                    progreso += 12;
+                    if (progreso > 100) progreso = 100;
+
+                    DOM.loaderPercentText.textContent = progreso + '%';
+                    DOM.loaderProgressBarFill.style.width = progreso + '%';
+
+                    if (progreso >= 48 && progreso <= 60) {
+                        currentLang = lang;
+                        aplicarTraducciones(lang);
+                        JavaBridge.enviar('idiomaCambiado', {
+                            lang: lang
+                        });
+                    }
+
+                    if (progreso >= 100) {
+                        clearInterval(animInterval);
+                        setTimeout(() => {
+                            DOM.loaderModal.style.display = 'none';
+                        }, 120);
+                    }
+                },
+                    30);
+            }
+
+            function aplicarTraducciones(lang) {
+                if (!translationsData || !translationsData[lang]) return;
+                const dict = translationsData[lang];
+
+                document.documentElement.dir = (lang === 'ar') ? 'rtl': 'ltr';
+
+                document.querySelectorAll('[data-i18n]').forEach(el => {
+                    const key = el.getAttribute('data-i18n');
+                    if (dict[key]) el.innerHTML = dict[key];
+                });
+
+                document.querySelectorAll('[data-i18n-ph]').forEach(el => {
+                    const key = el.getAttribute('data-i18n-ph');
+                    if (dict[key]) el.placeholder = dict[key];
+                });
+
+                if (DOM.langSelect) DOM.langSelect.value = lang;
+                evaluarSugerenciaEnTiempoReal();
+            }
+
+            /* --- CONFIGURACIÓN DEL SISTEMA --- */
+            const aiConfig = {
+                provider: 'gemini',
+                key: '',
+                model: '',
+                autoCopy: false,
+                batterySaver: false,
+                vibration: true,
+                sound: true,
+                gpuAccel: true
+            };
+
+            /* --- MOTOR DE AUDIO Y VIBRACIÓN --- */
+            let audioCtxInstance = null;
+
+            function obtenerAudioContext() {
+                if (!audioCtxInstance) {
+                    const AudioCtx = window.AudioContext || window.webkitAudioContext;
+                    if (AudioCtx) audioCtxInstance = new AudioCtx();
+                }
+                if (audioCtxInstance && audioCtxInstance.state === 'suspended') {
+                    audioCtxInstance.resume().catch(() => {});
+                }
+                return audioCtxInstance;
+            }
+
+            function ejecutarVibracion() {
+                if (aiConfig.vibration && navigator.vibrate) {
+                    try {
+                        navigator.vibrate(8);
+                    } catch(e) {}
+                }
+            }
+
+            function ejecutarSonidoUI(tipo) {
+                if (!aiConfig.sound) return;
+                try {
+                    const ctx = obtenerAudioContext();
+                    if (!ctx) return;
+
+                    const osc = ctx.createOscillator();
+                    const gain = ctx.createGain();
+                    const now = ctx.currentTime;
+
+                    osc.type = (tipo === 'gen') ? 'triangle': 'sine';
+                    osc.frequency.setValueAtTime((tipo === 'gen') ? 650: 880, now);
+                    osc.frequency.exponentialRampToValueAtTime(300, now + 0.03);
+
+                    gain.gain.setValueAtTime(0.03, now);
+                    gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.03);
+
+                    osc.connect(gain);
+                    gain.connect(ctx.destination);
+
+                    osc.start(now);
+                    osc.stop(now + 0.03);
+                } catch(e) {}
+            }
+
+            /* --- MODALES --- */
+            function abrirConfiguracion() {
+                ejecutarVibracion();
+                ejecutarSonidoUI('select');
+                toggleModal(true);
+                JavaBridge.enviar('modalConfigAbierto', {
+                    abierto: true
+                });
+            }
+
+            function toggleModal(show) {
+                DOM.aiModal.style.display = show ? 'flex': 'none';
+                JavaBridge.enviar('modalConfigEstado', {
+                    abierto: show
+                });
+            }
+
+            /* --- MONITOR DE RENDIMIENTO --- */
+            let frameCount = 0;
+            let lastSampleTime = performance.now();
+            let lastFrameTime = performance.now();
+            let frameDeltas = [];
+            let isBatterySaverActive = false;
+            let monitorFrameId = null;
+
+            function monitorPerformanceLoop(now) {
+                if (isBatterySaverActive || document.hidden) {
+                    monitorFrameId = null;
+                    return;
+                }
+
+                const frameDelta = now - lastFrameTime;
+                lastFrameTime = now;
+
+                if (frameDelta > 0) {
+                    frameDeltas.push(frameDelta);
+                    if (frameDeltas.length > 20) frameDeltas.shift();
+                }
+
+                frameCount++;
+                const elapsed = now - lastSampleTime;
+
+                if (elapsed >= 200) {
+                    const avgDelta = frameDeltas.reduce((a, b) => a + b, 0) / (frameDeltas.length || 1);
+                    const realFps = Math.min(144, Math.max(1, Math.round(1000 / avgDelta)));
+                    const computeTimeRatio = avgDelta / 6.94;
+
+                    const cpuCalc = Math.min(99, Math.max(2, Math.round(computeTimeRatio * 18 + Math.abs(frameDelta - avgDelta) * 5 + 3)));
+                    const gpuCalc = Math.min(99, Math.max(2, Math.round((realFps / 144) * 14 + (computeTimeRatio > 1 ? (computeTimeRatio - 1) * 20: 4))));
+
+                    if (DOM.fpsValue) DOM.fpsValue.textContent = realFps;
+                    if (DOM.cpuValue) DOM.cpuValue.textContent = cpuCalc + '%';
+                    if (DOM.gpuValue) DOM.gpuValue.textContent = gpuCalc + '%';
+
+                    frameCount = 0;
+                    lastSampleTime = now;
+                }
+
+                monitorFrameId = requestAnimationFrame(monitorPerformanceLoop);
+            }
+
+            document.addEventListener('visibilitychange', () => {
+                if (document.hidden) {
+                    if (monitorFrameId) {
+                        cancelAnimationFrame(monitorFrameId);
+                        monitorFrameId = null;
+                    }
+                } else if (!isBatterySaverActive && !monitorFrameId) {
+                    lastSampleTime = performance.now();
+                    lastFrameTime = performance.now();
+                    frameCount = 0;
+                    frameDeltas = [];
+                    monitorFrameId = requestAnimationFrame(monitorPerformanceLoop);
+                }
+            });
+
+            function aplicarModoAhorro() {
+                if (!DOM.batterySaverToggle) return;
+                isBatterySaverActive = DOM.batterySaverToggle.checked;
+                if (isBatterySaverActive) {
+                    if (DOM.perfMonitorBox) DOM.perfMonitorBox.style.display = 'none';
+                    if (monitorFrameId) {
+                        cancelAnimationFrame(monitorFrameId);
+                        monitorFrameId = null;
+                    }
+                } else {
+                    if (DOM.perfMonitorBox) DOM.perfMonitorBox.style.display = 'flex';
+                    if (!monitorFrameId) {
+                        lastSampleTime = performance.now();
+                        lastFrameTime = performance.now();
+                        frameCount = 0;
+                        frameDeltas = [];
+                        monitorFrameId = requestAnimationFrame(monitorPerformanceLoop);
+                    }
+                }
+            }
+
+            /* --- LÓGICA DE RECOMENDACIÓN MULTI-IDIOMA --- */
+            function evaluarSugerenciaEnTiempoReal() {
+                ejecutarVibracion();
+                ejecutarSonidoUI('select');
+
+                const mode = DOM.gameMode.value;
+                const brandOption = DOM.phoneBrand.options[DOM.phoneBrand.selectedIndex];
+                const brandText = brandOption ? brandOption.text: DOM.phoneBrand.value;
+
+                const dict = (translationsData && translationsData[currentLang]) ? translationsData[currentLang]: null;
+
+                let nivelRecomendado = dict ? dict.optSensiAlta: "Alta (188-197)";
+                let alzamientoMira = dict ? dict.techPvp: "Levantamiento seco de un solo toque sin pasar la cabeza.";
+
+                if (mode.includes('Lobo') || mode.includes('Lone') || mode.includes('Gladiadores') || mode.includes('หมาป่า')) {
+                    nivelRecomendado = dict ? dict.optSensiAlta: "Alta (188-197)";
+                    alzamientoMira = dict ? dict.techLobo: "Arrastre rápido en forma de 'J' para distancias cortas.";
+                } else if (mode.includes('PVP') || mode.includes('Rojo') || mode.includes('Headshot')) {
+                    nivelRecomendado = dict ? dict.optSensiAlta: "Alta (188-197)";
+                    alzamientoMira = dict ? dict.techPvp: "Levantamiento seco de un solo toque sin pasar la cabeza.";
+                } else if (mode.includes('Duelo') || mode.includes('Escuadras') || mode.includes('Clash') || mode.includes('CS')) {
+                    nivelRecomendado = dict ? dict.optSensiMedia: "Media (165-180)";
+                    alzamientoMira = dict ? dict.techDe: "Alzamiento progresivo según la distancia del objetivo.";
+                } else if (mode.includes('Battle') || mode.includes('BR') || mode.includes('Sinh Tồn')) {
+                    nivelRecomendado = dict ? dict.optSensiBaja: "Baja (130-145)";
+                    alzamientoMira = dict ? dict.techBr: "Levantamiento suave y constante a larga distancia.";
+                }
+
+                const titleHeader = dict ? dict.hintTitle: "⚡ RECOMENDACIÓN PRO";
+                const levelLabel = dict ? dict.hintLevel: "Nivel:";
+                const techLabel = dict ? dict.hintTech: "Técnica:";
+
+                DOM.modeHintBox.innerHTML = `
+                <div class="hint-header">${titleHeader} (${brandText})</div>
+                <ul class="hint-list">
+                <li><strong>${levelLabel}</strong> <span class="hint-highlight">${nivelRecomendado}</span></li>
+                <li><strong>${techLabel}</strong> ${alzamientoMira}</li>
+                </ul>
+                `;
+
+                JavaBridge.enviar('sugerenciaCambiada', {
+                    brand: brandText,
+                    mode: mode,
+                    nivel: nivelRecomendado,
+                    tecnica: alzamientoMira
+                });
+            }
+
+            function sanitizeInput(str) {
+                return String(str || '').replace(/[&<>"'/`=]/g, '').trim();
+            }
+
+            window.addEventListener('DOMContentLoaded', async () => {
+                initDOMCache();
+                await cargarTraduccionesJSON();
+
+                const saved = localStorage.getItem('ff_ai_cfg_v12') || sessionStorage.getItem('ff_ai_cfg_v12');
+                if (saved) {
+                    try {
+                        const parsed = JSON.parse(saved);
+                        aiConfig.provider = sanitizeInput(parsed.provider || 'gemini');
+                        aiConfig.key = parsed.key ? atob(parsed.key): '';
+                        aiConfig.model = sanitizeInput(parsed.model || '');
+                        aiConfig.autoCopy = !!parsed.autoCopy;
+                        aiConfig.batterySaver = !!parsed.batterySaver;
+                        aiConfig.vibration = parsed.vibration !== undefined ? !!parsed.vibration: true;
+                        aiConfig.sound = parsed.sound !== undefined ? !!parsed.sound: true;
+                        aiConfig.gpuAccel = parsed.gpuAccel !== undefined ? !!parsed.gpuAccel: true;
+                        if (parsed.lang) currentLang = parsed.lang;
+
+                        DOM.aiProvider.value = aiConfig.provider;
+                        DOM.apiKeyInput.value = aiConfig.key;
+                        DOM.autoCopyToggle.checked = aiConfig.autoCopy;
+                        DOM.batterySaverToggle.checked = aiConfig.batterySaver;
+                        DOM.vibrationToggle.checked = aiConfig.vibration;
+                        DOM.soundToggle.checked = aiConfig.sound;
+                        DOM.gpuAccelToggle.checked = aiConfig.gpuAccel;
+                        if (DOM.langSelect) DOM.langSelect.value = currentLang;
+
+                        aplicarModoAhorro();
+                    } catch(e) {}
+                }
+
+                aplicarTraducciones(currentLang);
+                monitorFrameId = requestAnimationFrame(monitorPerformanceLoop);
+
+                JavaBridge.enviar('appLista', {
+                    version: '1.2', status: 'ready'
+                });
+            });
+
+            function toggleApiKeyVisibilidad() {
+                ejecutarVibracion();
+                const isPassword = DOM.apiKeyInput.type === 'password';
+                DOM.apiKeyInput.type = isPassword ? 'text': 'password';
+                DOM.svgEyeOpen.style.display = isPassword ? 'none': 'block';
+                DOM.svgEyeClosed.style.display = isPassword ? 'block': 'none';
+            }
+
+            async function copiarApiKey() {
+                ejecutarVibracion();
+                const val = DOM.apiKeyInput.value.trim();
+                if (!val) return;
+                try {
+                    await navigator.clipboard.writeText(val);
+                } catch (err) {
+                    DOM.apiKeyInput.type = 'text';
+                    DOM.apiKeyInput.select();
+                    document.execCommand('copy');
+                }
+                const copiedText = obtenerTextoTraducido('statusCopied', '✓ Copiado');
+                DOM.modalConnStatus.innerHTML = `<span class="status-badge status-success">${copiedText}</span>`;
+            }
+
+            function alCambiarProveedor() {
+                ejecutarVibracion();
+                DOM.modelSelectContainer.style.display = 'none';
+                DOM.modalConnStatus.innerHTML = '';
+            }
+
+            function guardarConfigIA() {
+                ejecutarVibracion();
+                ejecutarSonidoUI('gen');
+
+                aiConfig.provider = sanitizeInput(DOM.aiProvider.value);
+                aiConfig.key = DOM.apiKeyInput.value.trim();
+                aiConfig.autoCopy = DOM.autoCopyToggle.checked;
+                aiConfig.batterySaver = DOM.batterySaverToggle.checked;
+                aiConfig.vibration = DOM.vibrationToggle.checked;
+                aiConfig.sound = DOM.soundToggle.checked;
+                aiConfig.gpuAccel = DOM.gpuAccelToggle.checked;
+
+                if (DOM.aiModelSelect && DOM.aiModelSelect.value) {
+                    aiConfig.model = sanitizeInput(DOM.aiModelSelect.value);
+                }
+
+                DOM.mainApp.style.transform = aiConfig.gpuAccel ? 'translateZ(0)': 'none';
+
+                const payloadData = {
+                    provider: aiConfig.provider,
+                    key: btoa(aiConfig.key),
+                    model: aiConfig.model,
+                    autoCopy: aiConfig.autoCopy,
+                    batterySaver: aiConfig.batterySaver,
+                    vibration: aiConfig.vibration,
+                    sound: aiConfig.sound,
+                    gpuAccel: aiConfig.gpuAccel,
+                    lang: currentLang
+                };
+
+                const payload = JSON.stringify(payloadData);
+
+                try {
+                    localStorage.setItem('ff_ai_cfg_v12', payload);
+                } catch(e) {
+                    sessionStorage.setItem('ff_ai_cfg_v12', payload);
+                }
+                toggleModal(false);
+
+                JavaBridge.enviar('configuracionGuardada', payloadData);
+            }
+
+            async function cargarModelosRealesAPI() {
+                ejecutarVibracion();
+                const provider = DOM.aiProvider.value;
+                const key = DOM.apiKeyInput.value.trim();
+
+                if (!key) {
+                    const msgKey = obtenerTextoTraducido('errNoKey', 'Ingresa tu API Key en Configuración');
+                    DOM.modalConnStatus.innerHTML = `<span class="status-badge status-error">${msgKey}</span>`;
+                    return;
+                }
+
+                DOM.btnTestConn.disabled = true;
+                const loadingText = obtenerTextoTraducido('statusLoading', 'Cargando...');
+                DOM.modalConnStatus.innerHTML = `<span class="status-badge status-success">${loadingText}</span>`;
+
+                try {
+                    let modelsList = [];
+                    if (provider === 'gemini') {
+                        const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models?key=${key}`);
+                        const json = await res.json();
+                        if (json.error) throw json;
+                        modelsList = json.models.filter(m => m.supportedGenerationMethods?.includes('generateContent')).map(m => m.name.replace('models/', ''));
+                    } else if (provider === 'anthropic') {
+                        modelsList = ['claude-3-5-sonnet-20241022',
+                            'claude-3-haiku-20240307',
+                            'claude-3-5-haiku-20241022'];
+                    } else if (provider === 'groq') {
+                        const res = await fetch('https://api.groq.com/openai/v1/models', {
+                            headers: {
+                                'Authorization': `Bearer ${key}`
+                            }
+                        });
+                        const json = await res.json();
+                        if (json.error) throw json;
+                        modelsList = json.data ? json.data.map(m => m.id): ['llama3-8b-8192',
+                            'llama3-70b-8192'];
+                    } else {
+                        const endpoints = {
+                            grok: 'https://api.x.ai/v1/models',
+                            deepseek: 'https://api.deepseek.com/models',
+                            mistral: 'https://api.mistral.ai/v1/models',
+                            openrouter: 'https://openrouter.ai/api/v1/models',
+                            openai: 'https://api.openai.com/v1/models'
+                        };
+                        const res = await fetch(endpoints[provider] || endpoints.openai, {
+                            headers: {
+                                'Authorization': `Bearer ${key}`
+                            }
+                        });
+                        const json = await res.json();
+                        if (json.error) throw json;
+                        modelsList = json.data ? json.data.map(m => m.id): [];
+                    }
+
+                    DOM.aiModelSelect.innerHTML = '';
+                    modelsList.forEach(m => {
+                        const opt = document.createElement('option');
+                        opt.value = sanitizeInput(m);
+                        opt.textContent = m;
+                        DOM.aiModelSelect.appendChild(opt);
+                    });
+
+                    DOM.modelSelectContainer.style.display = 'flex';
+                    const readyText = obtenerTextoTraducido('statusModels', 'Modelos Listos');
+                    DOM.modalConnStatus.innerHTML = `<span class="status-badge status-success">✓ ${modelsList.length} ${readyText}</span>`;
+
+                    JavaBridge.enviar('modelosCargados', {
+                        provider: provider, count: modelsList.length, models: modelsList
+                    });
+                } catch (e) {
+                    const errApiText = obtenerTextoTraducido('statusErrApi', 'Error al conectar con API');
+                    DOM.modalConnStatus.innerHTML = `<span class="status-badge status-error">${errApiText}</span>`;
+                    JavaBridge.enviar('errorConexionAPI', {
+                        error: String(e)
+                    });
+                } finally {
+                    DOM.btnTestConn.disabled = false;
+                }
+            }
+
+            function manejarErrorIA(err) {
+                const errStr = typeof err === 'object' ? JSON.stringify(err): String(err);
+                if (errStr.includes('429') || errStr.toLowerCase().includes('quota') || errStr.toLowerCase().includes('rate_limit') || errStr.includes('RESOURCE_EXHAUSTED')) {
+                    DOM.errorMsg.innerHTML = `⚠️ <strong>Límite alcanzado:</strong> Cuota agotada o demasiadas solicitudes. Intenta de nuevo en unos momentos.`;
+                } else {
+                    DOM.errorMsg.innerHTML = `⚠️ <strong>Error en IA:</strong> ${sanitizeInput(err.message || errStr)}`;
+                }
+                DOM.errorBox.style.display = 'block';
+
+                JavaBridge.enviar('errorIA', {
+                    error: errStr
+                });
+            }
+
+            /* --- GENERACIÓN DE SENSIBILIDAD --- */
+            let loaderInterval = null;
+
+            function iniciarCarga(esIA, alFinalizar) {
+                if (loaderInterval) clearInterval(loaderInterval);
+                let progreso = 0;
+                DOM.loaderModal.style.display = 'flex';
+
+                if (!esIA) {
+                    DOM.loaderStatusText.textContent = obtenerTextoTraducido('loaderProc', 'PROCESANDO...');
+                    loaderInterval = setInterval(() => {
+                        progreso += 34;
+                        const pVal = Math.min(100, progreso);
+                        DOM.loaderPercentText.textContent = pVal + '%';
+                        DOM.loaderProgressBarFill.style.width = pVal + '%';
+                        if (progreso >= 100) {
+                            clearInterval(loaderInterval);
+                            setTimeout(() => {
+                                DOM.loaderModal.style.display = 'none'; alFinalizar();
+                            }, 60);
+                        }
+                    },
+                        12);
+                } else {
+                    DOM.loaderStatusText.textContent = obtenerTextoTraducido('loaderAi', 'CONSULTANDO IA PRO...');
+                    loaderInterval = setInterval(() => {
+                        if (progreso < 90) progreso += (90 - progreso) * 0.22;
+                        const ent = Math.floor(progreso);
+                        DOM.loaderPercentText.textContent = ent + '%';
+                        DOM.loaderProgressBarFill.style.width = ent + '%';
+                    },
+                        25);
+                }
+            }
+
+            function finalizarCargaIA(exito, alFinalizar) {
+                if (loaderInterval) clearInterval(loaderInterval);
+                if (!exito) {
+                    DOM.loaderModal.style.display = 'none';
+                    return;
+                }
+                DOM.loaderPercentText.textContent = '100%';
+                DOM.loaderProgressBarFill.style.width = '100%';
+                setTimeout(() => {
+                    DOM.loaderModal.style.display = 'none';
+                    if (alFinalizar) alFinalizar();
+                },
+                    60);
+            }
+
+            function ejecutarBotonGenerar(conIA) {
+                ejecutarVibracion();
+                ejecutarSonidoUI('gen');
+                generar(conIA);
+            }
+
+            async function generar(conIA) {
+                DOM.errorBox.style.display = 'none';
+
+                const brand = sanitizeInput(DOM.phoneBrand.value);
+                const model = sanitizeInput(DOM.phoneModel.value);
+                const type = sanitizeInput(DOM.sensiType.value);
+                const mode = sanitizeInput(DOM.gameMode.value);
+                const dpi = sanitizeInput(DOM.useDpi.value);
+                const btn = sanitizeInput(DOM.useBtn.value);
+
+                const solicitudPayload = {
+                    brand: brand,
+                    model: model,
+                    sensiType: type,
+                    gameMode: mode,
+                    useDpi: dpi,
+                    useBtn: btn,
+                    conIA: conIA
+                };
+
+                JavaBridge.enviar('solicitudGeneracion',
+                    solicitudPayload);
+
+                if (!conIA) {
+                    iniciarCarga(false, () => {
+                        actualizarUI(generarLocalMatematico(brand, type, dpi, btn), type);
+                    });
+                    return;
+                }
+
+                if (!navigator.onLine) {
+                    DOM.errorMsg.innerHTML = obtenerTextoTraducido('errOffline', 'Sin conexión a Internet.');
+                    DOM.errorBox.style.display = 'block';
+                    JavaBridge.enviar('errorConexion', {
+                        msg: 'Sin conexión a Internet'
+                    });
+                    return;
+                }
+
+                if (!aiConfig.key) {
+                    DOM.errorMsg.innerHTML = obtenerTextoTraducido('errNoKey', 'Ingresa tu API Key en Configuración (⚙️).');
+                    DOM.errorBox.style.display = 'block';
+                    JavaBridge.enviar('errorApiKey', {
+                        msg: 'Falta API Key'
+                    });
+                    return;
+                }
+
+                iniciarCarga(true);
+
+                try {
+                    const resData = await solicitarIA(brand, model, type, mode, dpi, btn);
+                    finalizarCargaIA(true, () => actualizarUI(resData, type));
+                } catch (e) {
+                    finalizarCargaIA(false);
+                    manejarErrorIA(e);
+                }
+            }
+
+            function clamp(num, min, max) {
+                const parsed = parseInt(num, 10);
+                return isNaN(parsed) ? min: Math.min(Math.max(parsed, min), max);
+            }
+
+            function generarLocalMatematico(brand, type, useDpi, useBtn) {
+                let baseMin = 165,
+                baseMax = 180,
+                awmMin = 100,
+                awmMax = 130;
+                if (type.includes('Baja') || type.includes('Low') || type.includes('Baixa') || type.includes('Rendah') || type.includes('Thấp') || type.includes('ต่ำ') || type.includes('कम')) {
+                    baseMin = 130; baseMax = 145; awmMin = 50; awmMax = 60;
+                }
+                if (type.includes('Alta') || type.includes('High') || type.includes('Tinggi') || type.includes('Cao') || type.includes('สูง') || type.includes('उच्च')) {
+                    baseMin = 188; baseMax = 197; awmMin = 130; awmMax = 156;
+                }
+
+                let brandOffset = 0;
+                if (brand.includes('Xiaomi') || brand.includes('ZTE') || brand.includes('ASUS')) brandOffset = 2;
+                if (brand.includes('Apple')) brandOffset = -3;
+                if (brand.includes('Samsung')) brandOffset = 1;
+
+                const rand = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min;
+
+                const genVal = clamp(rand(baseMin, baseMax) + brandOffset, baseMin, baseMax);
+                const redVal = clamp(genVal - rand(1, 3), baseMin, baseMax);
+                const m2xVal = clamp(genVal + rand(0, 2), baseMin, baseMax);
+                const m4xVal = clamp(genVal - rand(2, 5), baseMin, baseMax);
+                const awmVal = rand(awmMin, awmMax);
+                const camVal = rand(130, 185);
+
+                let dpiCalculado = "Stock";
+                if (useDpi.includes('Con DPI') || useDpi.includes('With DPI') || useDpi.includes('Com DPI') || useDpi.includes('Dengan DPI') || useDpi.includes('Có DPI')) {
+                    const dpiBase = (baseMin >= 188) ? rand(520, 580): ((baseMin >= 165) ? rand(460, 520): rand(410, 460));
+                    dpiCalculado = Math.min(593, dpiBase);
+                }
+
+                let btnCalculado = "Omitido";
+                if (useBtn.includes('Pequeño') || useBtn.includes('Small') || useBtn.includes('Kecil') || useBtn.includes('Nhỏ') || useBtn.includes('เล็ก')) {
+                    btnCalculado = rand(36, 40) + "%";
+                } else if (useBtn.includes('Medio') || useBtn.includes('Medium') || useBtn.includes('Sedang') || useBtn.includes('Vừa') || useBtn.includes('ปานกลาง')) {
+                    btnCalculado = rand(41, 45) + "%";
+                } else if (useBtn.includes('Grande') || useBtn.includes('Large') || useBtn.includes('Besar') || useBtn.includes('Lớn') || useBtn.includes('ใหญ่')) {
+                    btnCalculado = rand(46, 50) + "%";
+                }
+
+                return {
+                    gen: genVal,
+                    red: redVal,
+                    m2x: m2xVal,
+                    m4x: m4xVal,
+                    awm: awmVal,
+                    cam: camVal,
+                    dpi: dpiCalculado,
+                    btn: btnCalculado
+                };
+            }
+
+            async function solicitarIA(brand, phoneModel, type, mode, useDpi, useBtn) {
+                const prompt = `Sensibilidad Free Fire / Language Context: ${currentLang}. Phone Brand:${brand}, Phone Model:${phoneModel}, Sensitivity Level:${type}, Game Mode:${mode}, DPI:${useDpi}, Fire Button:${useBtn}.
+                Strict Rules: Calculate General/RedDot/Scope2x/Scope4x/AWM/Camera360 sensitivities for maximum headshots in Free Fire. Max DPI 593.
+                Return ONLY valid JSON format: {"gen":num,"red":num,"m2x":num,"m4x":num,"awm":num,"cam":num,"dpi":"string/num","btn":"string/num"}`;
+
+                const defaultModel = aiConfig.provider === 'gemini' ? 'gemini-1.5-flash':
+                (aiConfig.provider === 'anthropic' ? 'claude-3-haiku-20240307':
+                    (aiConfig.provider === 'groq' ? 'llama3-8b-8192': 'gpt-4o-mini'));
+                const model = aiConfig.model || defaultModel;
+                let data = null;
+
+                if (aiConfig.provider === 'gemini') {
+                    const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${aiConfig.key}`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            contents: [{
+                                parts: [{
+                                    text: prompt
+                                }]
+                            }]
+                        })
+                    });
+                    const json = await res.json();
+                    if (json.error) throw json.error;
+                    data = parsearJSON(json.candidates[0].content.parts[0].text);
+                } else if (aiConfig.provider === 'anthropic') {
+                    const res = await fetch('https://api.anthropic.com/v1/messages', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'x-api-key': aiConfig.key,
+                            'anthropic-version': '2023-06-01',
+                            'anthropic-dangerous-direct-browser-access': 'true'
+                        },
+                        body: JSON.stringify({
+                            model: model, max_tokens: 300, messages: [{
+                                role: 'user', content: prompt
+                            }]
+                        })
+                    });
+                    const json = await res.json();
+                    if (json.error) throw json.error;
+                    data = parsearJSON(json.content[0].text);
+                } else {
+                    const endpoints = {
+                        grok: 'https://api.x.ai/v1/chat/completions',
+                        deepseek: 'https://api.deepseek.com/chat/completions',
+                        groq: 'https://api.groq.com/openai/v1/chat/completions',
+                        mistral: 'https://api.mistral.ai/v1/chat/completions',
+                        openrouter: 'https://openrouter.ai/api/v1/chat/completions',
+                        openai: 'https://api.openai.com/v1/chat/completions'
+                    };
+                    const res = await fetch(endpoints[aiConfig.provider] || endpoints.openai, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json', 'Authorization': `Bearer ${aiConfig.key}`
+                        },
+                        body: JSON.stringify({
+                            model: model, messages: [{
+                                role: 'user', content: prompt
+                            }]
+                        })
+                    });
+                    const json = await res.json();
+                    if (json.error) throw json.error;
+                    data = parsearJSON(json.choices[0].message.content);
+                }
+
+                if (!data) throw new Error("Respuesta no válida de la IA.");
+                return data;
+            }
+
+            function parsearJSON(str) {
+                try {
+                    let clean = str.replace(/```json/gi, '').replace(/```/g, '').trim();
+                    const jsonStart = clean.indexOf('{');
+                    const jsonEnd = clean.lastIndexOf('}');
+                    if (jsonStart !== -1 && jsonEnd !== -1) {
+                        clean = clean.substring(jsonStart, jsonEnd + 1);
+                    }
+                    return JSON.parse(clean);
+                } catch(e) {
+                    return null;
+                }
+            }
+
+            function actualizarUI(data, sensiType) {
+                let minS = 165,
+                maxS = 180,
+                awmMin = 100,
+                awmMax = 130;
+                if (sensiType.includes('Baja') || sensiType.includes('Low') || sensiType.includes('Baixa') || sensiType.includes('Thấp')) {
+                    minS = 130; maxS = 145; awmMin = 50; awmMax = 60;
+                }
+                if (sensiType.includes('Alta') || sensiType.includes('High') || sensiType.includes('Cao')) {
+                    minS = 188; maxS = 197; awmMin = 130; awmMax = 156;
+                }
+
+                const genVal = !isNaN(data.gen) ? clamp(data.gen, minS, maxS): data.gen;
+                const redVal = !isNaN(data.red) ? clamp(data.red, minS, maxS): data.red;
+                const m2xVal = !isNaN(data.m2x) ? clamp(data.m2x, minS, maxS): data.m2x;
+                const m4xVal = !isNaN(data.m4x) ? clamp(data.m4x, minS, maxS): data.m4x;
+                const awmVal = !isNaN(data.awm) ? clamp(data.awm, awmMin, awmMax): data.awm;
+                const camVal = data.cam;
+
+                let dpiVal = data.dpi;
+                if (!isNaN(parseInt(dpiVal, 10)) && parseInt(dpiVal, 10) > 593) dpiVal = 593;
+
+                const btnVal = data.btn;
+
+                DOM.r_gen.textContent = genVal;
+                DOM.r_red.textContent = redVal;
+                DOM.r_2x.textContent = m2xVal;
+                DOM.r_4x.textContent = m4xVal;
+                DOM.r_awm.textContent = awmVal;
+                DOM.r_cam.textContent = camVal;
+                DOM.r_dpi.textContent = dpiVal;
+                DOM.r_btn.textContent = btnVal;
+
+                DOM.customNoteBox.style.display = 'block';
+
+                const resultadoCalculado = {
+                    gen: genVal,
+                    red: redVal,
+                    m2x: m2xVal,
+                    m4x: m4xVal,
+                    awm: awmVal,
+                    cam: camVal,
+                    dpi: dpiVal,
+                    btn: btnVal
+                };
+
+                JavaBridge.enviar('resultadoGenerado', resultadoCalculado);
+
+                if (aiConfig.autoCopy) {
+                    const textToCopy = `SENSI VIP:
+                    General: ${genVal}
+                    Mira Roja: ${redVal}
+                    Mira 2x: ${m2xVal}
+                    Mira 4x: ${m4xVal}
+                    AWM: ${awmVal}
+                    360: ${camVal}
+                    DPI: ${dpiVal}
+                    Botón: ${btnVal}`;
+                    try {
+                        navigator.clipboard.writeText(textToCopy);
+                    } catch(e) {}
+                }
+            }
+        </script>
+    </body>
+</html>
