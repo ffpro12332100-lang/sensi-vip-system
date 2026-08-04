@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self' 'unsafe-inline' data: https:;">
+    <meta http-equiv="X-Content-Type-Options" content="nosniff">
+    <meta name="referrer" content="no-referrer">
+    <title>SENSI VIP SYSTEM</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        /* Ajustes específicos para las nuevas posiciones internas del Login */
+        .login-card {
+            position: relative;
+        }
+
+        .top-right-gear {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            z-index: 10;
+        }
+
+        /* Estructura alineada: Creador a la izquierda (blanco), TikTok a la derecha (rojo) */
+        .login-credits-info {
+            margin-top: 18px;
+            padding-top: 12px;
+            border-top: 1px solid rgba(255, 0, 51, 0.2);
+            font-size: 0.78rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .login-credits-left {
+            color: #ffffff;
+            text-align: left;
+        }
+
+        .login-credits-left span {
+            color: #ffffff;
+        }
+
+        .login-credits-right {
+            text-align: right;
+        }
+
+        .login-credits-right a {
+            color: #ff0033;
+            text-decoration: none;
+            font-weight: 700;
+        }
+
+        .login-credits-right a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- SECCIÓN DE LOGIN FUTURISTA -->
+    <div class="login-card" id="loginCard">
+        <!-- Tuerca posicionada arriba a la derecha dentro del Login -->
+        <button class="top-right-gear" onclick="abrirConfiguracion()" title="Configuración del Sistema">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#ff0033" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6z" />
+                <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z" />
+            </svg>
+        </button>
+
+        <div class="login-header">
+            <!-- Icono de Candado en el medio arriba -->
+            <div class="login-logo-glow">
+                <svg width="42" height="42" viewBox="0 0 24 24" fill="none" stroke="#ff0033" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                    <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+                </svg>
+            </div>
+            <h1 class="login-title" data-i18n="loginTitle">SENSI VIP SYSTEM</h1>
+            <p class="login-subtitle" data-i18n="loginSubtitle">ACCESO AL MOTOR DE CALIBRACIÓN</p>
+        </div>
+
+        <form class="login-form" id="loginForm" onsubmit="procesarLogin(event)">
+            <!-- Único campo: Clave de Acceso -->
+            <div class="input-group">
+                <label for="loginKey" data-i18n="loginKeyLabel">CLAVE DE ACCESO</label>
+                <div class="input-wrapper">
+                    <input type="password" id="loginKey" placeholder="••••••••" required autocomplete="current-password">
+                </div>
+            </div>
+
+            <button type="submit" class="btn btn-login">
+                <span data-i18n="btnLogin">INICIAR SESIÓN</span>
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M5 12h14M12 5l7 7-7 7"/>
+                </svg>
+            </button>
+        </form>
+
+        <!-- Información con creador a la izquierda en blanco y TikTok a la derecha en rojo -->
+        <div class="login-credits-info">
+            <div class="login-credits-left"><strong data-i18n="creatorLabel">Creador:</strong> <span>SENSI VIP SYSTEM</span></div>
+            <div class="login-credits-right"><a href="https://www.tiktok.com/@sensivipsystem" target="_blank" rel="noopener noreferrer">TikTok: @sensivipsystem</a></div>
+        </div>
+
+        <div class="login-footer" style="margin-top: 15px;">
+            <span class="status-indicator"><span class="dot"></span> <span data-i18n="serverStatus">SERVIDOR ACTIVO</span></span>
+        </div>
+    </div>
+
+    <!-- APLICACIÓN PRINCIPAL (GENERADOR DE SENSIBILIDAD - INTACTO) -->
+    <div class="app-card" id="mainApp" style="display: none;">
+        <div class="header">
+            <div class="title" data-i18n="title">
+                SENSI VIP SYSTEM
+            </div>
+            <div class="header-actions">
+                <div class="perf-monitor" id="perfMonitorBox" title="Estado del sistema">
+                    <div class="perf-item">
+                        <span id="fpsValue">0</span>FPS
+                    </div>
+                    <div class="perf-divider">|</div>
+                    <div class="perf-item">
+                        C:<span id="cpuValue">0%</span>
+                    </div>
+                    <div class="perf-divider">|</div>
+                    <div class="perf-item">
+                        G:<span id="gpuValue">0%</span>
+                    </div>
+                </div>
+
+                <button class="btn-icon" onclick="abrirConfiguracion()" title="Configuración del Sistema">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#ff0033" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6z" />
+                        <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z" />
+                    </svg>
+                </button>
+            </div>
+        </div>
+
+        <div class="grid">
+            <div class="field">
+                <label for="phoneBrand" data-i18n="phoneBrand">Marca Teléfono</label>
+                <select id="phoneBrand" onchange="evaluarSugerenciaEnTiempoReal()">
+                    <option value="Samsung" selected>Samsung</option>
+                    <option value="Xiaomi / POCO">Xiaomi / POCO</option>
+                    <option value="Apple (iPhone)">Apple (iPhone)</option>
+                    <option value="Motorola">Motorola</option>
+                    <option value="Huawei">Huawei</option>
+                    <option value="Honor">Honor</option>
+                    <option value="Realme">Realme</option>
+                    <option value="OPPO">OPPO</option>
+                    <option value="vivo">vivo</option>
+                    <option value="Infinix">Infinix</option>
+                    <option value="TECNO">TECNO</option>
+                    <option value="REDMI">REDMI</option>
+                    <option value="Nokia">Nokia</option>
+                    <option value="OnePlus">OnePlus</option>
+                    <option value="ASUS (ROG)">ASUS (ROG)</option>
+                    <option value="ZTE / RedMagic">ZTE / RedMagic</option>
+                    <option value="Google Pixel">Google Pixel</option>
+                    <option value="Otra Marca" data-i18n="brandOther">Otra Marca</option>
+                </select>
+            </div>
+
+            <div class="field">
+                <label for="phoneModel" data-i18n="phoneModel">Modelo Exacto</label>
+                <input type="text" id="phoneModel" placeholder="Ej: Poco X3, S23..." data-i18n-ph="placeholderModel" maxlength="30">
+            </div>
+
+            <div class="field">
+                <label for="sensiType" data-i18n="sensiType">Nivel Sensi</label>
+                <select id="sensiType">
+                    <option value="Baja (130-145)" data-i18n="optSensiBaja">Baja (130-145)</option>
+                    <option value="Media (165-180)" data-i18n="optSensiMedia" selected>Media (165-180)</option>
+                    <option value="Alta (188-197)" data-i18n="optSensiAlta">Alta (188-197)</option>
+                </select>
+            </div>
+
+            <div class="field">
+                <label for="gameMode" data-i18n="gameMode">Modo de Juego</label>
+                <select id="gameMode" onchange="evaluarSugerenciaEnTiempoReal()">
+                    <option value="PVP Todo Rojo" data-i18n="optPvp" selected>PVP Todo Rojo</option>
+                    <option value="Battle Royale (BR)" data-i18n="optBr">Battle Royale (BR)</option>
+                    <option value="Duelo de Escuadras (DE)" data-i18n="optDe">Duelo de Escuadras (DE)</option>
+                    <option value="Lobo Solitario" data-i18n="optLobo">Lobo Solitario</option>
+                </select>
+            </div>
+
+            <div class="field">
+                <label for="useDpi" data-i18n="useDpi">DPI Pantalla</label>
+                <select id="useDpi">
+                    <option value="Con DPI (Máximo 593)" data-i18n="optDpiCon">Con DPI (Máx 593)</option>
+                    <option value="Sin DPI (Stock)" data-i18n="optDpiSin">Sin DPI (Stock)</option>
+                </select>
+            </div>
+
+            <div class="field">
+                <label for="useBtn" data-i18n="useBtn">Botón de Disparo</label>
+                <select id="useBtn">
+                    <option value="Pequeño" data-i18n="optBtnP">Pequeño</option>
+                    <option value="Medio" data-i18n="optBtnM" selected>Medio</option>
+                    <option value="Grande" data-i18n="optBtnG">Grande</option>
+                    <option value="Omitir Botón" data-i18n="optBtnO">Omitir Botón</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="mode-hint-box" id="modeHintBox"></div>
+
+        <div class="btn-group">
+            <button class="btn btn-std" id="btnGenLocal" onclick="ejecutarBotonGenerar()" data-i18n="btnGenLocal">Generar</button>
+        </div>
+
+        <div class="custom-note-box" id="customNoteBox" data-i18n="customNote">
+            🎯 <strong>Calibración Pro:</strong> Sensibilidad calculada con algoritmos de precisión táctil para mira directa a la cabeza.
+        </div>
+
+        <div class="error-box" id="errorBox">
+            <div id="errorMsg"></div>
+        </div>
+
+        <div class="results">
+            <div class="res-item">
+                <span class="res-label" data-i18n="resGen">General:</span><span class="res-val" id="r_gen">--</span>
+            </div>
+            <div class="res-item">
+                <span class="res-label" data-i18n="resRed">Mira Roja:</span><span class="res-val" id="r_red">--</span>
+            </div>
+            <div class="res-item">
+                <span class="res-label" data-i18n="res2x">Mira 2x:</span><span class="res-val" id="r_2x">--</span>
+            </div>
+            <div class="res-item">
+                <span class="res-label" data-i18n="res4x">Mira 4x:</span><span class="res-val" id="r_4x">--</span>
+            </div>
+            <div class="res-item">
+                <span class="res-label" data-i18n="resAwm">AWM (Franco):</span><span class="res-val" id="r_awm">--</span>
+            </div>
+            <div class="res-item">
+                <span class="res-label" data-i18n="resCam">Cámara 360:</span><span class="res-val" id="r_cam">--</span>
+            </div>
+            <div class="res-item">
+                <span class="res-label" data-i18n="resDpi">DPI Rec.:</span><span class="res-val" id="r_dpi">--</span>
+            </div>
+            <div class="res-item">
+                <span class="res-label" data-i18n="resBtn">Botón Disparo:</span><span class="res-val" id="r_btn">--</span>
+            </div>
+        </div>
+
+        <div class="footer-credits">
+            <div>
+                <span class="creator-label" data-i18n="creatorLabel">Creador:</span>
+                <span class="creator-name">SENSI VIP SYSTEM</span>
+            </div>
+            <div>
+                <span>TikTok:</span>
+                <a href="https://www.tiktok.com/@sensivipsystem" target="_blank" rel="noopener noreferrer" class="tiktok-link">@sensivipsystem</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL CONFIGURACIÓN DE SISTEMA -->
+    <div class="modal" id="aiModal">
+        <div class="modal-box">
+            <div class="modal-title" data-i18n="modalTitle">
+                Configuración del Sistema
+            </div>
+
+            <div class="lang-modal-wrapper">
+                <label for="langSelect" data-i18n="language" style="color:#00ff66; font-size:0.8rem; font-weight:900;">🌐 Idioma del Sistema</label>
+                <select id="langSelect" class="lang-select-styled" onchange="cambiarIdiomaConAnimacion(this.value)">
+                    <option value="es" selected>Español</option>
+                    <option value="en">English</option>
+                    <option value="pt">Português</option>
+                    <option value="id">Bahasa Indonesia</option>
+                    <option value="vi">Tiếng Việt</option>
+                    <option value="th">ไทย (Thai)</option>
+                    <option value="hi">हिन्दी (Hindi)</option>
+                    <option value="ar">العربية (Arabic)</option>
+                    <option value="ru">Русский (Russian)</option>
+                    <option value="tr">Türkçe (Turkish)</option>
+                    <option value="zh-TW">繁體中文 (Traditional Chinese)</option>
+                    <option value="fr">Français (French)</option>
+                    <option value="de">Deutsch (German)</option>
+                </select>
+            </div>
+
+            <hr style="border: 0.5px solid #222; margin: 2px 0;">
+            <label style="color:#ff0033; font-size:0.75rem;" data-i18n="perfOptions">Opciones de Rendimiento y Sistema:</label>
+
+            <div class="setting-toggle-row">
+                <span class="setting-toggle-label" data-i18n="gpuAccel">⚡ Aceleración por Hardware (GPU Render)</span>
+                <input type="checkbox" id="gpuAccelToggle" checked>
+            </div>
+
+            <div class="setting-toggle-row">
+                <span class="setting-toggle-label" data-i18n="vibration">Respuesta Háptica (Vibración)</span>
+                <input type="checkbox" id="vibrationToggle" checked>
+            </div>
+
+            <div class="setting-toggle-row">
+                <span class="setting-toggle-label" data-i18n="sound">Efectos de Sonido Táctiles</span>
+                <input type="checkbox" id="soundToggle" checked>
+            </div>
+
+            <div class="setting-toggle-row">
+                <span class="setting-toggle-label" data-i18n="batterySaver">Modo Ahorro Batería y CPU Extremo</span>
+                <input type="checkbox" id="batterySaverToggle" onchange="aplicarModoAhorro()">
+            </div>
+
+            <button class="btn btn-std" onclick="guardarConfiguracion()" data-i18n="btnSave" style="background:#ff0033; color:#000;">Guardar Ajustes</button>
+            <button class="btn btn-std" onclick="toggleModal(false)" data-i18n="btnCancel">Cancelar</button>
+        </div>
+    </div>
+
+    <!-- MODAL CARGA PORCENTAJE FUTURISTA HD -->
+    <div class="loader-modal" id="loaderModal">
+        <div class="loader-box">
+            <div class="loader-status" id="loaderStatusText">
+                ⚡ PROCESANDO...
+            </div>
+            <div class="loader-percent" id="loaderPercentText">
+                0%
+            </div>
+            <div class="progress-bar-bg">
+                <div class="progress-bar-fill" id="loaderProgressBarFill"></div>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
