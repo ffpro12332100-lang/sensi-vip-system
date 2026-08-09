@@ -33,7 +33,7 @@ function procesarLogin(e) {
     const keyInput = document.getElementById('loginKey').value.trim();
 
     // Solo valida la contraseña SENSI VIP SYSTEM (insensible a mayúsculas/minúsculas)
-    if (keyInput.toLowerCase() === "sensi vip system") {
+    if (keyInput.toLowerCase() === "sensi") {
         iniciarCarga(() => {
             document.getElementById('loginCard').style.display = 'none';
             document.getElementById('mainApp').style.display = 'block';
