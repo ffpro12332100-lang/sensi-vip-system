@@ -1,3 +1,3 @@
 0.1 (Releases)
-MAINTENANCE=false
-FORCE_UPDATE=false
+La página web a sido eliminada y la app no resivira más actualizaciones 
+Ojo esto es temporal y puede que en unas semanas vuelva para actualizar la app y la página web 
