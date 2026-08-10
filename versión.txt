@@ -1,24 +1,3 @@
 0.1 (Releases)
-https://github.com/ffpro12332100-lang/sensi-vip-system/tree/main
-SENSI VIP SYSTEM Versión: 1.2 (Beta)
-🔥 ¡NUEVA ACTUALIZACIÓN DISPONIBLE! 🔥
-
-🎨 NUEVA INTERFAZ Y DISEÑO
-• Diseño visual renovado con un elegante modo oscuro (Negro Puro).
-• Menú de ajustes y ventanas más claras, bonitas y fáciles de leer.
-• Botones e interacciones mejoradas para acceder rápido a TikTok y WhatsApp.
-
-🚀 NUEVAS FUNCIONES
-• MODO OFFLINE: Ahora puedes seguir usando la app incluso si te quedas sin conexión a internet.
-• Detección inteligente de red: La app se adapta automáticamente a tu Wi-Fi o datos móviles sin interrupciones.
-• Protección de contenido: Mayor seguridad al navegar dentro de la aplicación.
-
-🛠️ ERRORES Y PROBLEMAS RESUELTOS
-• Solucionados los cierres inesperados (crashes) al abrir la app sin internet.
-• Arreglado el problema donde los menús se veían cortados en pantallas pequeñas.
-• Corrección de errores generales para una experiencia mucho más estable.
-
-⚡ MÁXIMO RENDIMIENTO Y FLUIDEZ
-• Navegación mucho más rápida y sin trabas (lag).
-• Compatibilidad total con cualquier teléfono Android.
-• Optimización de batería y memoria RAM para que tu celular no se caliente.
+MAINTENANCE=true
+FORCE_UPDATE=false
