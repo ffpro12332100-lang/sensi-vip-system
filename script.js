@@ -22,12 +22,48 @@
     }, true);
 })();
 
-/* --- CONFIGURACIÓN DE CONTRASEÑA Y ESTADO DEL SERVIDOR --- */
-// ✏️ CAMBIA LA CONTRASEÑA AQUÍ FÁCILMENTE:
+/* ==========================================================================
+   🎯 SECCIÓN DE AJUSTE RÁPIDO Y FÁCIL DE VALORES (EDITA AQUÍ)
+   ========================================================================== */
+
+// ✏️ CONTRASEÑA DE ACCESO:
 const CLAVE_ACCESO_CORRECTA = "sensi";
 
 // ✏️ ESTADO DEL SERVIDOR: true = ACTIVO (Verde) | false = INACTIVO (Rojo)
 let SERVIDOR_ACTIVO = true;
+
+// 🎯 AJUSTA AQUÍ LOS RANGOS DE SENSIBILIDAD Y BOTÓN DE DISPARO FÁCILMENTE:
+const SENSI_VALORES = {
+    // SENSIBILIDAD BAJA
+    BAJA: {
+        baseMin: 130,
+        baseMax: 145,
+        awmMin: 50,
+        awmMax: 60
+    },
+    // SENSIBILIDAD MEDIA
+    MEDIA: {
+        baseMin: 165,
+        baseMax: 182,
+        awmMin: 126,
+        awmMax: 142
+    },
+    // SENSIBILIDAD ALTA
+    ALTA: {
+        baseMin: 188,
+        baseMax: 197,
+        awmMin: 130,
+        awmMax: 156
+    },
+    // TAMAÑOS DE BOTÓN DE DISPARO (%)
+    BOTON: {
+        PEQUENO: { min: 33, max: 39 },
+        MEDIO:   { min: 41, max: 48 },
+        GRANDE:  { min: 48, max: 58 }
+    }
+};
+
+/* ========================================================================== */
 
 /* --- CONTROL DE INTENTOS Y SEGURIDAD DE AUTENTICACIÓN --- */
 const MAX_INTENTOS = 6;
@@ -167,6 +203,7 @@ function procesarLogin(e) {
         iniciarCarga(() => {
             document.getElementById('loginCard').style.display = 'none';
             document.getElementById('mainApp').style.display = 'block';
+            aplicarModoUniversal(appConfig.universalSensi);
             evaluarSugerenciaEnTiempoReal();
         });
     } else {
@@ -227,6 +264,7 @@ window.configurarDesdeJava = function(cfg) {
     if (cfg.gameMode && DOM.gameMode) DOM.gameMode.value = cfg.gameMode;
     if (cfg.useDpi && DOM.useDpi) DOM.useDpi.value = cfg.useDpi;
     if (cfg.useBtn && DOM.useBtn) DOM.useBtn.value = cfg.useBtn;
+    if (cfg.universalSensi !== undefined) aplicarModoUniversal(!!cfg.universalSensi);
     evaluarSugerenciaEnTiempoReal();
 };
 
@@ -261,6 +299,8 @@ function initDOMCache() {
         'vibrationToggle',
         'soundToggle',
         'batterySaverToggle',
+        'universalSensiToggle',
+        'infoUniversalModal',
         'loaderModal',
         'loaderStatusText',
         'loaderPercentText',
@@ -276,8 +316,43 @@ const appConfig = {
     batterySaver: false,
     vibration: true,
     sound: true,
-    gpuAccel: true
+    gpuAccel: true,
+    universalSensi: false
 };
+
+/* --- FUNCIONES DE MODO SENSI UNIVERSAL --- */
+function aplicarModoUniversal(activo) {
+    appConfig.universalSensi = activo !== undefined ? activo : (DOM.universalSensiToggle ? DOM.universalSensiToggle.checked : false);
+    
+    if (DOM.universalSensiToggle) DOM.universalSensiToggle.checked = appConfig.universalSensi;
+
+    if (DOM.phoneBrand && DOM.phoneModel) {
+        if (appConfig.universalSensi) {
+            DOM.phoneBrand.disabled = true;
+            DOM.phoneModel.disabled = true;
+            DOM.phoneModel.placeholder = "Modo Sensi Universal Activo";
+            DOM.phoneModel.value = "";
+        } else {
+            DOM.phoneBrand.disabled = false;
+            DOM.phoneModel.disabled = false;
+            DOM.phoneModel.placeholder = "Ej: Poco X3, S23...";
+        }
+    }
+    evaluarSugerenciaEnTiempoReal();
+}
+
+function mostrarInfoSensiUniversal(e) {
+    if (e) e.stopPropagation();
+    ejecutarVibracion();
+    ejecutarSonidoUI('select');
+    if (DOM.infoUniversalModal) DOM.infoUniversalModal.style.display = 'flex';
+}
+
+function cerrarInfoSensiUniversal() {
+    ejecutarVibracion();
+    ejecutarSonidoUI('select');
+    if (DOM.infoUniversalModal) DOM.infoUniversalModal.style.display = 'none';
+}
 
 /* --- MOTOR DE AUDIO Y VIBRACIÓN --- */
 let audioCtxInstance = null;
@@ -427,27 +502,31 @@ function evaluarSugerenciaEnTiempoReal() {
     if (!DOM.gameMode || !DOM.phoneBrand || !DOM.modeHintBox) return;
 
     const mode = DOM.gameMode.value;
-    const brandOption = DOM.phoneBrand.options[DOM.phoneBrand.selectedIndex];
-    const brandText = brandOption ? brandOption.text: DOM.phoneBrand.value;
+    let brandText = "Universal / Multi-Dispositivo";
 
-    let nivelRecomendado = "Alta (188-197)";
+    if (!appConfig.universalSensi) {
+        const brandOption = DOM.phoneBrand.options[DOM.phoneBrand.selectedIndex];
+        brandText = brandOption ? brandOption.text : DOM.phoneBrand.value;
+    }
+
+    let nivelRecomendado = `Alta (${SENSI_VALORES.ALTA.baseMin}-${SENSI_VALORES.ALTA.baseMax})`;
     let alzamientoMira = "Levantamiento seco de un solo toque sin pasar la cabeza.";
 
     if (mode.includes('Lobo')) {
-        nivelRecomendado = "Alta (188-197)";
+        nivelRecomendado = `Alta (${SENSI_VALORES.ALTA.baseMin}-${SENSI_VALORES.ALTA.baseMax})`;
         alzamientoMira = "Arrastre rápido en forma de 'J' para distancias cortas.";
     } else if (mode.includes('PVP') || mode.includes('Rojo')) {
-        nivelRecomendado = "Alta (188-197)";
+        nivelRecomendado = `Alta (${SENSI_VALORES.ALTA.baseMin}-${SENSI_VALORES.ALTA.baseMax})`;
         alzamientoMira = "Levantamiento seco de un solo toque sin pasar la cabeza.";
     } else if (mode.includes('Duelo') || mode.includes('Escuadras')) {
-        nivelRecomendado = "Media (165-180)";
+        nivelRecomendado = `Media (${SENSI_VALORES.MEDIA.baseMin}-${SENSI_VALORES.MEDIA.baseMax})`;
         alzamientoMira = "Alzamiento progresivo según la distancia del objetivo.";
     } else if (mode.includes('Battle') || mode.includes('BR')) {
-        nivelRecomendado = "Baja (130-145)";
+        nivelRecomendado = `Baja (${SENSI_VALORES.BAJA.baseMin}-${SENSI_VALORES.BAJA.baseMax})`;
         alzamientoMira = "Levantamiento suave y constante a larga distancia.";
     }
 
-    const titleHeader = "⚡ RECOMENDACIÓN PRO";
+    const titleHeader = appConfig.universalSensi ? "⚡ RECOMENDACIÓN UNIVERSAL" : "⚡ RECOMENDACIÓN PRO";
     const levelLabel = "Nivel:";
     const techLabel = "Técnica:";
 
@@ -463,7 +542,8 @@ function evaluarSugerenciaEnTiempoReal() {
         brand: brandText,
         mode: mode,
         nivel: nivelRecomendado,
-        tecnica: alzamientoMira
+        tecnica: alzamientoMira,
+        universal: appConfig.universalSensi
     });
 }
 
@@ -485,13 +565,16 @@ window.addEventListener('DOMContentLoaded', () => {
             appConfig.vibration = parsed.vibration !== undefined ? !!parsed.vibration: true;
             appConfig.sound = parsed.sound !== undefined ? !!parsed.sound: true;
             appConfig.gpuAccel = parsed.gpuAccel !== undefined ? !!parsed.gpuAccel: true;
+            appConfig.universalSensi = !!parsed.universalSensi;
 
             if (DOM.batterySaverToggle) DOM.batterySaverToggle.checked = appConfig.batterySaver;
             if (DOM.vibrationToggle) DOM.vibrationToggle.checked = appConfig.vibration;
             if (DOM.soundToggle) DOM.soundToggle.checked = appConfig.sound;
             if (DOM.gpuAccelToggle) DOM.gpuAccelToggle.checked = appConfig.gpuAccel;
+            if (DOM.universalSensiToggle) DOM.universalSensiToggle.checked = appConfig.universalSensi;
 
             aplicarModoAhorro();
+            aplicarModoUniversal(appConfig.universalSensi);
         } catch(e) {}
     }
 
@@ -511,6 +594,9 @@ function guardarConfiguracion() {
     if (DOM.vibrationToggle) appConfig.vibration = DOM.vibrationToggle.checked;
     if (DOM.soundToggle) appConfig.sound = DOM.soundToggle.checked;
     if (DOM.gpuAccelToggle) appConfig.gpuAccel = DOM.gpuAccelToggle.checked;
+    if (DOM.universalSensiToggle) appConfig.universalSensi = DOM.universalSensiToggle.checked;
+
+    aplicarModoUniversal(appConfig.universalSensi);
 
     if (DOM.mainApp) DOM.mainApp.style.transform = appConfig.gpuAccel ? 'translateZ(0)': 'none';
 
@@ -518,7 +604,8 @@ function guardarConfiguracion() {
         batterySaver: appConfig.batterySaver,
         vibration: appConfig.vibration,
         sound: appConfig.sound,
-        gpuAccel: appConfig.gpuAccel
+        gpuAccel: appConfig.gpuAccel,
+        universalSensi: appConfig.universalSensi
     };
 
     const payload = JSON.stringify(payloadData);
@@ -566,8 +653,8 @@ function ejecutarBotonGenerar() {
 async function generar() {
     if (DOM.errorBox) DOM.errorBox.style.display = 'none';
 
-    const brand = sanitizeInput(DOM.phoneBrand ? DOM.phoneBrand.value: '');
-    const model = sanitizeInput(DOM.phoneModel ? DOM.phoneModel.value: '');
+    const brand = appConfig.universalSensi ? "Universal" : sanitizeInput(DOM.phoneBrand ? DOM.phoneBrand.value: '');
+    const model = appConfig.universalSensi ? "Universal" : sanitizeInput(DOM.phoneModel ? DOM.phoneModel.value: '');
     const type = sanitizeInput(DOM.sensiType ? DOM.sensiType.value: '');
     const mode = sanitizeInput(DOM.gameMode ? DOM.gameMode.value: '');
     const dpi = sanitizeInput(DOM.useDpi ? DOM.useDpi.value: '');
@@ -579,7 +666,8 @@ async function generar() {
         sensiType: type,
         gameMode: mode,
         useDpi: dpi,
-        useBtn: btn
+        useBtn: btn,
+        universal: appConfig.universalSensi
     };
 
     JavaBridge.enviar('solicitudGeneracion', solicitudPayload);
@@ -595,21 +683,29 @@ function clamp(num, min, max) {
 }
 
 function generarLocalMatematico(brand, type, useDpi, useBtn) {
-    let baseMin = 165,
-    baseMax = 180,
-    awmMin = 100,
-    awmMax = 130;
+    let baseMin = SENSI_VALORES.MEDIA.baseMin,
+        baseMax = SENSI_VALORES.MEDIA.baseMax,
+        awmMin  = SENSI_VALORES.MEDIA.awmMin,
+        awmMax  = SENSI_VALORES.MEDIA.awmMax;
+
     if (type.includes('Baja')) {
-        baseMin = 130; baseMax = 145; awmMin = 50; awmMax = 60;
-    }
-    if (type.includes('Alta')) {
-        baseMin = 188; baseMax = 197; awmMin = 130; awmMax = 156;
+        baseMin = SENSI_VALORES.BAJA.baseMin;
+        baseMax = SENSI_VALORES.BAJA.baseMax;
+        awmMin  = SENSI_VALORES.BAJA.awmMin;
+        awmMax  = SENSI_VALORES.BAJA.awmMax;
+    } else if (type.includes('Alta')) {
+        baseMin = SENSI_VALORES.ALTA.baseMin;
+        baseMax = SENSI_VALORES.ALTA.baseMax;
+        awmMin  = SENSI_VALORES.ALTA.awmMin;
+        awmMax  = SENSI_VALORES.ALTA.awmMax;
     }
 
     let brandOffset = 0;
-    if (brand.includes('Xiaomi') || brand.includes('ZTE') || brand.includes('ASUS')) brandOffset = 2;
-    if (brand.includes('Apple')) brandOffset = -3;
-    if (brand.includes('Samsung')) brandOffset = 1;
+    if (!appConfig.universalSensi) {
+        if (brand.includes('Xiaomi') || brand.includes('ZTE') || brand.includes('ASUS')) brandOffset = 2;
+        if (brand.includes('Apple')) brandOffset = -3;
+        if (brand.includes('Samsung')) brandOffset = 1;
+    }
 
     const rand = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min;
 
@@ -622,17 +718,17 @@ function generarLocalMatematico(brand, type, useDpi, useBtn) {
 
     let dpiCalculado = "Stock";
     if (useDpi.includes('Con DPI')) {
-        const dpiBase = (baseMin >= 188) ? rand(520, 580): ((baseMin >= 165) ? rand(460, 520): rand(410, 460));
+        const dpiBase = (baseMin >= SENSI_VALORES.ALTA.baseMin) ? rand(520, 580): ((baseMin >= SENSI_VALORES.MEDIA.baseMin) ? rand(460, 520): rand(410, 460));
         dpiCalculado = Math.min(593, dpiBase);
     }
 
     let btnCalculado = "Omitido";
     if (useBtn.includes('Pequeño')) {
-        btnCalculado = rand(36, 40) + "%";
+        btnCalculado = rand(SENSI_VALORES.BOTON.PEQUENO.min, SENSI_VALORES.BOTON.PEQUENO.max) + "%";
     } else if (useBtn.includes('Medio')) {
-        btnCalculado = rand(41, 45) + "%";
+        btnCalculado = rand(SENSI_VALORES.BOTON.MEDIO.min, SENSI_VALORES.BOTON.MEDIO.max) + "%";
     } else if (useBtn.includes('Grande')) {
-        btnCalculado = rand(46, 50) + "%";
+        btnCalculado = rand(SENSI_VALORES.BOTON.GRANDE.min, SENSI_VALORES.BOTON.GRANDE.max) + "%";
     }
 
     return {
@@ -648,15 +744,21 @@ function generarLocalMatematico(brand, type, useDpi, useBtn) {
 }
 
 function actualizarUI(data, sensiType) {
-    let minS = 165,
-    maxS = 180,
-    awmMin = 100,
-    awmMax = 130;
+    let minS = SENSI_VALORES.MEDIA.baseMin,
+        maxS = SENSI_VALORES.MEDIA.baseMax,
+        awmMin = SENSI_VALORES.MEDIA.awmMin,
+        awmMax = SENSI_VALORES.MEDIA.awmMax;
+
     if (sensiType.includes('Baja')) {
-        minS = 130; maxS = 145; awmMin = 50; awmMax = 60;
-    }
-    if (sensiType.includes('Alta')) {
-        minS = 188; maxS = 197; awmMin = 130; awmMax = 156;
+        minS = SENSI_VALORES.BAJA.baseMin;
+        maxS = SENSI_VALORES.BAJA.baseMax;
+        awmMin = SENSI_VALORES.BAJA.awmMin;
+        awmMax = SENSI_VALORES.BAJA.awmMax;
+    } else if (sensiType.includes('Alta')) {
+        minS = SENSI_VALORES.ALTA.baseMin;
+        maxS = SENSI_VALORES.ALTA.baseMax;
+        awmMin = SENSI_VALORES.ALTA.awmMin;
+        awmMax = SENSI_VALORES.ALTA.awmMax;
     }
 
     const genVal = !isNaN(data.gen) ? clamp(data.gen, minS, maxS): data.gen;
