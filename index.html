@@ -8,42 +8,6 @@
     <meta name="referrer" content="no-referrer">
     <title>SENSI VIP SYSTEM</title>
     <link rel="stylesheet" href="styles.css">
-    <style>
-        .login-card { position: relative; }
-        .top-right-gear {
-            position: absolute;
-            top: 15px;
-            right: 15px;
-            background: transparent;
-            border: none;
-            cursor: pointer;
-            z-index: 10;
-            transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-        }
-        .top-right-gear:hover { transform: rotate(90deg) scale(1.1); }
-        .login-credits-info {
-            margin-top: 18px;
-            padding-top: 12px;
-            border-top: 1px solid rgba(255, 0, 51, 0.2);
-            font-size: 0.78rem;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        .login-credits-left { color: #ffffff; text-align: left; }
-        .login-credits-left span { color: #ffffff; }
-        .login-credits-right { text-align: right; }
-        .login-credits-right a {
-            color: #ff0033;
-            text-decoration: none;
-            font-weight: 700;
-            transition: color 0.2s ease, text-shadow 0.2s ease;
-        }
-        .login-credits-right a:hover {
-            text-decoration: underline;
-            text-shadow: 0 0 8px rgba(255, 0, 51, 0.6);
-        }
-    </style>
 </head>
 <body>
 
@@ -73,12 +37,10 @@
                 <div class="input-wrapper">
                     <input type="password" id="loginKey" placeholder="••••••••" required autocomplete="current-password">
                     <button type="button" class="toggle-password-btn" id="togglePasswordBtn" onclick="toggleVisibilidadPassword()" title="Mostrar/Ocultar Contraseña">
-                        <!-- Ojo Abierto -->
                         <svg id="eyeOpenIcon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#ff0033" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                             <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
                             <circle cx="12" cy="12" r="3"></circle>
                         </svg>
-                        <!-- Ojo Cerrado -->
                         <svg id="eyeClosedIcon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#ff0033" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display: none;">
                             <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path>
                             <line x1="1" y1="1" x2="23" y2="23"></line>
@@ -87,7 +49,6 @@
                 </div>
             </div>
 
-            <!-- Caja de Notificación de Alerta -->
             <div class="login-alert-box" id="loginAlertBox"></div>
 
             <button type="submit" class="btn btn-login" id="btnLoginBtn">
@@ -103,8 +64,7 @@
             <div class="login-credits-right"><a href="https://www.tiktok.com/@sensivipsystem" target="_blank" rel="noopener noreferrer">TikTok: @sensivipsystem</a></div>
         </div>
 
-        <!-- FOOTER LOGIN: SERVIDOR ACTIVO A LA IZQUIERDA Y SOPORTE A LA DERECHA -->
-        <div class="login-footer" style="margin-top: 15px;">
+        <div class="login-footer">
             <span class="status-indicator active" id="serverStatusContainer">
                 <span class="dot animate-dot-pulse" id="serverStatusDot"></span> 
                 <span id="serverStatusText">SERVIDOR ACTIVO</span>
@@ -129,17 +89,11 @@
             </div>
             <div class="header-actions">
                 <div class="perf-monitor" id="perfMonitorBox" title="Estado del sistema">
-                    <div class="perf-item">
-                        <span id="fpsValue">0</span>FPS
-                    </div>
+                    <div class="perf-item"><span id="fpsValue">0</span>FPS</div>
                     <div class="perf-divider">|</div>
-                    <div class="perf-item">
-                        C:<span id="cpuValue">0%</span>
-                    </div>
+                    <div class="perf-item">C:<span id="cpuValue">0%</span></div>
                     <div class="perf-divider">|</div>
-                    <div class="perf-item">
-                        G:<span id="gpuValue">0%</span>
-                    </div>
+                    <div class="perf-item">G:<span id="gpuValue">0%</span></div>
                 </div>
 
                 <button class="btn-icon" onclick="abrirConfiguracion()" title="Configuración del Sistema">
@@ -148,11 +102,26 @@
                         <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z" />
                     </svg>
                 </button>
+
+                <!-- BOTÓN DE CERRAR SESIÓN / SALIDA -->
+                <button class="btn-icon btn-logout" onclick="cerrarSesion()" title="Cerrar Sesión / Salir">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#ff0033" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+                        <polyline points="16 17 21 12 16 7"></polyline>
+                        <line x1="21" y1="12" x2="9" y2="12"></line>
+                    </svg>
+                </button>
             </div>
         </div>
 
+        <!-- BANNER DE BIENVENIDA Y TEMPORIZADOR DE TIEMPO VIP -->
+        <div class="user-status-banner" id="userStatusBanner">
+            <div class="status-welcome-text" id="statusWelcomeText">Cargando estado...</div>
+            <div class="status-timer-badge" id="statusTimerBadge">00h 00m 00s</div>
+        </div>
+
         <div class="grid">
-            <div class="field">
+            <div class="field" id="fieldPhoneBrand">
                 <label for="phoneBrand">Marca Teléfono</label>
                 <select id="phoneBrand" onchange="evaluarSugerenciaEnTiempoReal()">
                     <option value="Samsung" selected>Samsung</option>
@@ -175,7 +144,7 @@
                 </select>
             </div>
 
-            <div class="field">
+            <div class="field" id="fieldPhoneModel">
                 <label for="phoneModel">Modelo Exacto</label>
                 <input type="text" id="phoneModel" placeholder="Ej: Poco X3, S23..." maxlength="30">
             </div>
@@ -233,30 +202,14 @@
         </div>
 
         <div class="results">
-            <div class="res-item">
-                <span class="res-label">General:</span><span class="res-val" id="r_gen">--</span>
-            </div>
-            <div class="res-item">
-                <span class="res-label">Mira Roja:</span><span class="res-val" id="r_red">--</span>
-            </div>
-            <div class="res-item">
-                <span class="res-label">Mira 2x:</span><span class="res-val" id="r_2x">--</span>
-            </div>
-            <div class="res-item">
-                <span class="res-label">Mira 4x:</span><span class="res-val" id="r_4x">--</span>
-            </div>
-            <div class="res-item">
-                <span class="res-label">AWM (Franco):</span><span class="res-val" id="r_awm">--</span>
-            </div>
-            <div class="res-item">
-                <span class="res-label">Cámara 360:</span><span class="res-val" id="r_cam">--</span>
-            </div>
-            <div class="res-item">
-                <span class="res-label">DPI Rec.:</span><span class="res-val" id="r_dpi">--</span>
-            </div>
-            <div class="res-item">
-                <span class="res-label">Botón Disparo:</span><span class="res-val" id="r_btn">--</span>
-            </div>
+            <div class="res-item"><span class="res-label">General:</span><span class="res-val" id="r_gen">--</span></div>
+            <div class="res-item"><span class="res-label">Mira Roja:</span><span class="res-val" id="r_red">--</span></div>
+            <div class="res-item"><span class="res-label">Mira 2x:</span><span class="res-val" id="r_2x">--</span></div>
+            <div class="res-item"><span class="res-label">Mira 4x:</span><span class="res-val" id="r_4x">--</span></div>
+            <div class="res-item"><span class="res-label">AWM (Franco):</span><span class="res-val" id="r_awm">--</span></div>
+            <div class="res-item"><span class="res-label">Cámara 360:</span><span class="res-val" id="r_cam">--</span></div>
+            <div class="res-item"><span class="res-label">DPI Rec.:</span><span class="res-val" id="r_dpi">--</span></div>
+            <div class="res-item"><span class="res-label">Botón Disparo:</span><span class="res-val" id="r_btn">--</span></div>
         </div>
 
         <div class="footer-credits">
@@ -271,12 +224,10 @@
         </div>
     </div>
 
-    <!-- MODAL DE SOPORTE TÉCNICO DIRECTO A WHATSAPP -->
+    <!-- MODALES -->
     <div class="modal" id="soporteModal">
         <div class="modal-box hd-modal" style="max-width: 420px; text-align: center;">
-            <div class="modal-title" style="justify-content: center; color: #ff0033;">
-                🛠️ SOPORTE TÉCNICO VIP
-            </div>
+            <div class="modal-title" style="justify-content: center; color: #ff0033;">🛠️ SOPORTE TÉCNICO VIP</div>
             <div class="support-modal-body">
                 <p class="support-modal-text">
                     Ante cualquier error, bug o problema, comunícate directamente con el creador a través de WhatsApp:
@@ -306,13 +257,9 @@
         </div>
     </div>
 
-    <!-- MODAL CONFIGURACIÓN DE SISTEMA -->
     <div class="modal" id="aiModal">
         <div class="modal-box hd-modal">
-            <div class="modal-title">
-                Configuración del Sistema
-            </div>
-
+            <div class="modal-title">Configuración del Sistema</div>
             <label style="color:#ff0033; font-size:0.75rem;">Opciones de Rendimiento y Sistema:</label>
 
             <div class="setting-toggle-row">
@@ -348,33 +295,21 @@
         </div>
     </div>
 
-    <!-- MODAL INFORMATIVO SENSI UNIVERSAL -->
     <div class="modal" id="infoUniversalModal">
         <div class="modal-box hd-modal" style="max-width: 420px; text-align: center;">
-            <div class="modal-title" style="justify-content: center; color: #ff0033;">
-                🌐 SENSI UNIVERSAL
-            </div>
+            <div class="modal-title" style="justify-content: center; color: #ff0033;">🌐 SENSI UNIVERSAL</div>
             <div style="font-size: 0.85rem; color: #e0e0e0; line-height: 1.5; text-align: left; background: #0a0a0a; padding: 12px; border-radius: 8px; border: 1px solid rgba(255, 0, 51, 0.3);">
-                <p style="margin-bottom: 10px;">
-                    Esta función quita la marca y el modelo exacto para generar una <strong>Sensibilidad Universal (Multi-Dispositivo)</strong>.
-                </p>
-                <p>
-                    🎯 <strong>¿Para qué sirve?</strong> Es ideal para compartir tus configuraciones con amigos, seguidores en TikTok o la comunidad de Free Fire, asegurando que la SENSI sea compatible y funcione perfectamente en la mayoría de dispositivos posibles.
-                </p>
+                <p style="margin-bottom: 10px;">Esta función quita la marca y el modelo exacto para generar una <strong>Sensibilidad Universal (Multi-Dispositivo)</strong>.</p>
+                <p>🎯 <strong>¿Para qué sirve?</strong> Es ideal para compartir tus configuraciones con amigos, seguidores en TikTok o la comunidad de Free Fire.</p>
             </div>
             <button class="btn btn-std" onclick="cerrarInfoSensiUniversal()" style="background:#ff0033; color:#000; margin-top: 5px;">ENTENDIDO</button>
         </div>
     </div>
 
-    <!-- MODAL CARGA PORCENTAJE FUTURISTA HD+ -->
     <div class="loader-modal" id="loaderModal">
         <div class="loader-box">
-            <div class="loader-status" id="loaderStatusText">
-                ⚡ PROCESANDO...
-            </div>
-            <div class="loader-percent" id="loaderPercentText">
-                0%
-            </div>
+            <div class="loader-status" id="loaderStatusText">⚡ PROCESANDO...</div>
+            <div class="loader-percent" id="loaderPercentText">0%</div>
             <div class="progress-bar-bg">
                 <div class="progress-bar-fill" id="loaderProgressBarFill"></div>
             </div>
@@ -383,12 +318,10 @@
 
     <script src="script.js"></script>
     <script>
-        // Funciones dedicadas para la ventana de soporte
         function abrirModalSoporte() {
             const modal = document.getElementById('soporteModal');
             if (modal) modal.style.display = 'flex';
         }
-
         function cerrarModalSoporte() {
             const modal = document.getElementById('soporteModal');
             if (modal) modal.style.display = 'none';

@@ -7,7 +7,6 @@ html, body, *, *::before, *::after {
     -webkit-touch-callout: none !important;
 }
 
-/* --- RENDERIZADO VISUAL FULL HD+ Y ACELERACIÓN DE HARDWARE --- */
 html {
     -webkit-text-size-adjust: 100%;
     -webkit-font-smoothing: antialiased;
@@ -37,27 +36,14 @@ body {
     overflow-x: hidden;
 }
 
-/* --- ANIMACIONES HD+ --- */
 @keyframes cardEntrance {
-    0% {
-        opacity: 0;
-        transform: translateY(18px) scale(0.97);
-    }
-    100% {
-        opacity: 1;
-        transform: translateY(0) scale(1);
-    }
+    0% { opacity: 0; transform: translateY(18px) scale(0.97); }
+    100% { opacity: 1; transform: translateY(0) scale(1); }
 }
 
 @keyframes pulseGlow {
-    0%, 100% {
-        box-shadow: 0 0 20px rgba(255, 0, 51, 0.35);
-        border-color: rgba(255, 0, 51, 0.6);
-    }
-    50% {
-        box-shadow: 0 0 35px rgba(255, 0, 51, 0.75);
-        border-color: rgba(255, 0, 51, 1);
-    }
+    0%, 100% { box-shadow: 0 0 20px rgba(255, 0, 51, 0.35); border-color: rgba(255, 0, 51, 0.6); }
+    50% { box-shadow: 0 0 35px rgba(255, 0, 51, 0.75); border-color: rgba(255, 0, 51, 1); }
 }
 
 @keyframes dotPulse {
@@ -76,19 +62,11 @@ body {
     will-change: transform, opacity;
 }
 
-.animate-pulse-glow {
-    animation: pulseGlow 3s infinite ease-in-out;
-}
+.animate-pulse-glow { animation: pulseGlow 3s infinite ease-in-out; }
+.animate-dot-pulse { animation: dotPulse 1.8s infinite ease-in-out; }
+.shake-effect { animation: shakeError 0.4s ease-in-out; }
 
-.animate-dot-pulse {
-    animation: dotPulse 1.8s infinite ease-in-out;
-}
-
-.shake-effect {
-    animation: shakeError 0.4s ease-in-out;
-}
-
-/* --- ESTILOS DEL LOGIN FUTURISTA HD+ --- */
+/* ESTILOS DEL LOGIN FUTURISTA HD+ */
 .login-card {
     background: #050505;
     border: 1.8px solid #ff0033;
@@ -112,6 +90,19 @@ body {
     height: 2px;
     background: linear-gradient(90deg, transparent, #ff0033, #00ff66, transparent);
 }
+
+.top-right-gear {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    z-index: 10;
+    transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.top-right-gear:hover { transform: rotate(90deg) scale(1.1); }
 
 .login-header {
     text-align: center;
@@ -187,7 +178,6 @@ body {
     outline: none;
 }
 
-/* BOTÓN MOSTRAR / OCULTAR CONTRASEÑA */
 .toggle-password-btn {
     position: absolute;
     right: 10px;
@@ -205,7 +195,6 @@ body {
 .toggle-password-btn:hover { transform: scale(1.12); }
 .toggle-password-btn:active { transform: scale(0.92); }
 
-/* CAJA DE ALERTAS */
 .login-alert-box {
     display: none;
     background: rgba(255, 0, 51, 0.12);
@@ -249,15 +238,39 @@ body {
     filter: brightness(0.9);
 }
 
+.login-credits-info {
+    margin-top: 18px;
+    padding-top: 12px;
+    border-top: 1px solid rgba(255, 0, 51, 0.2);
+    font-size: 0.78rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.login-credits-left { color: #ffffff; text-align: left; }
+.login-credits-left span { color: #ffffff; }
+.login-credits-right { text-align: right; }
+.login-credits-right a {
+    color: #ff0033;
+    text-decoration: none;
+    font-weight: 700;
+    transition: color 0.2s ease, text-shadow 0.2s ease;
+}
+.login-credits-right a:hover {
+    text-decoration: underline;
+    text-shadow: 0 0 8px rgba(255, 0, 51, 0.6);
+}
+
 .login-footer {
     display: flex;
     justify-content: space-between;
     align-items: center;
     padding-top: 10px;
+    margin-top: 15px;
     border-top: 1px solid rgba(255, 255, 255, 0.08);
 }
 
-/* INDICADOR DE SERVIDOR */
 .status-indicator {
     font-size: 0.7rem;
     font-weight: 800;
@@ -278,7 +291,6 @@ body {
 .status-indicator.inactive { color: #ff0033; }
 .status-indicator.inactive .dot { background-color: #ff0033; box-shadow: 0 0 8px #ff0033; }
 
-/* BOTÓN DE SOPORTE EN FOOTER */
 .login-support-btn {
     background: rgba(255, 0, 51, 0.12);
     border: 1px solid #ff0033;
@@ -303,14 +315,9 @@ body {
     transform: translateY(-1px);
 }
 
-.login-support-btn:active {
-    transform: scale(0.95);
-}
+.login-support-btn:active { transform: scale(0.95); }
 
-/* ESTILOS DE LA VENTANA MODAL DE SOPORTE & WHATSAPP */
-.support-modal-body {
-    padding: 10px 0;
-}
+.support-modal-body { padding: 10px 0; }
 
 .support-modal-text {
     font-size: 0.82rem;
@@ -371,7 +378,7 @@ body {
     opacity: 0.9;
 }
 
-/* --- ESTILOS PRINCIPALES DE LA APLICACIÓN --- */
+/* ESTILOS PRINCIPALES DE LA APLICACIÓN */
 .app-card {
     background: #050505;
     border: 1.8px solid #ff0033;
@@ -408,6 +415,47 @@ body {
     display: flex;
     align-items: center;
     gap: 8px;
+}
+
+/* BANNER DE BIENVENIDA Y TEMPORIZADOR VIP */
+.user-status-banner {
+    background: rgba(255, 0, 51, 0.08);
+    border: 1.2px solid #ff0033;
+    border-radius: 8px;
+    padding: 10px 14px;
+    margin-bottom: 12px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+    box-shadow: 0 0 15px rgba(255, 0, 51, 0.2);
+}
+
+.status-welcome-text {
+    font-size: 0.82rem;
+    font-weight: 800;
+    color: #ffffff;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.status-welcome-text span {
+    color: #00ff66;
+}
+
+.status-timer-badge {
+    background: #000000;
+    border: 1px solid #00ff66;
+    color: #00ff66;
+    padding: 4px 10px;
+    border-radius: 6px;
+    font-size: 0.8rem;
+    font-weight: 900;
+    font-family: monospace;
+    letter-spacing: 0.5px;
+    box-shadow: 0 0 8px rgba(0, 255, 102, 0.25);
+    white-space: nowrap;
 }
 
 .perf-monitor {
@@ -487,7 +535,6 @@ input[type="checkbox"] {
     cursor: pointer;
 }
 
-/* CAJA DE SUGERENCIAS Y RECOMENDACIÓN */
 .mode-hint-box {
     background: rgba(10, 10, 10, 0.95);
     border: 1.2px solid #ff0033;
@@ -507,22 +554,10 @@ input[type="checkbox"] {
     font-size: 0.85rem;
 }
 
-.hint-list {
-    list-style: none;
-    padding-left: 0;
-    margin: 0;
-}
+.hint-list { list-style: none; padding-left: 0; margin: 0; }
+.hint-list li { margin-bottom: 3px; }
+.hint-highlight { color: #00ff66; font-weight: 700; }
 
-.hint-list li {
-    margin-bottom: 3px;
-}
-
-.hint-highlight {
-    color: #00ff66;
-    font-weight: 700;
-}
-
-/* NOTA PERSONALIZADA Y NOTIFICACIONES */
 .custom-note-box {
     background: rgba(255, 0, 51, 0.08);
     border: 1px solid rgba(255, 0, 51, 0.3);
@@ -547,7 +582,6 @@ input[type="checkbox"] {
     text-align: center;
 }
 
-/* BOTONES */
 .btn-group { display: grid; grid-template-columns: 1fr; gap: 8px; margin-bottom: 10px; }
 
 .btn {
@@ -575,9 +609,7 @@ input[type="checkbox"] {
     box-shadow: 0 0 15px rgba(255, 0, 51, 0.4);
 }
 
-.btn-glow-effect:hover {
-    box-shadow: 0 0 22px rgba(255, 0, 51, 0.7);
-}
+.btn-glow-effect:hover { box-shadow: 0 0 22px rgba(255, 0, 51, 0.7); }
 
 .results {
     background: #000000;
@@ -618,7 +650,6 @@ input[type="checkbox"] {
 .footer-credits .creator-name { color: #ffffff; font-weight: 900; }
 .footer-credits .tiktok-link { color: #ff3b30; font-weight: 600; text-decoration: none; border-bottom: 1.5px solid #ff3b30; }
 
-/* MODAL GLOBAL & AJUSTES */
 .modal {
     position: fixed;
     inset: 0;
@@ -675,7 +706,6 @@ input[type="checkbox"] {
     justify-content: center;
 }
 
-/* LOADER MODAL */
 .loader-modal {
     position: fixed;
     inset: 0;

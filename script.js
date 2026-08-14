@@ -7,78 +7,121 @@
     }, true);
 
     document.addEventListener('keydown', function(e) {
-        if (e.keyCode === 123 || e.keyCode === 122) { // F12, F11
+        const code = e.keyCode || e.which;
+        const key = (e.key || '').toLowerCase();
+
+        if (code === 123 || code === 122 || key === 'f12' || key === 'f11') {
             e.preventDefault();
             return false;
         }
-        if ((e.ctrlKey || e.metaKey) && e.shiftKey && (e.keyCode === 73 || e.keyCode === 74 || e.keyCode === 67)) {
+        if ((e.ctrlKey || e.metaKey) && e.shiftKey && (code === 73 || code === 74 || code === 67 || key === 'i' || key === 'j' || key === 'c')) {
             e.preventDefault();
             return false;
         }
-        if ((e.ctrlKey || e.metaKey) && (e.keyCode === 85 || e.keyCode === 117)) { // Ctrl+U
+        if ((e.ctrlKey || e.metaKey) && (code === 85 || code === 117 || key === 'u')) {
             e.preventDefault();
             return false;
         }
     }, true);
 })();
 
+/* --- ALMACENAMIENTO SEGURO COMPATIBLE CON CUALQUIER NAVEGADOR Y ANDROID WEBVIEW --- */
+const SafeStorage = {
+    getItem: function(key) {
+        try {
+            return localStorage.getItem(key);
+        } catch (e) {
+            try {
+                return sessionStorage.getItem(key);
+            } catch (err) {
+                return null;
+            }
+        }
+    },
+    setItem: function(key, val) {
+        try {
+            localStorage.setItem(key, val);
+        } catch (e) {
+            try {
+                sessionStorage.setItem(key, val);
+            } catch (err) {}
+        }
+    },
+    removeItem: function(key) {
+        try {
+            localStorage.removeItem(key);
+        } catch (e) {
+            try {
+                sessionStorage.removeItem(key);
+            } catch (err) {}
+        }
+    }
+};
+
 /* ==========================================================================
-   🎯 SECCIÓN DE AJUSTE RÁPIDO Y FÁCIL DE VALORES (EDITA AQUÍ)
+   🔑 SECCIÓN DE CONTRASEÑAS Y TIEMPOS PROGRAMADOS
    ========================================================================== */
 
-// ✏️ CONTRASEÑA DE ACCESO:
-const CLAVE_ACCESO_CORRECTA = "sensi";
+const SISTEMA_CLAVES = {
+    ADMIN: ["admin", "adminvip"],
+    PERMANENTE: ["jhonatan", "jhonatanvip"],
+
+    // 🕒 CONTRASEÑAS TEMPORALES PROGRAMADAS CON DURACIÓN REAL EN MS:
+    TEMPORALES: [
+        // --- PASES DE 3 DÍAS ---
+        { clave: "x9#K2$mP7!vQ", tipo: "3 Días", mensaje: "Pase Temporal de 3 Días Activo", duracionMs: 3 * 24 * 60 * 60 * 1000 },
+        { clave: "w3@L8*nR1#zT", tipo: "3 Días", mensaje: "Pase Temporal de 3 Días Activo", duracionMs: 3 * 24 * 60 * 60 * 1000 },
+        { clave: "b5!F9$yK4%pM", tipo: "3 Días", mensaje: "Pase Temporal de 3 Días Activo", duracionMs: 3 * 24 * 60 * 60 * 1000 },
+
+        // --- PASES DE 7 DÍAS ---
+        { clave: "k7#H2!vN9$xR", tipo: "7 Días", mensaje: "Pase Temporal de 7 Días Activo", duracionMs: 7 * 24 * 60 * 60 * 1000 },
+        { clave: "p4@M8*qT1&zW", tipo: "7 Días", mensaje: "Pase Temporal de 7 Días Activo", duracionMs: 7 * 24 * 60 * 60 * 1000 },
+        { clave: "g9!J3$yL5#sD", tipo: "7 Días", mensaje: "Pase Temporal de 7 Días Activo", duracionMs: 7 * 24 * 60 * 60 * 1000 },
+
+        // --- PASES DE 15 DÍAS ---
+        { clave: "m2#B7!xK9$vP", tipo: "15 Días", mensaje: "Pase Temporal de 15 Días Activo", duracionMs: 15 * 24 * 60 * 60 * 1000 },
+        { clave: "r8@Q3*nT1&yZ", tipo: "15 Días", mensaje: "Pase Temporal de 15 Días Activo", duracionMs: 15 * 24 * 60 * 60 * 1000 },
+        { clave: "d4!W9$pL6#kF", tipo: "15 Días", mensaje: "Pase Temporal de 15 Días Activo", duracionMs: 15 * 24 * 60 * 60 * 1000 },
+
+        // --- PASES DE 30 DÍAS (1 MES) ---
+        { clave: "z9#R2!mK7$vT", tipo: "30 Días", mensaje: "Pase Temporal de 30 Días (1 Mes) Activo", duracionMs: 30 * 24 * 60 * 60 * 1000 },
+        { clave: "h5@P8*qW1&xB", tipo: "30 Días", mensaje: "Pase Temporal de 30 Días (1 Mes) Activo", duracionMs: 30 * 24 * 60 * 60 * 1000 },
+        { clave: "c3!N9$yJ4#sM", tipo: "30 Días", mensaje: "Pase Temporal de 30 Días (1 Mes) Activo", duracionMs: 30 * 24 * 60 * 60 * 1000 }
+    ]
+};
 
 // ✏️ ESTADO DEL SERVIDOR: true = ACTIVO (Verde) | false = INACTIVO (Rojo)
 let SERVIDOR_ACTIVO = true;
 
-// 🎯 AJUSTA AQUÍ LOS RANGOS DE SENSIBILIDAD Y BOTÓN DE DISPARO FÁCILMENTE:
+// 🎯 CONFIGURACIÓN DE SENSIBILIDAD Y BOTÓN DE DISPARO:
 const SENSI_VALORES = {
-    // SENSIBILIDAD BAJA
-    BAJA: {
-        baseMin: 130,
-        baseMax: 145,
-        awmMin: 50,
-        awmMax: 60
-    },
-    // SENSIBILIDAD MEDIA
-    MEDIA: {
-        baseMin: 165,
-        baseMax: 182,
-        awmMin: 126,
-        awmMax: 142
-    },
-    // SENSIBILIDAD ALTA
-    ALTA: {
-        baseMin: 188,
-        baseMax: 197,
-        awmMin: 130,
-        awmMax: 156
-    },
-    // TAMAÑOS DE BOTÓN DE DISPARO (%)
+    BAJA: { baseMin: 130, baseMax: 145, awmMin: 50, awmMax: 60 },
+    MEDIA: { baseMin: 165, baseMax: 182, awmMin: 126, awmMax: 142 },
+    ALTA: { baseMin: 188, baseMax: 197, awmMin: 130, awmMax: 156 },
     BOTON: {
         PEQUENO: { min: 33, max: 39 },
-        MEDIO:   { min: 41, max: 48 },
-        GRANDE:  { min: 48, max: 58 }
+        MEDIO: { min: 41, max: 48 },
+        GRANDE: { min: 48, max: 58 }
     }
 };
 
 /* ========================================================================== */
 
-/* --- CONTROL DE INTENTOS Y SEGURIDAD DE AUTENTICACIÓN --- */
+/* --- CONTROL DE INTENTOS Y SEGURIDAD --- */
 const MAX_INTENTOS = 6;
-const TIEMPO_BLOQUEO_SEG = 60; // 60 segundos de cooldown
+const TIEMPO_BLOQUEO_SEG = 60;
 let intentosFallidos = 0;
 let temporizadorBloqueo = null;
+let passTimerInterval = null;
 
 function setEstadoServidor(activo) {
-    SERVIDOR_ACTIVO = activo;
+    SERVIDOR_ACTIVO = !!activo;
     const container = document.getElementById('serverStatusContainer');
     const statusText = document.getElementById('serverStatusText');
     const btnLogin = document.getElementById('btnLoginBtn');
 
     if (container && statusText) {
-        if (activo) {
+        if (SERVIDOR_ACTIVO) {
             container.classList.remove('inactive');
             container.classList.add('active');
             statusText.textContent = 'SERVIDOR ACTIVO';
@@ -87,21 +130,21 @@ function setEstadoServidor(activo) {
             container.classList.remove('active');
             container.classList.add('inactive');
             statusText.textContent = 'SERVIDOR INACTIVO';
-            if (btnLogin) btnLogin.disabled = true;
+            if (btnLogin && !verificarEstadoBloqueo()) btnLogin.disabled = false;
             mostrarAlertaLogin('⚠️ EL SERVIDOR SE ENCUENTRA INACTIVO EN ESTE MOMENTO.');
         }
     }
 }
 
 function verificarEstadoBloqueo() {
-    const bloqueoHasta = localStorage.getItem('svs_lock_until');
+    const bloqueoHasta = SafeStorage.getItem('svs_lock_until');
     if (bloqueoHasta) {
         const tiempoRestante = Math.ceil((parseInt(bloqueoHasta, 10) - Date.now()) / 1000);
         if (tiempoRestante > 0) {
             iniciarCooldownBloqueo(tiempoRestante);
             return true;
         } else {
-            localStorage.removeItem('svs_lock_until');
+            SafeStorage.removeItem('svs_lock_until');
             intentosFallidos = 0;
         }
     }
@@ -117,7 +160,7 @@ function mostrarAlertaLogin(mensaje) {
     }
     if (loginCard) {
         loginCard.classList.remove('shake-effect');
-        void loginCard.offsetWidth; // Trigger reflow
+        void loginCard.offsetWidth;
         loginCard.classList.add('shake-effect');
     }
 }
@@ -133,7 +176,7 @@ function iniciarCooldownBloqueo(segundos) {
     if (temporizadorBloqueo) clearInterval(temporizadorBloqueo);
 
     const actualizarMensaje = () => {
-        mostrarAlertaLogin(`⚠️ LÍMITE DE CONTRASEÑA ALCANZADO (${MAX_INTENTOS}/${MAX_INTENTOS}). Sistema bloqueado por ${tiempoRestante}s.`);
+        mostrarAlertaLogin(`⚠️ LÍMITE ALCANZADO (${MAX_INTENTOS}/${MAX_INTENTOS}). Sistema bloqueado por ${tiempoRestante}s.`);
     };
 
     actualizarMensaje();
@@ -142,10 +185,11 @@ function iniciarCooldownBloqueo(segundos) {
         tiempoRestante--;
         if (tiempoRestante <= 0) {
             clearInterval(temporizadorBloqueo);
-            localStorage.removeItem('svs_lock_until');
+            temporizadorBloqueo = null;
+            SafeStorage.removeItem('svs_lock_until');
             intentosFallidos = 0;
             if (keyInput) keyInput.disabled = false;
-            if (btnLogin && SERVIDOR_ACTIVO) btnLogin.disabled = false;
+            if (btnLogin) btnLogin.disabled = false;
             const alertBox = document.getElementById('loginAlertBox');
             if (alertBox && SERVIDOR_ACTIVO) alertBox.style.display = 'none';
         } else {
@@ -154,7 +198,6 @@ function iniciarCooldownBloqueo(segundos) {
     }, 1000);
 }
 
-/* --- FUNCIÓN PARA MOSTRAR / OCULTAR CONTRASEÑA (OJO) --- */
 function toggleVisibilidadPassword() {
     ejecutarVibracion();
     ejecutarSonidoUI('select');
@@ -175,34 +218,178 @@ function toggleVisibilidadPassword() {
     }
 }
 
-/* --- MANEJO DEL LOGIN EN TEXTO PLANO --- */
+/* --- VALIDACIÓN DE CLAVES --- */
+function validarClaveEntrada(input) {
+    const key = (input || '').trim();
+    const keyLower = key.toLowerCase();
+
+    if (SISTEMA_CLAVES.ADMIN.some(a => a.toLowerCase() === keyLower)) {
+        return {
+            esValida: true,
+            tipo: 'ADMIN',
+            info: 'Bienvenido Administrador',
+            duracionMs: null,
+            key: key
+        };
+    }
+    if (SISTEMA_CLAVES.PERMANENTE.some(p => p.toLowerCase() === keyLower)) {
+        return {
+            esValida: true,
+            tipo: 'PERMANENTE',
+            info: 'Acceso Permanente VIP',
+            duracionMs: null,
+            key: key
+        };
+    }
+
+    const tempMatch = SISTEMA_CLAVES.TEMPORALES.find(t => t.clave === key || t.clave.toLowerCase() === keyLower);
+    if (tempMatch) {
+        return {
+            esValida: true,
+            tipo: 'TEMPORAL',
+            info: tempMatch.mensaje,
+            duracionMs: tempMatch.duracionMs,
+            key: tempMatch.clave
+        };
+    }
+
+    return {
+        esValida: false,
+        tipo: null,
+        info: null,
+        duracionMs: null,
+        key: null
+    };
+}
+
+/* --- TEMPORIZADOR EN TIEMPO REAL PERSISTENTE --- */
+function iniciarTemporizadorEnTiempoReal(session) {
+    if (passTimerInterval) clearInterval(passTimerInterval);
+
+    const txtElem = document.getElementById('statusWelcomeText');
+    const timerElem = document.getElementById('statusTimerBadge');
+
+    function actualizar() {
+        if (!session) return;
+
+        if (session.tipo === 'ADMIN') {
+            if (txtElem) txtElem.innerHTML = '👑 <span>Bienvenido Administrador</span>';
+            if (timerElem) {
+                timerElem.textContent = 'ACCESO TOTAL';
+                timerElem.style.borderColor = '#00ff66';
+                timerElem.style.color = '#00ff66';
+            }
+            return;
+        }
+
+        if (session.tipo === 'PERMANENTE') {
+            if (txtElem) txtElem.innerHTML = '⭐ <span>' + (session.info || 'Acceso Permanente') + '</span>';
+            if (timerElem) {
+                timerElem.textContent = 'ILIMITADO';
+                timerElem.style.borderColor = '#00ff66';
+                timerElem.style.color = '#00ff66';
+            }
+            return;
+        }
+
+        if (session.tipo === 'TEMPORAL') {
+            const ahora = Date.now();
+            const restante = session.expiresAt - ahora;
+
+            if (txtElem) txtElem.innerHTML = '⏳ <span>' + (session.info || 'Pase Temporal Activo') + '</span>';
+
+            if (restante <= 0) {
+                if (timerElem) {
+                    timerElem.textContent = 'EXPIRADO';
+                    timerElem.style.borderColor = '#ff0033';
+                    timerElem.style.color = '#ff0033';
+                }
+                clearInterval(passTimerInterval);
+                passTimerInterval = null;
+                alert('⚠️ Tu pase temporal ha expirado.');
+                cerrarSesion();
+                return;
+            }
+
+            const segsTotales = Math.floor(restante / 1000);
+            const dias = Math.floor(segsTotales / 86400);
+            const horas = Math.floor((segsTotales % 86400) / 3600);
+            const mins = Math.floor((segsTotales % 3600) / 60);
+            const segs = segsTotales % 60;
+
+            let textoTiempo = '';
+            if (dias > 0) textoTiempo += dias + 'd ';
+            textoTiempo += String(horas).padStart(2, '0') + 'h ' +
+                String(mins).padStart(2, '0') + 'm ' +
+                String(segs).padStart(2, '0') + 's';
+
+            if (timerElem) {
+                timerElem.textContent = textoTiempo;
+                timerElem.style.borderColor = '#00ff66';
+                timerElem.style.color = '#00ff66';
+            }
+        }
+    }
+
+    actualizar();
+    passTimerInterval = setInterval(actualizar, 1000);
+}
+
+/* --- PROCESAMIENTO DE LOGIN Y SESIÓN CON GUARDADO AUTOMÁTICO --- */
 function procesarLogin(e) {
-    if (e) e.preventDefault();
+    if (e && e.preventDefault) e.preventDefault();
     ejecutarVibracion();
     ejecutarSonidoUI('gen');
-
-    if (!SERVIDOR_ACTIVO) {
-        mostrarAlertaLogin('⚠️ EL SERVIDOR SE ENCUENTRA INACTIVO EN ESTE MOMENTO.');
-        return;
-    }
 
     if (verificarEstadoBloqueo()) return;
 
     const keyInput = document.getElementById('loginKey');
-    const keyInputVal = keyInput ? keyInput.value.trim() : '';
+    const keyVal = keyInput ? keyInput.value.trim() : '';
 
-    if (!keyInputVal) return;
+    if (!keyVal) return;
 
-    // Comparación directa en texto plano (sin distinción de mayúsculas/minúsculas)
-    if (keyInputVal.toLowerCase() === CLAVE_ACCESO_CORRECTA.toLowerCase()) {
+    const resultado = validarClaveEntrada(keyVal);
+
+    if (!SERVIDOR_ACTIVO && resultado.tipo !== 'ADMIN') {
+        mostrarAlertaLogin('⚠️ EL SERVIDOR SE ENCUENTRA INACTIVO EN ESTE MOMENTO.');
+        return;
+    }
+
+    if (resultado.esValida) {
         intentosFallidos = 0;
-        localStorage.removeItem('svs_lock_until');
+        SafeStorage.removeItem('svs_lock_until');
+
+        // Guardar la contraseña correctamente para autocompletar en el login
+        SafeStorage.setItem('svs_saved_password', keyVal);
+
+        let expiresAt = null;
+        if (resultado.tipo === 'TEMPORAL') {
+            const storageKey = 'svs_pass_exp_' + resultado.key;
+            let storedExp = SafeStorage.getItem(storageKey);
+            if (storedExp) {
+                expiresAt = parseInt(storedExp, 10);
+            } else {
+                expiresAt = Date.now() + resultado.duracionMs;
+                SafeStorage.setItem(storageKey, expiresAt.toString());
+            }
+        }
+
+        const sessionData = {
+            ...resultado,
+            expiresAt: expiresAt
+        };
+
+        SafeStorage.setItem('svs_active_session', JSON.stringify(sessionData));
+        try { sessionStorage.setItem('svs_auth_user', JSON.stringify(sessionData)); } catch(err) {}
+
         const alertBox = document.getElementById('loginAlertBox');
         if (alertBox) alertBox.style.display = 'none';
 
         iniciarCarga(() => {
-            document.getElementById('loginCard').style.display = 'none';
-            document.getElementById('mainApp').style.display = 'block';
+            if (document.getElementById('loginCard')) document.getElementById('loginCard').style.display = 'none';
+            if (document.getElementById('mainApp')) document.getElementById('mainApp').style.display = 'block';
+
+            iniciarTemporizadorEnTiempoReal(sessionData);
             aplicarModoUniversal(appConfig.universalSensi);
             evaluarSugerenciaEnTiempoReal();
         });
@@ -210,13 +397,37 @@ function procesarLogin(e) {
         intentosFallidos++;
         if (intentosFallidos >= MAX_INTENTOS) {
             const bloqueoHasta = Date.now() + (TIEMPO_BLOQUEO_SEG * 1000);
-            localStorage.setItem('svs_lock_until', bloqueoHasta.toString());
+            SafeStorage.setItem('svs_lock_until', bloqueoHasta.toString());
             iniciarCooldownBloqueo(TIEMPO_BLOQUEO_SEG);
         } else {
             const restantes = MAX_INTENTOS - intentosFallidos;
             mostrarAlertaLogin(`⚠️ Clave incorrecta. Intentos restantes: ${restantes}/${MAX_INTENTOS}`);
         }
     }
+}
+
+/* --- FUNCIÓN PARA CERRAR SESIÓN / SALIR --- */
+function cerrarSesion() {
+    ejecutarVibracion();
+    ejecutarSonidoUI('select');
+
+    if (passTimerInterval) {
+        clearInterval(passTimerInterval);
+        passTimerInterval = null;
+    }
+    try { sessionStorage.removeItem('svs_auth_user'); } catch(e) {}
+    SafeStorage.removeItem('svs_active_session');
+
+    if (DOM.mainApp) DOM.mainApp.style.display = 'none';
+    if (document.getElementById('loginCard')) document.getElementById('loginCard').style.display = 'flex';
+
+    const alertBox = document.getElementById('loginAlertBox');
+    if (alertBox) alertBox.style.display = 'none';
+
+    // Autocompletar la contraseña guardada si existe
+    const savedPass = SafeStorage.getItem('svs_saved_password');
+    const keyInput = document.getElementById('loginKey');
+    if (keyInput) keyInput.value = savedPass || '';
 }
 
 /* --- PUENTE SEGURO DE COMUNICACIÓN WEB / JAVA --- */
@@ -232,28 +443,26 @@ const JavaBridge = {
                 window.JavaBridge.postMessage(jsonMessage);
             } else if (window.webkit && window.webkit.messageHandlers && window.webkit.messageHandlers.javaBridge) {
                 window.webkit.messageHandlers.javaBridge.postMessage(jsonMessage);
+            } else if (window.postMessage) {
+                window.postMessage(jsonMessage, '*');
             }
-        } catch(e) {}
+        } catch (e) {}
     }
 };
 
 window.recibirDeJava = function(jsonString) {
     try {
-        const data = typeof jsonString === 'string' ? JSON.parse(jsonString): jsonString;
+        const data = typeof jsonString === 'string' ? JSON.parse(jsonString) : jsonString;
         if (!data || typeof data !== 'object') return;
 
-        if (data.action === 'generarSensibilidad') {
-            ejecutarBotonGenerar();
-        } else if (data.action === 'cargarConfiguracion') {
-            window.configurarDesdeJava(data.config);
-        } else if (data.action === 'setServerStatus') {
-            setEstadoServidor(!!data.active);
-        }
-    } catch(e) {}
+        if (data.action === 'generarSensibilidad') ejecutarBotonGenerar();
+        else if (data.action === 'cargarConfiguracion') window.configurarDesdeJava(data.config);
+        else if (data.action === 'setServerStatus') setEstadoServidor(!!data.active);
+    } catch (e) {}
 };
 
 window.actualizarDesdeJava = function(datos) {
-    if (datos) actualizarUI(datos, DOM.sensiType ? DOM.sensiType.value: 'Media');
+    if (datos) actualizarUI(datos, DOM.sensiType ? DOM.sensiType.value : 'Media');
 };
 
 window.configurarDesdeJava = function(cfg) {
@@ -278,6 +487,8 @@ function initDOMCache() {
         'gpuValue',
         'phoneBrand',
         'phoneModel',
+        'fieldPhoneBrand',
+        'fieldPhoneModel',
         'sensiType',
         'gameMode',
         'useDpi',
@@ -311,7 +522,6 @@ function initDOMCache() {
     ids.forEach(id => DOM[id] = document.getElementById(id));
 }
 
-/* --- CONFIGURACIÓN DEL SISTEMA --- */
 const appConfig = {
     batterySaver: false,
     vibration: true,
@@ -320,29 +530,28 @@ const appConfig = {
     universalSensi: false
 };
 
-/* --- FUNCIONES DE MODO SENSI UNIVERSAL --- */
 function aplicarModoUniversal(activo) {
-    appConfig.universalSensi = activo !== undefined ? activo : (DOM.universalSensiToggle ? DOM.universalSensiToggle.checked : false);
-    
+    appConfig.universalSensi = activo !== undefined ? !!activo : (DOM.universalSensiToggle ? DOM.universalSensiToggle.checked : false);
+
     if (DOM.universalSensiToggle) DOM.universalSensiToggle.checked = appConfig.universalSensi;
 
-    if (DOM.phoneBrand && DOM.phoneModel) {
-        if (appConfig.universalSensi) {
-            DOM.phoneBrand.disabled = true;
-            DOM.phoneModel.disabled = true;
-            DOM.phoneModel.placeholder = "Modo Sensi Universal Activo";
-            DOM.phoneModel.value = "";
-        } else {
-            DOM.phoneBrand.disabled = false;
-            DOM.phoneModel.disabled = false;
-            DOM.phoneModel.placeholder = "Ej: Poco X3, S23...";
-        }
+    const fBrand = DOM.fieldPhoneBrand || document.getElementById('fieldPhoneBrand');
+    const fModel = DOM.fieldPhoneModel || document.getElementById('fieldPhoneModel');
+
+    if (appConfig.universalSensi) {
+        if (DOM.phoneBrand) DOM.phoneBrand.selectedIndex = 0;
+        if (DOM.phoneModel) DOM.phoneModel.value = "";
+        if (fBrand) fBrand.style.display = 'none';
+        if (fModel) fModel.style.display = 'none';
+    } else {
+        if (fBrand) fBrand.style.display = 'flex';
+        if (fModel) fModel.style.display = 'flex';
     }
     evaluarSugerenciaEnTiempoReal();
 }
 
 function mostrarInfoSensiUniversal(e) {
-    if (e) e.stopPropagation();
+    if (e && e.stopPropagation) e.stopPropagation();
     ejecutarVibracion();
     ejecutarSonidoUI('select');
     if (DOM.infoUniversalModal) DOM.infoUniversalModal.style.display = 'flex';
@@ -354,7 +563,7 @@ function cerrarInfoSensiUniversal() {
     if (DOM.infoUniversalModal) DOM.infoUniversalModal.style.display = 'none';
 }
 
-/* --- MOTOR DE AUDIO Y VIBRACIÓN --- */
+/* --- MOTOR DE AUDIO Y VIBRACIÓN OPTIMIZADO PARA CUALQUIER DISPOSITIVO --- */
 let audioCtxInstance = null;
 
 function obtenerAudioContext() {
@@ -369,10 +578,10 @@ function obtenerAudioContext() {
 }
 
 function ejecutarVibracion() {
-    if (appConfig.vibration && navigator.vibrate) {
+    if (appConfig.vibration && typeof navigator !== 'undefined' && navigator.vibrate) {
         try {
             navigator.vibrate(8);
-        } catch(e) {}
+        } catch (e) {}
     }
 }
 
@@ -386,8 +595,8 @@ function ejecutarSonidoUI(tipo) {
         const gain = ctx.createGain();
         const now = ctx.currentTime;
 
-        osc.type = (tipo === 'gen') ? 'triangle': 'sine';
-        osc.frequency.setValueAtTime((tipo === 'gen') ? 650: 880, now);
+        osc.type = (tipo === 'gen') ? 'triangle' : 'sine';
+        osc.frequency.setValueAtTime((tipo === 'gen') ? 650 : 880, now);
         osc.frequency.exponentialRampToValueAtTime(300, now + 0.03);
 
         gain.gain.setValueAtTime(0.03, now);
@@ -398,10 +607,9 @@ function ejecutarSonidoUI(tipo) {
 
         osc.start(now);
         osc.stop(now + 0.03);
-    } catch(e) {}
+    } catch (e) {}
 }
 
-/* --- MODALES --- */
 function abrirConfiguracion() {
     ejecutarVibracion();
     ejecutarSonidoUI('select');
@@ -410,8 +618,8 @@ function abrirConfiguracion() {
 }
 
 function toggleModal(show) {
-    if (DOM.aiModal) DOM.aiModal.style.display = show ? 'flex': 'none';
-    JavaBridge.enviar('modalConfigEstado', { abierto: show });
+    if (DOM.aiModal) DOM.aiModal.style.display = show ? 'flex' : 'none';
+    JavaBridge.enviar('modalConfigEstado', { abierto: !!show });
 }
 
 /* --- MONITOR DE RENDIMIENTO --- */
@@ -445,7 +653,7 @@ function monitorPerformanceLoop(now) {
         const computeTimeRatio = avgDelta / 6.94;
 
         const cpuCalc = Math.min(99, Math.max(2, Math.round(computeTimeRatio * 18 + Math.abs(frameDelta - avgDelta) * 5 + 3)));
-        const gpuCalc = Math.min(99, Math.max(2, Math.round((realFps / 144) * 14 + (computeTimeRatio > 1 ? (computeTimeRatio - 1) * 20: 4))));
+        const gpuCalc = Math.min(99, Math.max(2, Math.round((realFps / 144) * 14 + (computeTimeRatio > 1 ? (computeTimeRatio - 1) * 20 : 4))));
 
         if (DOM.fpsValue) DOM.fpsValue.textContent = realFps;
         if (DOM.cpuValue) DOM.cpuValue.textContent = cpuCalc + '%';
@@ -494,7 +702,6 @@ function aplicarModoAhorro() {
     }
 }
 
-/* --- LÓGICA DE RECOMENDACIÓN --- */
 function evaluarSugerenciaEnTiempoReal() {
     ejecutarVibracion();
     ejecutarSonidoUI('select');
@@ -527,15 +734,13 @@ function evaluarSugerenciaEnTiempoReal() {
     }
 
     const titleHeader = appConfig.universalSensi ? "⚡ RECOMENDACIÓN UNIVERSAL" : "⚡ RECOMENDACIÓN PRO";
-    const levelLabel = "Nivel:";
-    const techLabel = "Técnica:";
 
     DOM.modeHintBox.innerHTML = `
-    <div class="hint-header">${titleHeader} (${sanitizeInput(brandText)})</div>
-    <ul class="hint-list">
-    <li><strong>${levelLabel}</strong> <span class="hint-highlight">${nivelRecomendado}</span></li>
-    <li><strong>${techLabel}</strong> ${alzamientoMira}</li>
-    </ul>
+        <div class="hint-header">${titleHeader} (${sanitizeInput(brandText)})</div>
+        <ul class="hint-list">
+            <li><strong>Nivel:</strong> <span class="hint-highlight">${nivelRecomendado}</span></li>
+            <li><strong>Técnica:</strong> ${alzamientoMira}</li>
+        </ul>
     `;
 
     JavaBridge.enviar('sugerenciaCambiada', {
@@ -548,7 +753,8 @@ function evaluarSugerenciaEnTiempoReal() {
 }
 
 function sanitizeInput(str) {
-    return String(str || '').replace(/[&<>"'/`=]/g, '').trim();
+    if (str === null || str === undefined) return '';
+    return String(str).replace(/[&<>"'/`=]/g, '').trim();
 }
 
 window.addEventListener('DOMContentLoaded', () => {
@@ -557,14 +763,39 @@ window.addEventListener('DOMContentLoaded', () => {
     verificarEstadoBloqueo();
     setEstadoServidor(SERVIDOR_ACTIVO);
 
-    const saved = localStorage.getItem('ff_sys_cfg_v12') || sessionStorage.getItem('ff_sys_cfg_v12');
+    // Cargar la contraseña previamente guardada de forma automática
+    const savedPass = SafeStorage.getItem('svs_saved_password');
+    const keyInput = document.getElementById('loginKey');
+    if (savedPass && keyInput) {
+        keyInput.value = savedPass;
+    }
+
+    // Verificar sesión guardada o activa
+    const rawSession = SafeStorage.getItem('svs_active_session');
+    if (rawSession) {
+        try {
+            const session = JSON.parse(rawSession);
+            if (session && session.esValida) {
+                if (session.tipo === 'TEMPORAL' && session.expiresAt && Date.now() >= session.expiresAt) {
+                    SafeStorage.removeItem('svs_active_session');
+                    try { sessionStorage.removeItem('svs_auth_user'); } catch(e) {}
+                } else {
+                    if (document.getElementById('loginCard')) document.getElementById('loginCard').style.display = 'none';
+                    if (document.getElementById('mainApp')) document.getElementById('mainApp').style.display = 'block';
+                    iniciarTemporizadorEnTiempoReal(session);
+                }
+            }
+        } catch (e) {}
+    }
+
+    const saved = SafeStorage.getItem('ff_sys_cfg_v12');
     if (saved) {
         try {
             const parsed = JSON.parse(saved);
             appConfig.batterySaver = !!parsed.batterySaver;
-            appConfig.vibration = parsed.vibration !== undefined ? !!parsed.vibration: true;
-            appConfig.sound = parsed.sound !== undefined ? !!parsed.sound: true;
-            appConfig.gpuAccel = parsed.gpuAccel !== undefined ? !!parsed.gpuAccel: true;
+            appConfig.vibration = parsed.vibration !== undefined ? !!parsed.vibration : true;
+            appConfig.sound = parsed.sound !== undefined ? !!parsed.sound : true;
+            appConfig.gpuAccel = parsed.gpuAccel !== undefined ? !!parsed.gpuAccel : true;
             appConfig.universalSensi = !!parsed.universalSensi;
 
             if (DOM.batterySaverToggle) DOM.batterySaverToggle.checked = appConfig.batterySaver;
@@ -575,7 +806,7 @@ window.addEventListener('DOMContentLoaded', () => {
 
             aplicarModoAhorro();
             aplicarModoUniversal(appConfig.universalSensi);
-        } catch(e) {}
+        } catch (e) {}
     }
 
     evaluarSugerenciaEnTiempoReal();
@@ -598,7 +829,7 @@ function guardarConfiguracion() {
 
     aplicarModoUniversal(appConfig.universalSensi);
 
-    if (DOM.mainApp) DOM.mainApp.style.transform = appConfig.gpuAccel ? 'translateZ(0)': 'none';
+    if (DOM.mainApp) DOM.mainApp.style.transform = appConfig.gpuAccel ? 'translateZ(0)' : 'none';
 
     const payloadData = {
         batterySaver: appConfig.batterySaver,
@@ -608,13 +839,7 @@ function guardarConfiguracion() {
         universalSensi: appConfig.universalSensi
     };
 
-    const payload = JSON.stringify(payloadData);
-
-    try {
-        localStorage.setItem('ff_sys_cfg_v12', payload);
-    } catch(e) {
-        sessionStorage.setItem('ff_sys_cfg_v12', payload);
-    }
+    SafeStorage.setItem('ff_sys_cfg_v12', JSON.stringify(payloadData));
     toggleModal(false);
 
     JavaBridge.enviar('configuracionGuardada', payloadData);
@@ -636,9 +861,10 @@ function iniciarCarga(alFinalizar) {
         if (DOM.loaderProgressBarFill) DOM.loaderProgressBarFill.style.width = pVal + '%';
         if (progreso >= 100) {
             clearInterval(loaderInterval);
+            loaderInterval = null;
             setTimeout(() => {
                 if (DOM.loaderModal) DOM.loaderModal.style.display = 'none';
-                alFinalizar();
+                if (typeof alFinalizar === 'function') alFinalizar();
             }, 60);
         }
     }, 12);
@@ -653,12 +879,12 @@ function ejecutarBotonGenerar() {
 async function generar() {
     if (DOM.errorBox) DOM.errorBox.style.display = 'none';
 
-    const brand = appConfig.universalSensi ? "Universal" : sanitizeInput(DOM.phoneBrand ? DOM.phoneBrand.value: '');
-    const model = appConfig.universalSensi ? "Universal" : sanitizeInput(DOM.phoneModel ? DOM.phoneModel.value: '');
-    const type = sanitizeInput(DOM.sensiType ? DOM.sensiType.value: '');
-    const mode = sanitizeInput(DOM.gameMode ? DOM.gameMode.value: '');
-    const dpi = sanitizeInput(DOM.useDpi ? DOM.useDpi.value: '');
-    const btn = sanitizeInput(DOM.useBtn ? DOM.useBtn.value: '');
+    const brand = appConfig.universalSensi ? "Universal" : sanitizeInput(DOM.phoneBrand ? DOM.phoneBrand.value : '');
+    const model = appConfig.universalSensi ? "Universal" : sanitizeInput(DOM.phoneModel ? DOM.phoneModel.value : '');
+    const type = sanitizeInput(DOM.sensiType ? DOM.sensiType.value : '');
+    const mode = sanitizeInput(DOM.gameMode ? DOM.gameMode.value : '');
+    const dpi = sanitizeInput(DOM.useDpi ? DOM.useDpi.value : '');
+    const btn = sanitizeInput(DOM.useBtn ? DOM.useBtn.value : '');
 
     const solicitudPayload = {
         brand: brand,
@@ -679,25 +905,25 @@ async function generar() {
 
 function clamp(num, min, max) {
     const parsed = parseInt(num, 10);
-    return isNaN(parsed) ? min: Math.min(Math.max(parsed, min), max);
+    return isNaN(parsed) ? min : Math.min(Math.max(parsed, min), max);
 }
 
 function generarLocalMatematico(brand, type, useDpi, useBtn) {
     let baseMin = SENSI_VALORES.MEDIA.baseMin,
         baseMax = SENSI_VALORES.MEDIA.baseMax,
-        awmMin  = SENSI_VALORES.MEDIA.awmMin,
-        awmMax  = SENSI_VALORES.MEDIA.awmMax;
+        awmMin = SENSI_VALORES.MEDIA.awmMin,
+        awmMax = SENSI_VALORES.MEDIA.awmMax;
 
     if (type.includes('Baja')) {
         baseMin = SENSI_VALORES.BAJA.baseMin;
         baseMax = SENSI_VALORES.BAJA.baseMax;
-        awmMin  = SENSI_VALORES.BAJA.awmMin;
-        awmMax  = SENSI_VALORES.BAJA.awmMax;
+        awmMin = SENSI_VALORES.BAJA.awmMin;
+        awmMax = SENSI_VALORES.BAJA.awmMax;
     } else if (type.includes('Alta')) {
         baseMin = SENSI_VALORES.ALTA.baseMin;
         baseMax = SENSI_VALORES.ALTA.baseMax;
-        awmMin  = SENSI_VALORES.ALTA.awmMin;
-        awmMax  = SENSI_VALORES.ALTA.awmMax;
+        awmMin = SENSI_VALORES.ALTA.awmMin;
+        awmMax = SENSI_VALORES.ALTA.awmMax;
     }
 
     let brandOffset = 0;
@@ -718,7 +944,7 @@ function generarLocalMatematico(brand, type, useDpi, useBtn) {
 
     let dpiCalculado = "Stock";
     if (useDpi.includes('Con DPI')) {
-        const dpiBase = (baseMin >= SENSI_VALORES.ALTA.baseMin) ? rand(520, 580): ((baseMin >= SENSI_VALORES.MEDIA.baseMin) ? rand(460, 520): rand(410, 460));
+        const dpiBase = (baseMin >= SENSI_VALORES.ALTA.baseMin) ? rand(520, 580) : ((baseMin >= SENSI_VALORES.MEDIA.baseMin) ? rand(460, 520) : rand(410, 460));
         dpiCalculado = Math.min(593, dpiBase);
     }
 
@@ -761,11 +987,11 @@ function actualizarUI(data, sensiType) {
         awmMax = SENSI_VALORES.ALTA.awmMax;
     }
 
-    const genVal = !isNaN(data.gen) ? clamp(data.gen, minS, maxS): data.gen;
-    const redVal = !isNaN(data.red) ? clamp(data.red, minS, maxS): data.red;
-    const m2xVal = !isNaN(data.m2x) ? clamp(data.m2x, minS, maxS): data.m2x;
-    const m4xVal = !isNaN(data.m4x) ? clamp(data.m4x, minS, maxS): data.m4x;
-    const awmVal = !isNaN(data.awm) ? clamp(data.awm, awmMin, awmMax): data.awm;
+    const genVal = !isNaN(data.gen) ? clamp(data.gen, minS, maxS) : data.gen;
+    const redVal = !isNaN(data.red) ? clamp(data.red, minS, maxS) : data.red;
+    const m2xVal = !isNaN(data.m2x) ? clamp(data.m2x, minS, maxS) : data.m2x;
+    const m4xVal = !isNaN(data.m4x) ? clamp(data.m4x, minS, maxS) : data.m4x;
+    const awmVal = !isNaN(data.awm) ? clamp(data.awm, awmMin, awmMax) : data.awm;
     const camVal = data.cam;
 
     let dpiVal = data.dpi;
