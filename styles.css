@@ -728,6 +728,70 @@ input[type="checkbox"] {
     justify-content: center;
 }
 
+/* ESTILOS EXCLUSIVOS DEL CENTRO AVANZADO VIP */
+.advanced-center-section {
+    margin-top: 6px;
+    padding-top: 10px;
+    border-top: 1.2px solid rgba(255, 0, 51, 0.35);
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.advanced-center-title {
+    color: #ff0033;
+    font-size: 0.78rem;
+    font-weight: 900;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    display: block;
+}
+
+.advanced-center-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+}
+
+.advanced-btn {
+    background: #0a0a0a;
+    border: 1.2px solid #ff0033;
+    color: #ffffff;
+    padding: 9px 8px;
+    border-radius: 7px;
+    font-size: 0.73rem;
+    font-weight: 800;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    text-align: center;
+    transition: all 0.22s ease;
+    box-shadow: 0 0 8px rgba(255, 0, 51, 0.15);
+}
+
+.advanced-btn svg {
+    stroke: #ff0033;
+    transition: stroke 0.2s ease;
+    flex-shrink: 0;
+}
+
+.advanced-btn:hover {
+    background: #ff0033;
+    color: #000000;
+    box-shadow: 0 0 16px rgba(255, 0, 51, 0.55);
+    transform: translateY(-1.5px);
+}
+
+.advanced-btn:hover svg {
+    stroke: #000000;
+}
+
+.advanced-btn:active {
+    transform: scale(0.96);
+}
+
 .loader-modal {
     position: fixed;
     inset: 0;

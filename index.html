@@ -231,6 +231,7 @@
             <div class="support-modal-body">
                 <p class="support-modal-text">
                     💬 <strong>Centro de Atención:</strong> Este canal es exclusivamente para hacer preguntas, realizar consultas o informar sobre errores, bugs e inconvenientes con la aplicación.<br><br>
+                    🔑 <strong>Obtener Contraseña:</strong> Para obtener una contraseña puede comprarla o hacer publicidad al generador de sensibilidad y al creador o darle like a todos los vídeos del creador.<br><br>
                     🚫 <strong>Advertencia de Seguridad:</strong> Cualquier usuario que haga spam, busque problemas o realice acciones fuera de los límites permitidos será <strong>bloqueado de inmediato</strong> de forma permanente.
                 </p>
                 <div class="whatsapp-buttons-container">
@@ -266,6 +267,7 @@
         </div>
     </div>
 
+    <!-- MODAL DE CONFIGURACIÓN CON EL CENTRO AVANZADO VIP -->
     <div class="modal" id="aiModal">
         <div class="modal-box hd-modal">
             <div class="modal-title">Configuración del Sistema</div>
@@ -299,7 +301,45 @@
                 <input type="checkbox" id="batterySaverToggle" onchange="aplicarModoAhorro()">
             </div>
 
-            <button class="btn btn-std" onclick="guardarConfiguracion()" style="background:#ff0033; color:#000;">Guardar Ajustes</button>
+            <!-- NUEVO APARTADO: CENTRO AVANZADO VIP -->
+            <div class="advanced-center-section">
+                <label class="advanced-center-title">🔥 CENTRO AVANZADO GARENA VIP</label>
+                <div class="advanced-center-grid">
+                    <a href="https://ffsoporte.garena.com/hc/es-419" target="_blank" rel="noopener noreferrer" class="advanced-btn">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
+                            <polyline points="15 3 21 3 21 9"></polyline>
+                            <line x1="10" y1="14" x2="21" y2="3"></line>
+                        </svg>
+                        <span>Soporte Garena Oficial</span>
+                    </a>
+                    <a href="https://pagostore.garena.com/" target="_blank" rel="noopener noreferrer" class="advanced-btn">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <rect x="1" y="4" width="22" height="16" rx="2" ry="2"></rect>
+                            <line x1="1" y1="10" x2="23" y2="10"></line>
+                        </svg>
+                        <span>Recarga Garena Oficial</span>
+                    </a>
+                    <a href="https://reward.ff.garena.com/" target="_blank" rel="noopener noreferrer" class="advanced-btn">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M20 12v10H4V12"></path>
+                            <path d="M22 7H2v5h20V7z"></path>
+                            <path d="M12 22V7"></path>
+                            <path d="M12 7H7.5a2.5 2.5 0 0 1 0-5C11 2 12 7 12 7z"></path>
+                            <path d="M12 7h4.5a2.5 2.5 0 0 0 0-5C13 2 12 7 12 7z"></path>
+                        </svg>
+                        <span>Canjear Código Garena</span>
+                    </a>
+                    <a href="https://somosgamerslatam.com/" target="_blank" rel="noopener noreferrer" class="advanced-btn">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+                        </svg>
+                        <span>Recarga Somos Gamers Latam</span>
+                    </a>
+                </div>
+            </div>
+
+            <button class="btn btn-std" onclick="guardarConfiguracion()" style="background:#ff0033; color:#000; margin-top: 6px;">Guardar Ajustes</button>
             <button class="btn btn-std" onclick="toggleModal(false)">Cancelar</button>
         </div>
     </div>
