@@ -359,6 +359,28 @@ body {
     transform: translateY(-2px);
 }
 
+.telegram-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    background: #091a24;
+    border: 1.5px solid #0088cc;
+    color: #0088cc;
+    text-decoration: none;
+    padding: 10px 14px;
+    border-radius: 8px;
+    transition: all 0.25s ease;
+    box-shadow: 0 0 10px rgba(0, 136, 204, 0.15);
+}
+
+.telegram-btn:hover {
+    background: #0088cc;
+    color: #000000;
+    box-shadow: 0 0 18px rgba(0, 136, 204, 0.5);
+    transform: translateY(-2px);
+}
+
 .wa-btn-text {
     display: flex;
     flex-direction: column;
