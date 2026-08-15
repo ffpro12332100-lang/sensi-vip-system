@@ -1,16 +1,16 @@
 © 2026 Jhonatan David Mazenett Villarroel. Todos los derechos reservados.
-
-AVISO DE PROPIEDAD INTELECTUAL Y LICENCIA DE USO EXCLUSIVO
-
+AVISO DE PROPIEDAD INTELECTUAL Y LICENCIA DE USO
 Todo el contenido, código fuente (incluyendo HTML, CSS, JavaScript, WebAssembly y sus derivados), arquitectura de software, algoritmos, bases de datos, diseño de interfaz de usuario (UI/UX), marcas, logotipos y material gráfico o audiovisual presente en este sitio web y aplicación son propiedad exclusiva de Jhonatan David Mazenett Villarroel y se encuentran protegidos por las leyes internacionales y nacionales de derechos de autor y propiedad intelectual.
-
-QUEDA ESTRICTAMENTE PROHIBIDO:
-1. La copia, reproducción, distribución, modificación, venta, sublicenciamiento o comercialización total o parcial de cualquier componente del sistema.
-2. La ingeniería inversa, descompilación, desmontaje, desensamblado o intento de extracción de código fuente, lógica de negocio o algoritmos.
-3. La extracción automatizada de datos (web scraping, data mining) o el alojamiento no autorizado en servidores de terceros (mirroring).
-4. El uso de fragmentos de código, funciones o estilos para la creación de obras derivadas o aplicaciones competidoras.
-
-LICENCIA LIMITADA DE NAVEGACIÓN:
-Se concede al usuario una licencia temporal, limitada, revocable y no exclusiva únicamente para cargar y visualizar este sitio web mediante un navegador web estándar con fines estrictamente personales. La ejecución técnica necesaria en la memoria del navegador no constituye en ningún caso la transferencia de ningún derecho de propiedad intelectual sobre el software.
-
-Contacto para autorizaciones o licencias comerciales: [sanbranoricmaryis@gmail.com]
+PROHIBICIONES ESTRICTAS:
+Protección del Código Fuente: Queda estrictamente prohibido el robo, copia, reproducción, distribución, venta, sublicenciamiento o comercialización total o parcial de cualquier componente del sistema o su código fuente.
+Ingeniería Inversa: Queda prohibida la descompilación, desmontaje, desensamblado o cualquier intento de extracción de la lógica de negocio, algoritmos o código base de la plataforma.
+Extracción y Relojamiento No Autorizado: Se prohíbe la extracción automatizada de datos (web scraping, data mining), así como el alojamiento no autorizado en servidores de terceros (mirroring).
+Creación de Obras Derivadas del Código: No está permitido utilizar fragmentos de código, funciones, scripts o estilos para crear aplicaciones competidoras o copiar la infraestructura del sistema.
+USO AUTORIZADO Y GENERACIÓN DE SENSIBILIDADES Y CONFIGURACIONES:
+Se concede al usuario el derecho de utilizar esta plataforma exclusivamente para interactuar con sus herramientas y generar configuraciones, ajustes, sensibilidades u otros parámetros de salida, sujeto a los siguientes términos:
+Origen Autorizado: El uso es válido únicamente si el acceso a la plataforma o aplicación fue proporcionado directamente por el creador (Jhonatan David Mazenett Villarroel), ya sea mediante su publicación en un servidor/hosting oficial, entrega personal directa o distribución a través de una aplicación autorizada.
+Uso de los Resultados: El usuario es libre de utilizar, aplicar y compartir las sensibilidades o configuraciones generadas por la herramienta.
+Condición de Respeto al Software: La generación de sensibilidades no otorga ningún derecho de propiedad sobre la plataforma. El usuario podrá hacer uso de la herramienta siempre y cuando no infrinja las normas de protección del código fuente, no intente sustraer la lógica del software ni distribuya la aplicación de forma no autorizada.
+LICENCIA LIMITADA DE NAVEGACIÓN Y EJECUCIÓN:
+Se otorga una licencia temporal, limitada, revocable y no exclusiva únicamente para ejecutar y visualizar esta plataforma en un navegador o dispositivo compatible. La ejecución técnica en la memoria del dispositivo no constituye en ningún caso transferencia alguna de derechos de propiedad intelectual.
+Contacto para autorizaciones, consultas o licencias comerciales: sanbranoricmaryis@gmail.com
