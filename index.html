@@ -103,7 +103,6 @@
                     </svg>
                 </button>
 
-                <!-- BOTÓN DE CERRAR SESIÓN / SALIDA -->
                 <button class="btn-icon btn-logout" onclick="cerrarSesion()" title="Cerrar Sesión / Salir">
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#ff0033" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
                         <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
@@ -114,7 +113,6 @@
             </div>
         </div>
 
-        <!-- BANNER DE BIENVENIDA Y TEMPORIZADOR DE TIEMPO VIP -->
         <div class="user-status-banner" id="userStatusBanner">
             <div class="status-welcome-text" id="statusWelcomeText">Cargando estado...</div>
             <div class="status-timer-badge" id="statusTimerBadge">00h 00m 00s</div>
@@ -222,6 +220,33 @@
                 <a href="https://www.tiktok.com/@sensivipsystem" target="_blank" rel="noopener noreferrer" class="tiktok-link">@sensivipsystem</a>
             </div>
         </div>
+
+        <!-- APARTADO DE PROPIEDAD INTELECTUAL Y LICENCIA DE USO -->
+        <div class="legal-box" id="legalSection">
+            <div class="legal-copyright">© 2026 Jhonatan David Mazenett Villarroel. Todos los derechos reservados.</div>
+            <div class="legal-header-title">AVISO DE PROPIEDAD INTELECTUAL Y LICENCIA DE USO EXCLUSIVO</div>
+            <p class="legal-text">
+                Todo el contenido, código fuente (incluyendo HTML, CSS, JavaScript, WebAssembly y sus derivados), arquitectura de software, algoritmos, bases de datos, diseño de interfaz de usuario (UI/UX), marcas, logotipos y material gráfico o audiovisual presente en este sitio web y aplicación son propiedad exclusiva de Jhonatan David Mazenett Villarroel y se encuentran protegidos por las leyes internacionales y nacionales de derechos de autor y propiedad intelectual.
+            </p>
+            <div class="legal-subtitle">USO EN HOSTING O PÁGINA WEB:</div>
+            <p class="legal-text">
+                Si el creador ha publicado o alojado esta aplicación en un hosting o sitio web, se puede utilizar libremente y sin límites.
+            </p>
+            <div class="legal-subtitle">QUEDA ESTRICTAMENTE PROHIBIDO:</div>
+            <ol class="legal-list">
+                <li>La copia, reproducción, distribución, modificación, venta, sublicenciamiento o comercialización total o parcial de cualquier componente del sistema.</li>
+                <li>La ingeniería inversa, descompilación, desmontaje, desensamblado o intento de extracción de código fuente, lógica de negocio o algoritmos.</li>
+                <li>La extracción automatizada de datos (web scraping, data mining) o el alojamiento no autorizado en servidores de terceros (mirroring).</li>
+                <li>El uso de fragmentos de código, funciones o estilos para la creación de obras derivadas o aplicaciones competidoras.</li>
+            </ol>
+            <div class="legal-subtitle">LICENCIA LIMITADA DE NAVEGACIÓN:</div>
+            <p class="legal-text">
+                Se concede al usuario una licencia temporal, limitada, revocable y no exclusiva únicamente para cargar y visualizar este sitio web mediante un navegador web estándar con fines strictly personales. La ejecución técnica necesaria en la memoria del navegador no constituye en ningún caso la transferencia de ningún derecho de propiedad intelectual sobre el software.
+            </p>
+            <div class="legal-contact">
+                Contacto para autorizaciones o licencias comerciales: <a href="mailto:sanbranoricmaryis@gmail.com">sanbranoricmaryis@gmail.com</a>
+            </div>
+        </div>
     </div>
 
     <!-- MODALES -->
@@ -282,6 +307,11 @@
             </div>
 
             <div class="setting-toggle-row">
+                <span class="setting-toggle-label">👁️ Ocultar Propiedad Intelectual</span>
+                <input type="checkbox" id="hideLegalToggle" onchange="aplicarOcultarLegal(this.checked)">
+            </div>
+
+            <div class="setting-toggle-row">
                 <span class="setting-toggle-label">⚡ Aceleración por Hardware (GPU Render)</span>
                 <input type="checkbox" id="gpuAccelToggle" checked>
             </div>
@@ -301,7 +331,7 @@
                 <input type="checkbox" id="batterySaverToggle" onchange="aplicarModoAhorro()">
             </div>
 
-            <!-- NUEVO APARTADO: CENTRO AVANZADO VIP -->
+            <!-- CENTRO AVANZADO VIP -->
             <div class="advanced-center-section">
                 <label class="advanced-center-title">🔥 CENTRO AVANZADO GARENA VIP</label>
                 <div class="advanced-center-grid">
@@ -366,15 +396,5 @@
     </div>
 
     <script src="script.js"></script>
-    <script>
-        function abrirModalSoporte() {
-            const modal = document.getElementById('soporteModal');
-            if (modal) modal.style.display = 'flex';
-        }
-        function cerrarModalSoporte() {
-            const modal = document.getElementById('soporteModal');
-            if (modal) modal.style.display = 'none';
-        }
-    </script>
 </body>
 </html>

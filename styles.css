@@ -672,6 +672,80 @@ input[type="checkbox"] {
 .footer-credits .creator-name { color: #ffffff; font-weight: 900; }
 .footer-credits .tiktok-link { color: #ff3b30; font-weight: 600; text-decoration: none; border-bottom: 1.5px solid #ff3b30; }
 
+/* ESTILOS DEL APARTADO DE PROPIEDAD INTELECTUAL */
+.legal-box {
+    margin-top: 14px;
+    padding: 12px;
+    background: #060606;
+    border: 1.2px solid rgba(255, 0, 51, 0.4);
+    border-radius: 8px;
+    text-align: left;
+    box-shadow: inset 0 0 10px rgba(255, 0, 51, 0.05);
+}
+
+.legal-copyright {
+    color: #00ff66;
+    font-size: 0.75rem;
+    font-weight: 800;
+    margin-bottom: 6px;
+    letter-spacing: 0.3px;
+}
+
+.legal-header-title {
+    color: #ff0033;
+    font-size: 0.78rem;
+    font-weight: 900;
+    margin-bottom: 8px;
+    letter-spacing: 0.4px;
+    text-transform: uppercase;
+}
+
+.legal-subtitle {
+    color: #ff0033;
+    font-size: 0.73rem;
+    font-weight: 800;
+    margin-top: 8px;
+    margin-bottom: 4px;
+    letter-spacing: 0.3px;
+}
+
+.legal-text {
+    font-size: 0.72rem;
+    color: #bbbbbb;
+    line-height: 1.4;
+    margin-bottom: 6px;
+}
+
+.legal-list {
+    font-size: 0.72rem;
+    color: #bbbbbb;
+    padding-left: 18px;
+    line-height: 1.4;
+    margin-bottom: 6px;
+}
+
+.legal-list li {
+    margin-bottom: 3px;
+}
+
+.legal-contact {
+    font-size: 0.73rem;
+    color: #ffffff;
+    margin-top: 8px;
+    padding-top: 6px;
+    border-top: 1px dashed rgba(255, 0, 51, 0.3);
+    font-weight: 700;
+}
+
+.legal-contact a {
+    color: #ff0033;
+    text-decoration: none;
+}
+
+.legal-contact a:hover {
+    text-decoration: underline;
+}
+
 .modal {
     position: fixed;
     inset: 0;
@@ -728,7 +802,7 @@ input[type="checkbox"] {
     justify-content: center;
 }
 
-/* ESTILOS EXCLUSIVOS DEL CENTRO AVANZADO VIP */
+/* CENTRO AVANZADO VIP */
 .advanced-center-section {
     margin-top: 6px;
     padding-top: 10px;
@@ -773,48 +847,67 @@ input[type="checkbox"] {
 
 .advanced-btn svg {
     stroke: #ff0033;
-    transition: stroke 0.2s ease;
-    flex-shrink: 0;
+    transition: stroke 0.22s ease;
 }
 
 .advanced-btn:hover {
     background: #ff0033;
     color: #000000;
-    box-shadow: 0 0 16px rgba(255, 0, 51, 0.55);
-    transform: translateY(-1.5px);
+    box-shadow: 0 0 15px rgba(255, 0, 51, 0.5);
 }
 
 .advanced-btn:hover svg {
     stroke: #000000;
 }
 
-.advanced-btn:active {
-    transform: scale(0.96);
-}
-
+/* MODAL CARGADOR DE PROCESAMIENTO */
 .loader-modal {
     position: fixed;
     inset: 0;
-    background: rgba(0, 0, 0, 0.96);
+    background: rgba(0, 0, 0, 0.85);
     display: none;
     justify-content: center;
     align-items: center;
-    z-index: 999;
-    padding: 16px;
-    backdrop-filter: blur(12px);
+    z-index: 100;
+    backdrop-filter: blur(5px);
 }
 
 .loader-box {
-    background: #030303;
-    border: 2px solid #ff0033;
+    background: #050505;
+    border: 1.8px solid #ff0033;
     border-radius: 12px;
-    padding: 24px;
-    width: 100%;
-    max-width: 360px;
+    padding: 20px;
+    width: 280px;
     text-align: center;
-    box-shadow: 0 0 40px rgba(255, 0, 51, 0.4);
+    box-shadow: 0 0 30px rgba(255, 0, 51, 0.4);
 }
 
-.loader-percent { color: #ff0033; font-size: 2.8rem; font-weight: 900; font-family: monospace; }
-.progress-bar-bg { background: #0c0c0c; border: 1.2px solid #ff0033; border-radius: 8px; height: 16px; width: 100%; overflow: hidden; }
-.progress-bar-fill { background: linear-gradient(90deg, #ff0033 0%, #00ff66 100%); height: 100%; width: 0%; }
+.loader-status {
+    color: #ff0033;
+    font-size: 0.85rem;
+    font-weight: 900;
+    margin-bottom: 8px;
+    letter-spacing: 0.5px;
+}
+
+.loader-percent {
+    color: #ffffff;
+    font-size: 1.2rem;
+    font-weight: 900;
+    margin-bottom: 12px;
+}
+
+.progress-bar-bg {
+    background: #111111;
+    border: 1px solid #333333;
+    height: 10px;
+    border-radius: 5px;
+    overflow: hidden;
+}
+
+.progress-bar-fill {
+    background: linear-gradient(90deg, #ff0033, #00ff66);
+    height: 100%;
+    width: 0%;
+    transition: width 0.05s linear;
+}

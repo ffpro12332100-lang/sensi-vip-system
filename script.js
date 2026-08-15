@@ -218,6 +218,21 @@ function toggleVisibilidadPassword() {
     }
 }
 
+/* --- CONTROL DE MODAL DE SOPORTE --- */
+function abrirModalSoporte() {
+    ejecutarVibracion();
+    ejecutarSonidoUI('select');
+    const modal = document.getElementById('soporteModal');
+    if (modal) modal.style.display = 'flex';
+}
+
+function cerrarModalSoporte() {
+    ejecutarVibracion();
+    ejecutarSonidoUI('select');
+    const modal = document.getElementById('soporteModal');
+    if (modal) modal.style.display = 'none';
+}
+
 /* --- VALIDACIÓN DE CLAVES --- */
 function validarClaveEntrada(input) {
     const key = (input || '').trim();
@@ -335,7 +350,7 @@ function iniciarTemporizadorEnTiempoReal(session) {
     passTimerInterval = setInterval(actualizar, 1000);
 }
 
-/* --- PROCESAMIENTO DE LOGIN Y SESIÓN CON GUARDADO AUTOMÁTICO --- */
+/* --- PROCESAMIENTO DE LOGIN Y SESIÓN --- */
 function procesarLogin(e) {
     if (e && e.preventDefault) e.preventDefault();
     ejecutarVibracion();
@@ -359,7 +374,6 @@ function procesarLogin(e) {
         intentosFallidos = 0;
         SafeStorage.removeItem('svs_lock_until');
 
-        // Guardar la contraseña correctamente para autocompletar en el login
         SafeStorage.setItem('svs_saved_password', keyVal);
 
         let expiresAt = null;
@@ -391,6 +405,7 @@ function procesarLogin(e) {
 
             iniciarTemporizadorEnTiempoReal(sessionData);
             aplicarModoUniversal(appConfig.universalSensi);
+            aplicarOcultarLegal(appConfig.hideLegal);
             evaluarSugerenciaEnTiempoReal();
         });
     } else {
@@ -424,7 +439,6 @@ function cerrarSesion() {
     const alertBox = document.getElementById('loginAlertBox');
     if (alertBox) alertBox.style.display = 'none';
 
-    // Autocompletar la contraseña guardada si existe
     const savedPass = SafeStorage.getItem('svs_saved_password');
     const keyInput = document.getElementById('loginKey');
     if (keyInput) keyInput.value = savedPass || '';
@@ -474,6 +488,7 @@ window.configurarDesdeJava = function(cfg) {
     if (cfg.useDpi && DOM.useDpi) DOM.useDpi.value = cfg.useDpi;
     if (cfg.useBtn && DOM.useBtn) DOM.useBtn.value = cfg.useBtn;
     if (cfg.universalSensi !== undefined) aplicarModoUniversal(!!cfg.universalSensi);
+    if (cfg.hideLegal !== undefined) aplicarOcultarLegal(!!cfg.hideLegal);
     evaluarSugerenciaEnTiempoReal();
 };
 
@@ -511,13 +526,15 @@ function initDOMCache() {
         'soundToggle',
         'batterySaverToggle',
         'universalSensiToggle',
+        'hideLegalToggle',
         'infoUniversalModal',
         'loaderModal',
         'loaderStatusText',
         'loaderPercentText',
         'loaderProgressBarFill',
         'perfMonitorBox',
-        'mainApp'
+        'mainApp',
+        'legalSection'
     ];
     ids.forEach(id => DOM[id] = document.getElementById(id));
 }
@@ -527,7 +544,8 @@ const appConfig = {
     vibration: true,
     sound: true,
     gpuAccel: true,
-    universalSensi: false
+    universalSensi: false,
+    hideLegal: false
 };
 
 function aplicarModoUniversal(activo) {
@@ -550,6 +568,16 @@ function aplicarModoUniversal(activo) {
     evaluarSugerenciaEnTiempoReal();
 }
 
+function aplicarOcultarLegal(ocultar) {
+    appConfig.hideLegal = ocultar !== undefined ? !!ocultar : (DOM.hideLegalToggle ? DOM.hideLegalToggle.checked : false);
+    if (DOM.hideLegalToggle) DOM.hideLegalToggle.checked = appConfig.hideLegal;
+
+    const legalSec = DOM.legalSection || document.getElementById('legalSection');
+    if (legalSec) {
+        legalSec.style.display = appConfig.hideLegal ? 'none' : 'block';
+    }
+}
+
 function mostrarInfoSensiUniversal(e) {
     if (e && e.stopPropagation) e.stopPropagation();
     ejecutarVibracion();
@@ -563,7 +591,7 @@ function cerrarInfoSensiUniversal() {
     if (DOM.infoUniversalModal) DOM.infoUniversalModal.style.display = 'none';
 }
 
-/* --- MOTOR DE AUDIO Y VIBRACIÓN OPTIMIZADO PARA CUALQUIER DISPOSITIVO --- */
+/* --- MOTOR DE AUDIO Y VIBRACIÓN OPTIMIZADO --- */
 let audioCtxInstance = null;
 
 function obtenerAudioContext() {
@@ -763,14 +791,12 @@ window.addEventListener('DOMContentLoaded', () => {
     verificarEstadoBloqueo();
     setEstadoServidor(SERVIDOR_ACTIVO);
 
-    // Cargar la contraseña previamente guardada de forma automática
     const savedPass = SafeStorage.getItem('svs_saved_password');
     const keyInput = document.getElementById('loginKey');
     if (savedPass && keyInput) {
         keyInput.value = savedPass;
     }
 
-    // Verificar sesión guardada o activa
     const rawSession = SafeStorage.getItem('svs_active_session');
     if (rawSession) {
         try {
@@ -797,15 +823,18 @@ window.addEventListener('DOMContentLoaded', () => {
             appConfig.sound = parsed.sound !== undefined ? !!parsed.sound : true;
             appConfig.gpuAccel = parsed.gpuAccel !== undefined ? !!parsed.gpuAccel : true;
             appConfig.universalSensi = !!parsed.universalSensi;
+            appConfig.hideLegal = !!parsed.hideLegal;
 
             if (DOM.batterySaverToggle) DOM.batterySaverToggle.checked = appConfig.batterySaver;
             if (DOM.vibrationToggle) DOM.vibrationToggle.checked = appConfig.vibration;
             if (DOM.soundToggle) DOM.soundToggle.checked = appConfig.sound;
             if (DOM.gpuAccelToggle) DOM.gpuAccelToggle.checked = appConfig.gpuAccel;
             if (DOM.universalSensiToggle) DOM.universalSensiToggle.checked = appConfig.universalSensi;
+            if (DOM.hideLegalToggle) DOM.hideLegalToggle.checked = appConfig.hideLegal;
 
             aplicarModoAhorro();
             aplicarModoUniversal(appConfig.universalSensi);
+            aplicarOcultarLegal(appConfig.hideLegal);
         } catch (e) {}
     }
 
@@ -826,8 +855,10 @@ function guardarConfiguracion() {
     if (DOM.soundToggle) appConfig.sound = DOM.soundToggle.checked;
     if (DOM.gpuAccelToggle) appConfig.gpuAccel = DOM.gpuAccelToggle.checked;
     if (DOM.universalSensiToggle) appConfig.universalSensi = DOM.universalSensiToggle.checked;
+    if (DOM.hideLegalToggle) appConfig.hideLegal = DOM.hideLegalToggle.checked;
 
     aplicarModoUniversal(appConfig.universalSensi);
+    aplicarOcultarLegal(appConfig.hideLegal);
 
     if (DOM.mainApp) DOM.mainApp.style.transform = appConfig.gpuAccel ? 'translateZ(0)' : 'none';
 
@@ -836,7 +867,8 @@ function guardarConfiguracion() {
         vibration: appConfig.vibration,
         sound: appConfig.sound,
         gpuAccel: appConfig.gpuAccel,
-        universalSensi: appConfig.universalSensi
+        universalSensi: appConfig.universalSensi,
+        hideLegal: appConfig.hideLegal
     };
 
     SafeStorage.setItem('ff_sys_cfg_v12', JSON.stringify(payloadData));
