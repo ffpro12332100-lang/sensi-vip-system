@@ -1,0 +1,16 @@
+© 2026 Jhonatan David Mazenett Villarroel. Todos los derechos reservados.
+
+AVISO DE PROPIEDAD INTELECTUAL Y LICENCIA DE USO EXCLUSIVO
+
+Todo el contenido, código fuente (incluyendo HTML, CSS, JavaScript, WebAssembly y sus derivados), arquitectura de software, algoritmos, bases de datos, diseño de interfaz de usuario (UI/UX), marcas, logotipos y material gráfico o audiovisual presente en este sitio web y aplicación son propiedad exclusiva de Jhonatan David Mazenett Villarroel y se encuentran protegidos por las leyes internacionales y nacionales de derechos de autor y propiedad intelectual.
+
+QUEDA ESTRICTAMENTE PROHIBIDO:
+1. La copia, reproducción, distribución, modificación, venta, sublicenciamiento o comercialización total o parcial de cualquier componente del sistema.
+2. La ingeniería inversa, descompilación, desmontaje, desensamblado o intento de extracción de código fuente, lógica de negocio o algoritmos.
+3. La extracción automatizada de datos (web scraping, data mining) o el alojamiento no autorizado en servidores de terceros (mirroring).
+4. El uso de fragmentos de código, funciones o estilos para la creación de obras derivadas o aplicaciones competidoras.
+
+LICENCIA LIMITADA DE NAVEGACIÓN:
+Se concede al usuario una licencia temporal, limitada, revocable y no exclusiva únicamente para cargar y visualizar este sitio web mediante un navegador web estándar con fines estrictamente personales. La ejecución técnica necesaria en la memoria del navegador no constituye en ningún caso la transferencia de ningún derecho de propiedad intelectual sobre el software.
+
+Contacto para autorizaciones o licencias comerciales: [sanbranoricmaryis@gmail.com]
