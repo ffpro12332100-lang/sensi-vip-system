@@ -58,40 +58,36 @@ const SafeStorage = {
     }
 };
 
-/* --- CONTROL DE CONTRASEÑAS USADAS --- */
-function obtenerContrasenasUsadas() {
-    try {
-        const raw = SafeStorage.getItem('svs_used_passwords');
-        return raw ? JSON.parse(raw) : [];
-    } catch(e) {
-        return [];
-    }
-}
+/* --- CONTROL DE MODAL DE CONTRASEÑA USADA / EXPIRADA --- */
+let modalOrigenExpiracion = false;
 
-function registrarContrasenaUsada(clave) {
-    if (!clave) return;
-    const lista = obtenerContrasenasUsadas();
-    const claveNorm = clave.trim().toLowerCase();
-    if (!lista.includes(claveNorm)) {
-        lista.push(claveNorm);
-        SafeStorage.setItem('svs_used_passwords', JSON.stringify(lista));
-    }
-}
-
-function esContrasenaUsada(clave) {
-    if (!clave) return false;
-    const lista = obtenerContrasenasUsadas();
-    return lista.includes(clave.trim().toLowerCase());
-}
-
-function mostrarModalContrasenaUsada(clave) {
+function mostrarModalContrasenaUsada(clave, esExpiracionEnUso = false) {
     ejecutarVibracion();
     ejecutarSonidoUI('gen');
+    modalOrigenExpiracion = !!esExpiracionEnUso;
     const modal = document.getElementById('usedPasswordModal');
     const display = document.getElementById('usedPassDisplay');
-    if (display && clave) {
-        display.textContent = clave.length > 3 ? clave.substring(0, 3) + '••••' : clave;
+    const subtitle = document.getElementById('usedPassSubtitle');
+    const msg = document.getElementById('usedPassMsg');
+
+    const claveCensurada = clave ? (clave.length > 3 ? clave.substring(0, 3) + '••••' : clave) : '••••••••';
+
+    if (display) {
+        display.textContent = claveCensurada;
     }
+
+    if (esExpiracionEnUso) {
+        if (subtitle) subtitle.textContent = "ACCESO DENEGADO - CLAVE EXPIRADA";
+        if (msg) {
+            msg.innerHTML = `Tu clave temporal <strong id="usedPassDisplay" class="used-pass-highlight">${claveCensurada}</strong> ha expirado mientras utilizabas el <strong>Generador de Sensibilidad</strong>. El acceso ha finalizado.`;
+        }
+    } else {
+        if (subtitle) subtitle.textContent = "CLAVE EXPIRADA O YA UTILIZADA";
+        if (msg) {
+            msg.innerHTML = `La contraseña ingresada <strong id="usedPassDisplay" class="used-pass-highlight">${claveCensurada}</strong> ha expirado o ya ha cumplido su ciclo en este dispositivo.`;
+        }
+    }
+
     if (modal) modal.style.display = 'flex';
 }
 
@@ -100,6 +96,11 @@ function cerrarModalContrasenaUsada() {
     ejecutarSonidoUI('select');
     const modal = document.getElementById('usedPasswordModal');
     if (modal) modal.style.display = 'none';
+
+    if (modalOrigenExpiracion) {
+        cerrarSesion();
+        modalOrigenExpiracion = false;
+    }
 }
 
 /* ==========================================================================
@@ -123,7 +124,7 @@ const SISTEMA_CLAVES = {
         { clave: "z9#R2!mK7$vT", tipo: "30 Días", mensaje: "Pase Temporal de 30 Días (1 Mes) Activo", duracionMs: 30 * 24 * 60 * 60 * 1000 },
         { clave: "h5@P8*qW1&xB", tipo: "30 Días", mensaje: "Pase Temporal de 30 Días (1 Mes) Activo", duracionMs: 30 * 24 * 60 * 60 * 1000 },
         { clave: "c3!N9$yJ4#sM", tipo: "30 Días", mensaje: "Pase Temporal de 30 Días (1 Mes) Activo", duracionMs: 30 * 24 * 60 * 60 * 1000 },
-        { clave: "1", tipo: "1 minuto", mensaje: "Pase Temporal de un minuto (1 minuto) Activo", duracionMs: 1 * 60 * 1000 }
+        { clave: "1234", tipo: "1 minuto", mensaje: "Pase Temporal de un minuto (1 minuto) Activo", duracionMs: 1 * 60 * 1000 }
     ]
 };
 
@@ -330,8 +331,8 @@ function iniciarTemporizadorEnTiempoReal(session) {
                     clearInterval(passTimerInterval);
                     passTimerInterval = null;
                 }
-                alert('⚠️ Tu pase temporal ha expirado.');
-                cerrarSesion();
+                // Muestra la pantalla de Acceso Denegado adaptada al generador cuando expira en uso
+                mostrarModalContrasenaUsada(session.key || '••••••••', true);
                 return;
             }
 
@@ -360,6 +361,9 @@ function iniciarTemporizadorEnTiempoReal(session) {
     passTimerInterval = setInterval(actualizar, 1000);
 }
 
+/* ==========================================================================
+   🔧 CORRECCIÓN DE LOGIN Y GESTIÓN DE TIEMPOS
+   ========================================================================== */
 function procesarLogin(e) {
     if (e && e.preventDefault) e.preventDefault();
     ejecutarVibracion();
@@ -372,12 +376,6 @@ function procesarLogin(e) {
 
     if (!keyVal) return;
 
-    // VERIFICACIÓN DE CONTRASEÑA YA UTILIZADA
-    if (esContrasenaUsada(keyVal)) {
-        mostrarModalContrasenaUsada(keyVal);
-        return;
-    }
-
     const resultado = validarClaveEntrada(keyVal);
 
     if (!SERVIDOR_ACTIVO && resultado.tipo !== 'ADMIN') {
@@ -385,47 +383,7 @@ function procesarLogin(e) {
         return;
     }
 
-    if (resultado.esValida) {
-        intentosFallidos = 0;
-        SafeStorage.removeItem('svs_lock_until');
-        SafeStorage.setItem('svs_saved_password', keyVal);
-        registrarContrasenaUsada(keyVal);
-
-        let expiresAt = null;
-        if (resultado.tipo === 'TEMPORAL') {
-            const storageKey = 'svs_pass_exp_' + resultado.key;
-            let storedExp = SafeStorage.getItem(storageKey);
-            if (storedExp && !isNaN(parseInt(storedExp, 10))) {
-                expiresAt = parseInt(storedExp, 10);
-            } else {
-                expiresAt = Date.now() + resultado.duracionMs;
-                SafeStorage.setItem(storageKey, expiresAt.toString());
-            }
-        }
-
-        const sessionData = { ...resultado, expiresAt: expiresAt };
-
-        SafeStorage.setItem('svs_active_session', JSON.stringify(sessionData));
-        try {
-            sessionStorage.setItem('svs_auth_user', JSON.stringify(sessionData));
-        } catch(err) {}
-
-        const alertBox = document.getElementById('loginAlertBox');
-        if (alertBox) alertBox.style.display = 'none';
-
-        iniciarCarga(() => {
-            const loginCard = document.getElementById('loginCard');
-            const mainApp = document.getElementById('mainApp');
-
-            if (loginCard) loginCard.style.display = 'none';
-            if (mainApp) mainApp.style.display = 'block';
-
-            iniciarTemporizadorEnTiempoReal(sessionData);
-            aplicarModoUniversal(appConfig.universalSensi);
-            aplicarOcultarLegal(appConfig.hideLegal);
-            evaluarSugerenciaEnTiempoReal(false);
-        });
-    } else {
+    if (!resultado.esValida) {
         intentosFallidos++;
         if (intentosFallidos >= MAX_INTENTOS) {
             const bloqueoHasta = Date.now() + (TIEMPO_BLOQUEO_SEG * 1000);
@@ -435,7 +393,64 @@ function procesarLogin(e) {
             const restantes = MAX_INTENTOS - intentosFallidos;
             mostrarAlertaLogin(`⚠️ Clave incorrecta. Intentos restantes: ${restantes}/${MAX_INTENTOS}`);
         }
+        return;
     }
+
+    if (resultado.tipo === 'ADMIN' || resultado.tipo === 'PERMANENTE') {
+        completarLoginExitoso(resultado, keyVal, null);
+        return;
+    }
+
+    if (resultado.tipo === 'TEMPORAL') {
+        const storageKey = 'svs_pass_exp_' + resultado.key.toLowerCase();
+        const storedExp = SafeStorage.getItem(storageKey);
+        const ahora = Date.now();
+
+        if (storedExp && !isNaN(parseInt(storedExp, 10))) {
+            const expiresAtNum = parseInt(storedExp, 10);
+            if (expiresAtNum > ahora) {
+                completarLoginExitoso(resultado, keyVal, expiresAtNum);
+                return;
+            } else {
+                mostrarModalContrasenaUsada(keyVal, false);
+                return;
+            }
+        } else {
+            const expiresAt = ahora + resultado.duracionMs;
+            SafeStorage.setItem(storageKey, expiresAt.toString());
+            completarLoginExitoso(resultado, keyVal, expiresAt);
+            return;
+        }
+    }
+}
+
+function completarLoginExitoso(resultado, keyVal, expiresAt) {
+    intentosFallidos = 0;
+    SafeStorage.removeItem('svs_lock_until');
+    SafeStorage.setItem('svs_saved_password', keyVal);
+
+    const sessionData = { ...resultado, expiresAt: expiresAt };
+
+    SafeStorage.setItem('svs_active_session', JSON.stringify(sessionData));
+    try {
+        sessionStorage.setItem('svs_auth_user', JSON.stringify(sessionData));
+    } catch(err) {}
+
+    const alertBox = document.getElementById('loginAlertBox');
+    if (alertBox) alertBox.style.display = 'none';
+
+    iniciarCarga(() => {
+        const loginCard = document.getElementById('loginCard');
+        const mainApp = document.getElementById('mainApp');
+
+        if (loginCard) loginCard.style.display = 'none';
+        if (mainApp) mainApp.style.display = 'block';
+
+        iniciarTemporizadorEnTiempoReal(sessionData);
+        aplicarModoUniversal(appConfig.universalSensi);
+        aplicarOcultarLegal(appConfig.hideLegal);
+        evaluarSugerenciaEnTiempoReal(false);
+    });
 }
 
 function cerrarSesion() {

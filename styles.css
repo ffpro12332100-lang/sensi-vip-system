@@ -822,34 +822,33 @@ input[type="checkbox"] {
     font-weight: 800;
     margin-top: 8px;
     margin-bottom: 4px;
-    letter-spacing: 0.3px;
+    letter-spacing: 0.4px;
+    text-transform: uppercase;
 }
 
 .legal-text {
-    font-size: 0.72rem;
-    color: #bbbbbb;
-    line-height: 1.4;
-    margin-bottom: 6px;
+    color: #cccccc;
+    font-size: 0.75rem;
+    line-height: 1.45;
+    margin-bottom: 8px;
 }
 
 .legal-list {
-    font-size: 0.72rem;
-    color: #bbbbbb;
-    padding-left: 18px;
-    line-height: 1.4;
-    margin-bottom: 6px;
+    color: #cccccc;
+    font-size: 0.75rem;
+    padding-left: 16px;
+    margin-bottom: 8px;
+    line-height: 1.45;
 }
 
 .legal-list li {
-    margin-bottom: 3px;
+    margin-bottom: 4px;
 }
 
 .legal-contact {
-    font-size: 0.73rem;
     color: #ffffff;
+    font-size: 0.75rem;
     margin-top: 8px;
-    padding-top: 6px;
-    border-top: 1px dashed rgba(255, 0, 51, 0.3);
     font-weight: 700;
 }
 
@@ -857,84 +856,105 @@ input[type="checkbox"] {
     color: #ff0033;
     text-decoration: none;
 }
-
 .legal-contact a:hover {
     text-decoration: underline;
 }
 
+/* MODALES GENERALES */
 .modal {
-    position: fixed;
-    inset: 0;
-    background: rgba(0,0,0,0.94);
     display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.85);
+    z-index: 1000;
     justify-content: center;
     align-items: center;
-    z-index: 99;
-    padding: 14px;
+    padding: 15px;
     backdrop-filter: blur(8px);
 }
 
 .modal-box {
     background: #050505;
     border: 1.8px solid #ff0033;
-    padding: 16px;
-    border-radius: 10px;
+    border-radius: 12px;
     width: 100%;
-    max-width: 500px;
+    max-width: 440px;
+    padding: 20px;
+    box-shadow: 0 0 35px rgba(255, 0, 51, 0.35);
     display: flex;
     flex-direction: column;
-    gap: 12px;
-    max-height: 88vh;
+    gap: 14px;
+    max-height: 90vh;
     overflow-y: auto;
-    -webkit-overflow-scrolling: touch;
-    box-shadow: 0 0 35px rgba(255, 0, 51, 0.35);
+}
+
+.modal-title {
+    color: #ff0033;
+    font-size: 1.05rem;
+    font-weight: 900;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
 }
 
 .setting-toggle-row {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 8px 0;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    background: #0a0a0a;
+    padding: 10px 12px;
+    border-radius: 7px;
+    border: 1px solid rgba(255, 0, 51, 0.2);
 }
 
 .setting-toggle-label {
-    font-size: 0.82rem;
+    font-size: 0.8rem;
     color: #ffffff;
     font-weight: 700;
 }
 
 .help-circle-btn {
-    background: rgba(255, 0, 51, 0.2);
+    background: rgba(255, 0, 51, 0.15);
     border: 1px solid #ff0033;
     color: #ff0033;
+    width: 22px;
+    height: 22px;
     border-radius: 50%;
-    width: 20px;
-    height: 20px;
-    font-size: 0.75rem;
+    font-size: 0.72rem;
     font-weight: 900;
     cursor: pointer;
     display: flex;
     align-items: center;
     justify-content: center;
+    transition: all 0.2s ease;
+}
+
+.help-circle-btn:hover {
+    background: #ff0033;
+    color: #000000;
+    box-shadow: 0 0 8px rgba(255, 0, 51, 0.6);
 }
 
 .advanced-center-section {
-    margin-top: 10px;
-    padding: 10px;
     background: #0a0a0a;
-    border: 1.2px solid rgba(255, 0, 51, 0.3);
+    border: 1.2px solid rgba(255, 0, 51, 0.4);
     border-radius: 8px;
+    padding: 12px;
+    margin-top: 4px;
 }
 
 .advanced-center-title {
     color: #ff0033;
     font-size: 0.78rem;
     font-weight: 900;
-    letter-spacing: 0.5px;
     display: block;
-    margin-bottom: 8px;
-    text-align: center;
+    margin-bottom: 10px;
+    letter-spacing: 0.5px;
 }
 
 .advanced-center-grid {
@@ -944,90 +964,32 @@ input[type="checkbox"] {
 }
 
 .advanced-btn {
-    background: #050505;
-    border: 1px solid rgba(255, 0, 51, 0.4);
-    color: #ffffff;
-    padding: 8px;
-    border-radius: 6px;
-    font-size: 0.72rem;
-    font-weight: 700;
-    text-decoration: none;
     display: flex;
     align-items: center;
-    gap: 6px;
-    justify-content: center;
+    gap: 8px;
+    background: #111111;
+    border: 1px solid rgba(255, 0, 51, 0.3);
+    color: #ffffff;
+    text-decoration: none;
+    padding: 9px 10px;
+    border-radius: 6px;
+    font-size: 0.74rem;
+    font-weight: 700;
     transition: all 0.2s ease;
 }
 
 .advanced-btn:hover {
-    border-color: #ff0033;
     background: rgba(255, 0, 51, 0.15);
+    border-color: #ff0033;
     color: #ff0033;
+    box-shadow: 0 0 10px rgba(255, 0, 51, 0.25);
+    transform: translateY(-1px);
 }
 
-.loader-modal {
-    position: fixed;
-    inset: 0;
-    background: rgba(0,0,0,0.95);
-    display: none;
-    justify-content: center;
-    align-items: center;
-    z-index: 100;
-    backdrop-filter: blur(10px);
-}
-
-.loader-box {
-    background: #050505;
-    border: 1.8px solid #ff0033;
-    padding: 24px;
-    border-radius: 12px;
-    width: 90%;
-    max-width: 320px;
-    text-align: center;
-    box-shadow: 0 0 30px rgba(255, 0, 51, 0.4);
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-}
-
-.loader-status {
-    color: #ff0033;
-    font-weight: 900;
-    font-size: 0.95rem;
-    letter-spacing: 1px;
-}
-
-.loader-percent {
-    color: #00ff66;
-    font-weight: 900;
-    font-size: 1.4rem;
-    font-family: monospace;
-}
-
-.progress-bar-bg {
-    background: #0a0a0a;
-    border: 1px solid #333;
-    height: 10px;
-    border-radius: 5px;
-    overflow: hidden;
-    width: 100%;
-}
-
-.progress-bar-fill {
-    background: linear-gradient(90deg, #ff0033, #00ff66);
-    height: 100%;
-    width: 0%;
-    transition: width 0.05s linear;
-}
-
-/* ESTILOS PANTALLA VIP 10/10 DE CONTRASEÑA UTILIZADA */
+/* ESTILOS DEL MODAL DE CONTRASEÑA USADA / EXPIRADA */
 .used-password-box {
-    max-width: 440px;
+    max-width: 420px;
     text-align: center;
-    border: 2px solid #ff0033;
-    box-shadow: 0 0 45px rgba(255, 0, 51, 0.5), inset 0 0 20px rgba(255, 0, 51, 0.1);
-    background: #050505;
-    padding: 22px 18px;
 }
 
 .used-pass-header {
@@ -1035,42 +997,40 @@ input[type="checkbox"] {
     flex-direction: column;
     align-items: center;
     gap: 6px;
-    margin-bottom: 10px;
 }
 
 .used-pass-icon-glow {
-    background: rgba(255, 0, 51, 0.12);
-    border: 1.5px solid #ff0033;
-    padding: 14px;
+    background: rgba(255, 0, 51, 0.08);
+    border: 1px solid rgba(255, 0, 51, 0.4);
+    padding: 12px;
     border-radius: 50%;
-    box-shadow: 0 0 25px rgba(255, 0, 51, 0.5);
-    margin-bottom: 6px;
+    box-shadow: 0 0 20px rgba(255, 0, 51, 0.3);
+    margin-bottom: 2px;
 }
 
 .used-pass-title {
     color: #ff0033;
-    font-size: 1.25rem;
+    font-size: 1.2rem;
     font-weight: 900;
-    letter-spacing: 1.2px;
-    text-shadow: 0 0 15px rgba(255, 0, 51, 0.6);
+    letter-spacing: 1px;
+    text-shadow: 0 0 10px rgba(255, 0, 51, 0.5);
 }
 
 .used-pass-subtitle {
-    color: #888888;
-    font-size: 0.7rem;
+    font-size: 0.72rem;
+    color: #aaaaaa;
     font-weight: 800;
-    letter-spacing: 1.5px;
+    letter-spacing: 1.2px;
 }
 
 .used-pass-body {
     display: flex;
     flex-direction: column;
-    gap: 10px;
-    margin: 8px 0;
+    gap: 12px;
 }
 
 .used-pass-alert-card {
-    background: rgba(255, 0, 51, 0.09);
+    background: rgba(255, 0, 51, 0.1);
     border: 1.2px solid #ff0033;
     border-radius: 8px;
     padding: 12px;
@@ -1078,78 +1038,131 @@ input[type="checkbox"] {
     align-items: center;
     gap: 10px;
     text-align: left;
-    box-shadow: inset 0 0 10px rgba(255, 0, 51, 0.1);
+    box-shadow: 0 0 12px rgba(255, 0, 51, 0.15);
 }
 
 .used-pass-alert-icon {
     font-size: 1.4rem;
+    flex-shrink: 0;
 }
 
 .used-pass-msg {
-    font-size: 0.8rem;
-    color: #ffffff;
+    font-size: 0.82rem;
+    color: #e0e0e0;
     line-height: 1.4;
 }
 
 .used-pass-highlight {
     color: #ff0033;
-    font-family: monospace;
-    font-size: 0.88rem;
-    background: #000;
-    padding: 2px 6px;
-    border-radius: 4px;
-    border: 1px solid rgba(255, 0, 51, 0.4);
+    font-weight: 900;
 }
 
 .used-pass-info-list {
-    background: #0a0a0a;
-    border: 1px solid rgba(255, 255, 255, 0.08);
-    border-radius: 8px;
-    padding: 12px;
     display: flex;
     flex-direction: column;
     gap: 8px;
     text-align: left;
+    background: #0a0a0a;
+    padding: 10px 12px;
+    border-radius: 8px;
+    border: 1px solid rgba(255, 0, 51, 0.2);
 }
 
 .used-pass-info-item {
     display: flex;
     align-items: flex-start;
     gap: 8px;
-    font-size: 0.76rem;
+    font-size: 0.78rem;
     color: #cccccc;
     line-height: 1.35;
 }
 
 .info-bullet {
-    font-size: 0.85rem;
+    flex-shrink: 0;
 }
 
 .used-pass-actions {
     display: flex;
     flex-direction: column;
     gap: 8px;
-    margin-top: 6px;
+    margin-top: 4px;
 }
 
 .btn-used-pass-soporte {
-    background: linear-gradient(135deg, #ff0033 0%, #a80022 100%);
+    background: linear-gradient(135deg, #ff0033 0%, #cc0029 100%);
     color: #ffffff;
-    border: none;
     box-shadow: 0 0 15px rgba(255, 0, 51, 0.4);
 }
 
 .btn-used-pass-soporte:hover {
-    box-shadow: 0 0 25px rgba(255, 0, 51, 0.7);
+    box-shadow: 0 0 22px rgba(255, 0, 51, 0.7);
 }
 
 .btn-used-pass-close {
-    background: #000000;
-    border: 1px solid #444444;
-    color: #aaaaaa;
+    background: #0a0a0a;
+    color: #cccccc;
+    border-color: #333333;
 }
 
 .btn-used-pass-close:hover {
     border-color: #ff0033;
     color: #ffffff;
+}
+
+/* LOADER MODAL */
+.loader-modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.9);
+    z-index: 2000;
+    justify-content: center;
+    align-items: center;
+}
+
+.loader-box {
+    background: #050505;
+    border: 2px solid #ff0033;
+    border-radius: 12px;
+    padding: 24px;
+    width: 280px;
+    text-align: center;
+    box-shadow: 0 0 35px rgba(255, 0, 51, 0.5);
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.loader-status {
+    color: #ff0033;
+    font-size: 0.95rem;
+    font-weight: 900;
+    letter-spacing: 1px;
+}
+
+.loader-percent {
+    color: #ffffff;
+    font-size: 1.6rem;
+    font-weight: 900;
+    font-family: monospace;
+}
+
+.progress-bar-bg {
+    background: #0a0a0a;
+    border: 1px solid #333333;
+    height: 8px;
+    border-radius: 4px;
+    overflow: hidden;
+    position: relative;
+}
+
+.progress-bar-fill {
+    background: linear-gradient(90deg, #ff0033, #00ff66);
+    height: 100%;
+    width: 0%;
+    transition: width 0.05s linear;
+    box-shadow: 0 0 10px #ff0033;
 }

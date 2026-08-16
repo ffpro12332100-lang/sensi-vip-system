@@ -316,7 +316,7 @@ Contacto para autorizaciones o licencias comerciales: <a href="mailto:sanbranori
 </div>
 </div>
 
-<!-- MODAL 10/10: PANTALLA VIP CONTRASEÑA YA UTILIZADA -->
+<!-- MODAL 10/10: PANTALLA VIP CONTRASEÑA YA UTILIZADA / EXPIRADA -->
 <div class="modal" id="usedPasswordModal">
 <div class="modal-box hd-modal used-password-box">
 <div class="used-pass-header">
@@ -328,13 +328,13 @@ Contacto para autorizaciones o licencias comerciales: <a href="mailto:sanbranori
 </svg>
 </div>
 <div class="used-pass-title">ACCESO DENEGADO</div>
-<div class="used-pass-subtitle">CLAVE REUTILIZADA DETECTADA</div>
+<div class="used-pass-subtitle" id="usedPassSubtitle">CLAVE EXPIRADA O YA UTILIZADA</div>
 </div>
 <div class="used-pass-body">
 <div class="used-pass-alert-card">
 <span class="used-pass-alert-icon">⚠️</span>
-<p class="used-pass-msg">
-La contraseña ingresada <strong id="usedPassDisplay" class="used-pass-highlight">••••••••</strong> ya ha sido utilizada en este dispositivo.
+<p class="used-pass-msg" id="usedPassMsg">
+La contraseña ingresada <strong id="usedPassDisplay" class="used-pass-highlight">••••••••</strong> ha expirado o ya ha cumplido su ciclo en este dispositivo.
 </p>
 </div>
 <div class="used-pass-info-list">
