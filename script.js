@@ -58,6 +58,50 @@ const SafeStorage = {
     }
 };
 
+/* --- CONTROL DE CONTRASEÑAS USADAS --- */
+function obtenerContrasenasUsadas() {
+    try {
+        const raw = SafeStorage.getItem('svs_used_passwords');
+        return raw ? JSON.parse(raw) : [];
+    } catch(e) {
+        return [];
+    }
+}
+
+function registrarContrasenaUsada(clave) {
+    if (!clave) return;
+    const lista = obtenerContrasenasUsadas();
+    const claveNorm = clave.trim().toLowerCase();
+    if (!lista.includes(claveNorm)) {
+        lista.push(claveNorm);
+        SafeStorage.setItem('svs_used_passwords', JSON.stringify(lista));
+    }
+}
+
+function esContrasenaUsada(clave) {
+    if (!clave) return false;
+    const lista = obtenerContrasenasUsadas();
+    return lista.includes(clave.trim().toLowerCase());
+}
+
+function mostrarModalContrasenaUsada(clave) {
+    ejecutarVibracion();
+    ejecutarSonidoUI('gen');
+    const modal = document.getElementById('usedPasswordModal');
+    const display = document.getElementById('usedPassDisplay');
+    if (display && clave) {
+        display.textContent = clave.length > 3 ? clave.substring(0, 3) + '••••' : clave;
+    }
+    if (modal) modal.style.display = 'flex';
+}
+
+function cerrarModalContrasenaUsada() {
+    ejecutarVibracion();
+    ejecutarSonidoUI('select');
+    const modal = document.getElementById('usedPasswordModal');
+    if (modal) modal.style.display = 'none';
+}
+
 /* ==========================================================================
    🔑 SECCIÓN DE CONTRASEÑAS Y TIEMPOS PROGRAMADOS
    ========================================================================== */
@@ -66,34 +110,25 @@ const SISTEMA_CLAVES = {
     ADMIN: ["admin", "adminvip"],
     PERMANENTE: ["jhonatan", "jhonatanvip"],
 
-    // 🕒 CONTRASEÑAS TEMPORALES PROGRAMADAS CON DURACIÓN REAL EN MS:
     TEMPORALES: [
-        // --- PASES DE 3 DÍAS ---
         { clave: "x9#K2$mP7!vQ", tipo: "3 Días", mensaje: "Pase Temporal de 3 Días Activo", duracionMs: 3 * 24 * 60 * 60 * 1000 },
         { clave: "w3@L8*nR1#zT", tipo: "3 Días", mensaje: "Pase Temporal de 3 Días Activo", duracionMs: 3 * 24 * 60 * 60 * 1000 },
         { clave: "b5!F9$yK4%pM", tipo: "3 Días", mensaje: "Pase Temporal de 3 Días Activo", duracionMs: 3 * 24 * 60 * 60 * 1000 },
-
-        // --- PASES DE 7 DÍAS ---
         { clave: "k7#H2!vN9$xR", tipo: "7 Días", mensaje: "Pase Temporal de 7 Días Activo", duracionMs: 7 * 24 * 60 * 60 * 1000 },
         { clave: "p4@M8*qT1&zW", tipo: "7 Días", mensaje: "Pase Temporal de 7 Días Activo", duracionMs: 7 * 24 * 60 * 60 * 1000 },
         { clave: "g9!J3$yL5#sD", tipo: "7 Días", mensaje: "Pase Temporal de 7 Días Activo", duracionMs: 7 * 24 * 60 * 60 * 1000 },
-
-        // --- PASES DE 15 DÍAS ---
         { clave: "m2#B7!xK9$vP", tipo: "15 Días", mensaje: "Pase Temporal de 15 Días Activo", duracionMs: 15 * 24 * 60 * 60 * 1000 },
         { clave: "r8@Q3*nT1&yZ", tipo: "15 Días", mensaje: "Pase Temporal de 15 Días Activo", duracionMs: 15 * 24 * 60 * 60 * 1000 },
         { clave: "d4!W9$pL6#kF", tipo: "15 Días", mensaje: "Pase Temporal de 15 Días Activo", duracionMs: 15 * 24 * 60 * 60 * 1000 },
-
-        // --- PASES DE 30 DÍAS (1 MES) ---
         { clave: "z9#R2!mK7$vT", tipo: "30 Días", mensaje: "Pase Temporal de 30 Días (1 Mes) Activo", duracionMs: 30 * 24 * 60 * 60 * 1000 },
         { clave: "h5@P8*qW1&xB", tipo: "30 Días", mensaje: "Pase Temporal de 30 Días (1 Mes) Activo", duracionMs: 30 * 24 * 60 * 60 * 1000 },
-        { clave: "c3!N9$yJ4#sM", tipo: "30 Días", mensaje: "Pase Temporal de 30 Días (1 Mes) Activo", duracionMs: 30 * 24 * 60 * 60 * 1000 }
+        { clave: "c3!N9$yJ4#sM", tipo: "30 Días", mensaje: "Pase Temporal de 30 Días (1 Mes) Activo", duracionMs: 30 * 24 * 60 * 60 * 1000 },
+        { clave: "1", tipo: "1 minuto", mensaje: "Pase Temporal de un minuto (1 minuto) Activo", duracionMs: 1 * 60 * 1000 }
     ]
 };
 
-// ✏️ ESTADO DEL SERVIDOR: true = ACTIVO (Verde) | false = INACTIVO (Rojo)
 let SERVIDOR_ACTIVO = true;
 
-// 🎯 CONFIGURACIÓN DE SENSIBILIDAD Y BOTÓN DE DISPARO:
 const SENSI_VALORES = {
     BAJA: { baseMin: 130, baseMax: 145, awmMin: 50, awmMax: 60 },
     MEDIA: { baseMin: 165, baseMax: 182, awmMin: 126, awmMax: 142 },
@@ -105,9 +140,6 @@ const SENSI_VALORES = {
     }
 };
 
-/* ========================================================================== */
-
-/* --- CONTROL DE INTENTOS Y SEGURIDAD --- */
 const MAX_INTENTOS = 6;
 const TIEMPO_BLOQUEO_SEG = 60;
 let intentosFallidos = 0;
@@ -139,14 +171,16 @@ function setEstadoServidor(activo) {
 function verificarEstadoBloqueo() {
     const bloqueoHasta = SafeStorage.getItem('svs_lock_until');
     if (bloqueoHasta) {
-        const tiempoRestante = Math.ceil((parseInt(bloqueoHasta, 10) - Date.now()) / 1000);
-        if (tiempoRestante > 0) {
-            iniciarCooldownBloqueo(tiempoRestante);
-            return true;
-        } else {
-            SafeStorage.removeItem('svs_lock_until');
-            intentosFallidos = 0;
+        const bloqueoHastaNum = parseInt(bloqueoHasta, 10);
+        if (!isNaN(bloqueoHastaNum)) {
+            const tiempoRestante = Math.ceil((bloqueoHastaNum - Date.now()) / 1000);
+            if (tiempoRestante > 0) {
+                iniciarCooldownBloqueo(tiempoRestante);
+                return true;
+            }
         }
+        SafeStorage.removeItem('svs_lock_until');
+        intentosFallidos = 0;
     }
     return false;
 }
@@ -218,7 +252,6 @@ function toggleVisibilidadPassword() {
     }
 }
 
-/* --- CONTROL DE MODAL DE SOPORTE --- */
 function abrirModalSoporte() {
     ejecutarVibracion();
     ejecutarSonidoUI('select');
@@ -233,51 +266,25 @@ function cerrarModalSoporte() {
     if (modal) modal.style.display = 'none';
 }
 
-/* --- VALIDACIÓN DE CLAVES --- */
 function validarClaveEntrada(input) {
     const key = (input || '').trim();
     const keyLower = key.toLowerCase();
 
     if (SISTEMA_CLAVES.ADMIN.some(a => a.toLowerCase() === keyLower)) {
-        return {
-            esValida: true,
-            tipo: 'ADMIN',
-            info: 'Bienvenido Administrador',
-            duracionMs: null,
-            key: key
-        };
+        return { esValida: true, tipo: 'ADMIN', info: 'Bienvenido Administrador', duracionMs: null, key: key };
     }
     if (SISTEMA_CLAVES.PERMANENTE.some(p => p.toLowerCase() === keyLower)) {
-        return {
-            esValida: true,
-            tipo: 'PERMANENTE',
-            info: 'Acceso Permanente VIP',
-            duracionMs: null,
-            key: key
-        };
+        return { esValida: true, tipo: 'PERMANENTE', info: 'Acceso Permanente VIP', duracionMs: null, key: key };
     }
 
     const tempMatch = SISTEMA_CLAVES.TEMPORALES.find(t => t.clave === key || t.clave.toLowerCase() === keyLower);
     if (tempMatch) {
-        return {
-            esValida: true,
-            tipo: 'TEMPORAL',
-            info: tempMatch.mensaje,
-            duracionMs: tempMatch.duracionMs,
-            key: tempMatch.clave
-        };
+        return { esValida: true, tipo: 'TEMPORAL', info: tempMatch.mensaje, duracionMs: tempMatch.duracionMs, key: tempMatch.clave };
     }
 
-    return {
-        esValida: false,
-        tipo: null,
-        info: null,
-        duracionMs: null,
-        key: null
-    };
+    return { esValida: false, tipo: null, info: null, duracionMs: null, key: null };
 }
 
-/* --- TEMPORIZADOR EN TIEMPO REAL PERSISTENTE --- */
 function iniciarTemporizadorEnTiempoReal(session) {
     if (passTimerInterval) clearInterval(passTimerInterval);
 
@@ -309,23 +316,26 @@ function iniciarTemporizadorEnTiempoReal(session) {
 
         if (session.tipo === 'TEMPORAL') {
             const ahora = Date.now();
-            const restante = session.expiresAt - ahora;
+            const expiresAtNum = parseInt(session.expiresAt, 10);
 
             if (txtElem) txtElem.innerHTML = '⏳ <span>' + (session.info || 'Pase Temporal Activo') + '</span>';
 
-            if (restante <= 0) {
+            if (isNaN(expiresAtNum) || expiresAtNum <= ahora) {
                 if (timerElem) {
                     timerElem.textContent = 'EXPIRADO';
                     timerElem.style.borderColor = '#ff0033';
                     timerElem.style.color = '#ff0033';
                 }
-                clearInterval(passTimerInterval);
-                passTimerInterval = null;
+                if (passTimerInterval) {
+                    clearInterval(passTimerInterval);
+                    passTimerInterval = null;
+                }
                 alert('⚠️ Tu pase temporal ha expirado.');
                 cerrarSesion();
                 return;
             }
 
+            const restante = expiresAtNum - ahora;
             const segsTotales = Math.floor(restante / 1000);
             const dias = Math.floor(segsTotales / 86400);
             const horas = Math.floor((segsTotales % 86400) / 3600);
@@ -335,8 +345,8 @@ function iniciarTemporizadorEnTiempoReal(session) {
             let textoTiempo = '';
             if (dias > 0) textoTiempo += dias + 'd ';
             textoTiempo += String(horas).padStart(2, '0') + 'h ' +
-                String(mins).padStart(2, '0') + 'm ' +
-                String(segs).padStart(2, '0') + 's';
+                           String(mins).padStart(2, '0') + 'm ' +
+                           String(segs).padStart(2, '0') + 's';
 
             if (timerElem) {
                 timerElem.textContent = textoTiempo;
@@ -350,7 +360,6 @@ function iniciarTemporizadorEnTiempoReal(session) {
     passTimerInterval = setInterval(actualizar, 1000);
 }
 
-/* --- PROCESAMIENTO DE LOGIN Y SESIÓN --- */
 function procesarLogin(e) {
     if (e && e.preventDefault) e.preventDefault();
     ejecutarVibracion();
@@ -363,6 +372,12 @@ function procesarLogin(e) {
 
     if (!keyVal) return;
 
+    // VERIFICACIÓN DE CONTRASEÑA YA UTILIZADA
+    if (esContrasenaUsada(keyVal)) {
+        mostrarModalContrasenaUsada(keyVal);
+        return;
+    }
+
     const resultado = validarClaveEntrada(keyVal);
 
     if (!SERVIDOR_ACTIVO && resultado.tipo !== 'ADMIN') {
@@ -373,14 +388,14 @@ function procesarLogin(e) {
     if (resultado.esValida) {
         intentosFallidos = 0;
         SafeStorage.removeItem('svs_lock_until');
-
         SafeStorage.setItem('svs_saved_password', keyVal);
+        registrarContrasenaUsada(keyVal);
 
         let expiresAt = null;
         if (resultado.tipo === 'TEMPORAL') {
             const storageKey = 'svs_pass_exp_' + resultado.key;
             let storedExp = SafeStorage.getItem(storageKey);
-            if (storedExp) {
+            if (storedExp && !isNaN(parseInt(storedExp, 10))) {
                 expiresAt = parseInt(storedExp, 10);
             } else {
                 expiresAt = Date.now() + resultado.duracionMs;
@@ -388,25 +403,27 @@ function procesarLogin(e) {
             }
         }
 
-        const sessionData = {
-            ...resultado,
-            expiresAt: expiresAt
-        };
+        const sessionData = { ...resultado, expiresAt: expiresAt };
 
         SafeStorage.setItem('svs_active_session', JSON.stringify(sessionData));
-        try { sessionStorage.setItem('svs_auth_user', JSON.stringify(sessionData)); } catch(err) {}
+        try {
+            sessionStorage.setItem('svs_auth_user', JSON.stringify(sessionData));
+        } catch(err) {}
 
         const alertBox = document.getElementById('loginAlertBox');
         if (alertBox) alertBox.style.display = 'none';
 
         iniciarCarga(() => {
-            if (document.getElementById('loginCard')) document.getElementById('loginCard').style.display = 'none';
-            if (document.getElementById('mainApp')) document.getElementById('mainApp').style.display = 'block';
+            const loginCard = document.getElementById('loginCard');
+            const mainApp = document.getElementById('mainApp');
+
+            if (loginCard) loginCard.style.display = 'none';
+            if (mainApp) mainApp.style.display = 'block';
 
             iniciarTemporizadorEnTiempoReal(sessionData);
             aplicarModoUniversal(appConfig.universalSensi);
             aplicarOcultarLegal(appConfig.hideLegal);
-            evaluarSugerenciaEnTiempoReal();
+            evaluarSugerenciaEnTiempoReal(false);
         });
     } else {
         intentosFallidos++;
@@ -421,7 +438,6 @@ function procesarLogin(e) {
     }
 }
 
-/* --- FUNCIÓN PARA CERRAR SESIÓN / SALIR --- */
 function cerrarSesion() {
     ejecutarVibracion();
     ejecutarSonidoUI('select');
@@ -430,11 +446,16 @@ function cerrarSesion() {
         clearInterval(passTimerInterval);
         passTimerInterval = null;
     }
-    try { sessionStorage.removeItem('svs_auth_user'); } catch(e) {}
+    try {
+        sessionStorage.removeItem('svs_auth_user');
+    } catch(e) {}
     SafeStorage.removeItem('svs_active_session');
 
-    if (DOM.mainApp) DOM.mainApp.style.display = 'none';
-    if (document.getElementById('loginCard')) document.getElementById('loginCard').style.display = 'flex';
+    const mainApp = DOM.mainApp || document.getElementById('mainApp');
+    const loginCard = document.getElementById('loginCard');
+
+    if (mainApp) mainApp.style.display = 'none';
+    if (loginCard) loginCard.style.display = 'flex';
 
     const alertBox = document.getElementById('loginAlertBox');
     if (alertBox) alertBox.style.display = 'none';
@@ -444,13 +465,10 @@ function cerrarSesion() {
     if (keyInput) keyInput.value = savedPass || '';
 }
 
-/* --- PUENTE SEGURO DE COMUNICACIÓN WEB / JAVA --- */
 const JavaBridge = {
     enviar: function(action, payload) {
         try {
-            const jsonMessage = JSON.stringify({
-                action: action, payload: payload
-            });
+            const jsonMessage = JSON.stringify({ action: action, payload: payload });
             if (window.Android && typeof window.Android.onDataFromWeb === 'function') {
                 window.Android.onDataFromWeb(jsonMessage);
             } else if (window.JavaBridge && typeof window.JavaBridge.postMessage === 'function') {
@@ -476,65 +494,38 @@ window.recibirDeJava = function(jsonString) {
 };
 
 window.actualizarDesdeJava = function(datos) {
-    if (datos) actualizarUI(datos, DOM.sensiType ? DOM.sensiType.value : 'Media');
+    if (datos) {
+        const sensiElem = DOM.sensiType || document.getElementById('sensiType');
+        actualizarUI(datos, sensiElem ? sensiElem.value : 'Media');
+    }
 };
 
 window.configurarDesdeJava = function(cfg) {
     if (!cfg) return;
-    if (cfg.brand && DOM.phoneBrand) DOM.phoneBrand.value = cfg.brand;
-    if (cfg.model && DOM.phoneModel) DOM.phoneModel.value = cfg.model;
-    if (cfg.sensiType && DOM.sensiType) DOM.sensiType.value = cfg.sensiType;
-    if (cfg.gameMode && DOM.gameMode) DOM.gameMode.value = cfg.gameMode;
-    if (cfg.useDpi && DOM.useDpi) DOM.useDpi.value = cfg.useDpi;
-    if (cfg.useBtn && DOM.useBtn) DOM.useBtn.value = cfg.useBtn;
+    if (cfg.brand && (DOM.phoneBrand || document.getElementById('phoneBrand'))) (DOM.phoneBrand || document.getElementById('phoneBrand')).value = cfg.brand;
+    if (cfg.model && (DOM.phoneModel || document.getElementById('phoneModel'))) (DOM.phoneModel || document.getElementById('phoneModel')).value = cfg.model;
+    if (cfg.sensiType && (DOM.sensiType || document.getElementById('sensiType'))) (DOM.sensiType || document.getElementById('sensiType')).value = cfg.sensiType;
+    if (cfg.gameMode && (DOM.gameMode || document.getElementById('gameMode'))) (DOM.gameMode || document.getElementById('gameMode')).value = cfg.gameMode;
+    if (cfg.useDpi && (DOM.useDpi || document.getElementById('useDpi'))) (DOM.useDpi || document.getElementById('useDpi')).value = cfg.useDpi;
+    if (cfg.useBtn && (DOM.useBtn || document.getElementById('useBtn'))) (DOM.useBtn || document.getElementById('useBtn')).value = cfg.useBtn;
     if (cfg.universalSensi !== undefined) aplicarModoUniversal(!!cfg.universalSensi);
     if (cfg.hideLegal !== undefined) aplicarOcultarLegal(!!cfg.hideLegal);
-    evaluarSugerenciaEnTiempoReal();
+    evaluarSugerenciaEnTiempoReal(false);
 };
 
-/* --- CACHE DE ELEMENTOS DOM --- */
 const DOM = {};
 
 function initDOMCache() {
     const ids = [
-        'fpsValue',
-        'cpuValue',
-        'gpuValue',
-        'phoneBrand',
-        'phoneModel',
-        'fieldPhoneBrand',
-        'fieldPhoneModel',
-        'sensiType',
-        'gameMode',
-        'useDpi',
-        'useBtn',
-        'modeHintBox',
-        'customNoteBox',
-        'errorBox',
-        'errorMsg',
-        'r_gen',
-        'r_red',
-        'r_2x',
-        'r_4x',
-        'r_awm',
-        'r_cam',
-        'r_dpi',
-        'r_btn',
-        'aiModal',
-        'gpuAccelToggle',
-        'vibrationToggle',
-        'soundToggle',
-        'batterySaverToggle',
-        'universalSensiToggle',
-        'hideLegalToggle',
-        'infoUniversalModal',
-        'loaderModal',
-        'loaderStatusText',
-        'loaderPercentText',
-        'loaderProgressBarFill',
-        'perfMonitorBox',
-        'mainApp',
-        'legalSection'
+        'fpsValue', 'cpuValue', 'gpuValue', 'phoneBrand', 'phoneModel',
+        'fieldPhoneBrand', 'fieldPhoneModel', 'sensiType', 'gameMode',
+        'useDpi', 'useBtn', 'modeHintBox', 'customNoteBox', 'errorBox',
+        'errorMsg', 'r_gen', 'r_red', 'r_2x', 'r_4x', 'r_awm', 'r_cam',
+        'r_dpi', 'r_btn', 'aiModal', 'gpuAccelToggle', 'vibrationToggle',
+        'soundToggle', 'batterySaverToggle', 'universalSensiToggle',
+        'hideLegalToggle', 'infoUniversalModal', 'loaderModal',
+        'loaderStatusText', 'loaderPercentText', 'loaderProgressBarFill',
+        'perfMonitorBox', 'mainApp', 'legalSection'
     ];
     ids.forEach(id => DOM[id] = document.getElementById(id));
 }
@@ -549,28 +540,32 @@ const appConfig = {
 };
 
 function aplicarModoUniversal(activo) {
-    appConfig.universalSensi = activo !== undefined ? !!activo : (DOM.universalSensiToggle ? DOM.universalSensiToggle.checked : false);
+    const uniToggle = DOM.universalSensiToggle || document.getElementById('universalSensiToggle');
+    appConfig.universalSensi = activo !== undefined ? !!activo : (uniToggle ? uniToggle.checked : false);
 
-    if (DOM.universalSensiToggle) DOM.universalSensiToggle.checked = appConfig.universalSensi;
+    if (uniToggle) uniToggle.checked = appConfig.universalSensi;
 
     const fBrand = DOM.fieldPhoneBrand || document.getElementById('fieldPhoneBrand');
     const fModel = DOM.fieldPhoneModel || document.getElementById('fieldPhoneModel');
+    const phoneBrand = DOM.phoneBrand || document.getElementById('phoneBrand');
+    const phoneModel = DOM.phoneModel || document.getElementById('phoneModel');
 
     if (appConfig.universalSensi) {
-        if (DOM.phoneBrand) DOM.phoneBrand.selectedIndex = 0;
-        if (DOM.phoneModel) DOM.phoneModel.value = "";
+        if (phoneBrand) phoneBrand.selectedIndex = 0;
+        if (phoneModel) phoneModel.value = "";
         if (fBrand) fBrand.style.display = 'none';
         if (fModel) fModel.style.display = 'none';
     } else {
         if (fBrand) fBrand.style.display = 'flex';
         if (fModel) fModel.style.display = 'flex';
     }
-    evaluarSugerenciaEnTiempoReal();
+    evaluarSugerenciaEnTiempoReal(false);
 }
 
 function aplicarOcultarLegal(ocultar) {
-    appConfig.hideLegal = ocultar !== undefined ? !!ocultar : (DOM.hideLegalToggle ? DOM.hideLegalToggle.checked : false);
-    if (DOM.hideLegalToggle) DOM.hideLegalToggle.checked = appConfig.hideLegal;
+    const legalToggle = DOM.hideLegalToggle || document.getElementById('hideLegalToggle');
+    appConfig.hideLegal = ocultar !== undefined ? !!ocultar : (legalToggle ? legalToggle.checked : false);
+    if (legalToggle) legalToggle.checked = appConfig.hideLegal;
 
     const legalSec = DOM.legalSection || document.getElementById('legalSection');
     if (legalSec) {
@@ -582,16 +577,17 @@ function mostrarInfoSensiUniversal(e) {
     if (e && e.stopPropagation) e.stopPropagation();
     ejecutarVibracion();
     ejecutarSonidoUI('select');
-    if (DOM.infoUniversalModal) DOM.infoUniversalModal.style.display = 'flex';
+    const modal = DOM.infoUniversalModal || document.getElementById('infoUniversalModal');
+    if (modal) modal.style.display = 'flex';
 }
 
 function cerrarInfoSensiUniversal() {
     ejecutarVibracion();
     ejecutarSonidoUI('select');
-    if (DOM.infoUniversalModal) DOM.infoUniversalModal.style.display = 'none';
+    const modal = DOM.infoUniversalModal || document.getElementById('infoUniversalModal');
+    if (modal) modal.style.display = 'none';
 }
 
-/* --- MOTOR DE AUDIO Y VIBRACIÓN OPTIMIZADO --- */
 let audioCtxInstance = null;
 
 function obtenerAudioContext() {
@@ -633,6 +629,13 @@ function ejecutarSonidoUI(tipo) {
         osc.connect(gain);
         gain.connect(ctx.destination);
 
+        osc.onended = () => {
+            try {
+                osc.disconnect();
+                gain.disconnect();
+            } catch (e) {}
+        };
+
         osc.start(now);
         osc.stop(now + 0.03);
     } catch (e) {}
@@ -646,15 +649,16 @@ function abrirConfiguracion() {
 }
 
 function toggleModal(show) {
-    if (DOM.aiModal) DOM.aiModal.style.display = show ? 'flex' : 'none';
+    const aiModal = DOM.aiModal || document.getElementById('aiModal');
+    if (aiModal) aiModal.style.display = show ? 'flex' : 'none';
     JavaBridge.enviar('modalConfigEstado', { abierto: !!show });
 }
 
-/* --- MONITOR DE RENDIMIENTO --- */
 let frameCount = 0;
 let lastSampleTime = performance.now();
 let lastFrameTime = performance.now();
-let frameDeltas = [];
+let frameDeltas = new Array(20).fill(16.6);
+let deltaIndex = 0;
 let isBatterySaverActive = false;
 let monitorFrameId = null;
 
@@ -668,24 +672,31 @@ function monitorPerformanceLoop(now) {
     lastFrameTime = now;
 
     if (frameDelta > 0) {
-        frameDeltas.push(frameDelta);
-        if (frameDeltas.length > 20) frameDeltas.shift();
+        frameDeltas[deltaIndex] = frameDelta;
+        deltaIndex = (deltaIndex + 1) % 20;
     }
 
     frameCount++;
     const elapsed = now - lastSampleTime;
 
-    if (elapsed >= 200) {
-        const avgDelta = frameDeltas.reduce((a, b) => a + b, 0) / (frameDeltas.length || 1);
-        const realFps = Math.min(144, Math.max(1, Math.round(1000 / avgDelta)));
-        const computeTimeRatio = avgDelta / 6.94;
+    if (elapsed >= 250) {
+        let sum = 0;
+        for (let i = 0; i < 20; i++) sum += frameDeltas[i];
+        const avgDelta = sum / 20;
+        const safeDelta = Math.max(0.001, avgDelta);
+        const realFps = Math.min(144, Math.max(1, Math.round(1000 / safeDelta)));
+        const computeTimeRatio = safeDelta / 6.94;
 
-        const cpuCalc = Math.min(99, Math.max(2, Math.round(computeTimeRatio * 18 + Math.abs(frameDelta - avgDelta) * 5 + 3)));
+        const cpuCalc = Math.min(99, Math.max(2, Math.round(computeTimeRatio * 18 + Math.abs(frameDelta - safeDelta) * 5 + 3)));
         const gpuCalc = Math.min(99, Math.max(2, Math.round((realFps / 144) * 14 + (computeTimeRatio > 1 ? (computeTimeRatio - 1) * 20 : 4))));
 
-        if (DOM.fpsValue) DOM.fpsValue.textContent = realFps;
-        if (DOM.cpuValue) DOM.cpuValue.textContent = cpuCalc + '%';
-        if (DOM.gpuValue) DOM.gpuValue.textContent = gpuCalc + '%';
+        const fpsVal = DOM.fpsValue || document.getElementById('fpsValue');
+        const cpuVal = DOM.cpuValue || document.getElementById('cpuValue');
+        const gpuVal = DOM.gpuValue || document.getElementById('gpuValue');
+
+        if (fpsVal) fpsVal.textContent = realFps;
+        if (cpuVal) cpuVal.textContent = cpuCalc + '%';
+        if (gpuVal) gpuVal.textContent = gpuCalc + '%';
 
         frameCount = 0;
         lastSampleTime = now;
@@ -704,44 +715,58 @@ document.addEventListener('visibilitychange', () => {
         lastSampleTime = performance.now();
         lastFrameTime = performance.now();
         frameCount = 0;
-        frameDeltas = [];
+        frameDeltas.fill(16.6);
+        deltaIndex = 0;
         monitorFrameId = requestAnimationFrame(monitorPerformanceLoop);
     }
 });
 
 function aplicarModoAhorro() {
-    if (!DOM.batterySaverToggle) return;
-    isBatterySaverActive = DOM.batterySaverToggle.checked;
+    const saverToggle = DOM.batterySaverToggle || document.getElementById('batterySaverToggle');
+    const perfBox = DOM.perfMonitorBox || document.getElementById('perfMonitorBox');
+
+    if (!saverToggle) return;
+    isBatterySaverActive = saverToggle.checked;
     if (isBatterySaverActive) {
-        if (DOM.perfMonitorBox) DOM.perfMonitorBox.style.display = 'none';
+        if (perfBox) perfBox.style.display = 'none';
         if (monitorFrameId) {
             cancelAnimationFrame(monitorFrameId);
             monitorFrameId = null;
         }
     } else {
-        if (DOM.perfMonitorBox) DOM.perfMonitorBox.style.display = 'flex';
+        if (perfBox) perfBox.style.display = 'flex';
         if (!monitorFrameId) {
             lastSampleTime = performance.now();
             lastFrameTime = performance.now();
             frameCount = 0;
-            frameDeltas = [];
+            frameDeltas.fill(16.6);
+            deltaIndex = 0;
             monitorFrameId = requestAnimationFrame(monitorPerformanceLoop);
         }
     }
 }
 
-function evaluarSugerenciaEnTiempoReal() {
-    ejecutarVibracion();
-    ejecutarSonidoUI('select');
+function evaluarSugerenciaEnTiempoReal(userTriggered = false) {
+    if (userTriggered) {
+        ejecutarVibracion();
+        ejecutarSonidoUI('select');
+    }
 
-    if (!DOM.gameMode || !DOM.phoneBrand || !DOM.modeHintBox) return;
+    const gameMode = DOM.gameMode || document.getElementById('gameMode');
+    const phoneBrand = DOM.phoneBrand || document.getElementById('phoneBrand');
+    const modeHintBox = DOM.modeHintBox || document.getElementById('modeHintBox');
 
-    const mode = DOM.gameMode.value;
+    if (!gameMode || !phoneBrand || !modeHintBox) return;
+
+    const mode = String(gameMode.value || '');
     let brandText = "Universal / Multi-Dispositivo";
 
     if (!appConfig.universalSensi) {
-        const brandOption = DOM.phoneBrand.options[DOM.phoneBrand.selectedIndex];
-        brandText = brandOption ? brandOption.text : DOM.phoneBrand.value;
+        if (phoneBrand.selectedIndex >= 0 && phoneBrand.options[phoneBrand.selectedIndex]) {
+            brandText = phoneBrand.options[phoneBrand.selectedIndex].text;
+        } else {
+            brandText = phoneBrand.value || "Universal";
+        }
     }
 
     let nivelRecomendado = `Alta (${SENSI_VALORES.ALTA.baseMin}-${SENSI_VALORES.ALTA.baseMax})`;
@@ -763,12 +788,12 @@ function evaluarSugerenciaEnTiempoReal() {
 
     const titleHeader = appConfig.universalSensi ? "⚡ RECOMENDACIÓN UNIVERSAL" : "⚡ RECOMENDACIÓN PRO";
 
-    DOM.modeHintBox.innerHTML = `
-        <div class="hint-header">${titleHeader} (${sanitizeInput(brandText)})</div>
-        <ul class="hint-list">
-            <li><strong>Nivel:</strong> <span class="hint-highlight">${nivelRecomendado}</span></li>
-            <li><strong>Técnica:</strong> ${alzamientoMira}</li>
-        </ul>
+    modeHintBox.innerHTML = `
+    <div class="hint-header">${titleHeader} (${sanitizeInput(brandText)})</div>
+    <ul class="hint-list">
+    <li><strong>Nivel:</strong> <span class="hint-highlight">${nivelRecomendado}</span></li>
+    <li><strong>Técnica:</strong> ${alzamientoMira}</li>
+    </ul>
     `;
 
     JavaBridge.enviar('sugerenciaCambiada', {
@@ -782,7 +807,17 @@ function evaluarSugerenciaEnTiempoReal() {
 
 function sanitizeInput(str) {
     if (str === null || str === undefined) return '';
-    return String(str).replace(/[&<>"'/`=]/g, '').trim();
+    const map = {
+        '&': '&amp;',
+        '<': '&lt;',
+        '>': '&gt;',
+        '"': '&quot;',
+        "'": '&#x27;',
+        '/': '&#x2F;',
+        '`': '&#x60;',
+        '=': '&#x3D;'
+    };
+    return String(str).replace(/[&<>"'/`=]/g, m => map[m]).trim();
 }
 
 window.addEventListener('DOMContentLoaded', () => {
@@ -791,27 +826,16 @@ window.addEventListener('DOMContentLoaded', () => {
     verificarEstadoBloqueo();
     setEstadoServidor(SERVIDOR_ACTIVO);
 
+    const loginCard = document.getElementById('loginCard');
+    const mainApp = document.getElementById('mainApp');
+
+    if (loginCard) loginCard.style.display = 'flex';
+    if (mainApp) mainApp.style.display = 'none';
+
     const savedPass = SafeStorage.getItem('svs_saved_password');
     const keyInput = document.getElementById('loginKey');
     if (savedPass && keyInput) {
         keyInput.value = savedPass;
-    }
-
-    const rawSession = SafeStorage.getItem('svs_active_session');
-    if (rawSession) {
-        try {
-            const session = JSON.parse(rawSession);
-            if (session && session.esValida) {
-                if (session.tipo === 'TEMPORAL' && session.expiresAt && Date.now() >= session.expiresAt) {
-                    SafeStorage.removeItem('svs_active_session');
-                    try { sessionStorage.removeItem('svs_auth_user'); } catch(e) {}
-                } else {
-                    if (document.getElementById('loginCard')) document.getElementById('loginCard').style.display = 'none';
-                    if (document.getElementById('mainApp')) document.getElementById('mainApp').style.display = 'block';
-                    iniciarTemporizadorEnTiempoReal(session);
-                }
-            }
-        } catch (e) {}
     }
 
     const saved = SafeStorage.getItem('ff_sys_cfg_v12');
@@ -838,12 +862,10 @@ window.addEventListener('DOMContentLoaded', () => {
         } catch (e) {}
     }
 
-    evaluarSugerenciaEnTiempoReal();
+    evaluarSugerenciaEnTiempoReal(false);
     monitorFrameId = requestAnimationFrame(monitorPerformanceLoop);
 
-    JavaBridge.enviar('appLista', {
-        version: '1.2', status: 'ready'
-    });
+    JavaBridge.enviar('appLista', { version: '1.2', status: 'ready' });
 });
 
 function guardarConfiguracion() {
@@ -860,7 +882,8 @@ function guardarConfiguracion() {
     aplicarModoUniversal(appConfig.universalSensi);
     aplicarOcultarLegal(appConfig.hideLegal);
 
-    if (DOM.mainApp) DOM.mainApp.style.transform = appConfig.gpuAccel ? 'translateZ(0)' : 'none';
+    const mainApp = DOM.mainApp || document.getElementById('mainApp');
+    if (mainApp) mainApp.style.transform = appConfig.gpuAccel ? 'translateZ(0)' : 'none';
 
     const payloadData = {
         batterySaver: appConfig.batterySaver,
@@ -877,29 +900,34 @@ function guardarConfiguracion() {
     JavaBridge.enviar('configuracionGuardada', payloadData);
 }
 
-/* --- GENERACIÓN DE SENSIBILIDAD --- */
 let loaderInterval = null;
 
 function iniciarCarga(alFinalizar) {
     if (loaderInterval) clearInterval(loaderInterval);
     let progreso = 0;
-    if (DOM.loaderModal) DOM.loaderModal.style.display = 'flex';
 
-    if (DOM.loaderStatusText) DOM.loaderStatusText.textContent = '⚡ PROCESANDO...';
+    const loaderModal = DOM.loaderModal || document.getElementById('loaderModal');
+    const loaderStatusText = DOM.loaderStatusText || document.getElementById('loaderStatusText');
+    const loaderPercentText = DOM.loaderPercentText || document.getElementById('loaderPercentText');
+    const loaderProgressBarFill = DOM.loaderProgressBarFill || document.getElementById('loaderProgressBarFill');
+
+    if (loaderModal) loaderModal.style.display = 'flex';
+    if (loaderStatusText) loaderStatusText.textContent = '⚡ PROCESANDO...';
+
     loaderInterval = setInterval(() => {
-        progreso += 34;
+        progreso += 10;
         const pVal = Math.min(100, progreso);
-        if (DOM.loaderPercentText) DOM.loaderPercentText.textContent = pVal + '%';
-        if (DOM.loaderProgressBarFill) DOM.loaderProgressBarFill.style.width = pVal + '%';
+        if (loaderPercentText) loaderPercentText.textContent = pVal + '%';
+        if (loaderProgressBarFill) loaderProgressBarFill.style.width = pVal + '%';
         if (progreso >= 100) {
             clearInterval(loaderInterval);
             loaderInterval = null;
             setTimeout(() => {
-                if (DOM.loaderModal) DOM.loaderModal.style.display = 'none';
+                if (loaderModal) loaderModal.style.display = 'none';
                 if (typeof alFinalizar === 'function') alFinalizar();
-            }, 60);
+            }, 50);
         }
-    }, 12);
+    }, 30);
 }
 
 function ejecutarBotonGenerar() {
@@ -909,14 +937,22 @@ function ejecutarBotonGenerar() {
 }
 
 async function generar() {
-    if (DOM.errorBox) DOM.errorBox.style.display = 'none';
+    const errorBox = DOM.errorBox || document.getElementById('errorBox');
+    if (errorBox) errorBox.style.display = 'none';
 
-    const brand = appConfig.universalSensi ? "Universal" : sanitizeInput(DOM.phoneBrand ? DOM.phoneBrand.value : '');
-    const model = appConfig.universalSensi ? "Universal" : sanitizeInput(DOM.phoneModel ? DOM.phoneModel.value : '');
-    const type = sanitizeInput(DOM.sensiType ? DOM.sensiType.value : '');
-    const mode = sanitizeInput(DOM.gameMode ? DOM.gameMode.value : '');
-    const dpi = sanitizeInput(DOM.useDpi ? DOM.useDpi.value : '');
-    const btn = sanitizeInput(DOM.useBtn ? DOM.useBtn.value : '');
+    const phoneBrand = DOM.phoneBrand || document.getElementById('phoneBrand');
+    const phoneModel = DOM.phoneModel || document.getElementById('phoneModel');
+    const sensiType = DOM.sensiType || document.getElementById('sensiType');
+    const gameMode = DOM.gameMode || document.getElementById('gameMode');
+    const useDpi = DOM.useDpi || document.getElementById('useDpi');
+    const useBtn = DOM.useBtn || document.getElementById('useBtn');
+
+    const brand = appConfig.universalSensi ? "Universal" : sanitizeInput(phoneBrand ? phoneBrand.value : '');
+    const model = appConfig.universalSensi ? "Universal" : sanitizeInput(phoneModel ? phoneModel.value : '');
+    const type = sanitizeInput(sensiType ? sensiType.value : '');
+    const mode = sanitizeInput(gameMode ? gameMode.value : '');
+    const dpi = sanitizeInput(useDpi ? useDpi.value : '');
+    const btn = sanitizeInput(useBtn ? useBtn.value : '');
 
     const solicitudPayload = {
         brand: brand,
@@ -941,17 +977,22 @@ function clamp(num, min, max) {
 }
 
 function generarLocalMatematico(brand, type, useDpi, useBtn) {
+    const strBrand = String(brand || '');
+    const strType = String(type || '');
+    const strDpi = String(useDpi || '');
+    const strBtn = String(useBtn || '');
+
     let baseMin = SENSI_VALORES.MEDIA.baseMin,
         baseMax = SENSI_VALORES.MEDIA.baseMax,
         awmMin = SENSI_VALORES.MEDIA.awmMin,
         awmMax = SENSI_VALORES.MEDIA.awmMax;
 
-    if (type.includes('Baja')) {
+    if (strType.includes('Baja')) {
         baseMin = SENSI_VALORES.BAJA.baseMin;
         baseMax = SENSI_VALORES.BAJA.baseMax;
         awmMin = SENSI_VALORES.BAJA.awmMin;
         awmMax = SENSI_VALORES.BAJA.awmMax;
-    } else if (type.includes('Alta')) {
+    } else if (strType.includes('Alta')) {
         baseMin = SENSI_VALORES.ALTA.baseMin;
         baseMax = SENSI_VALORES.ALTA.baseMax;
         awmMin = SENSI_VALORES.ALTA.awmMin;
@@ -960,9 +1001,9 @@ function generarLocalMatematico(brand, type, useDpi, useBtn) {
 
     let brandOffset = 0;
     if (!appConfig.universalSensi) {
-        if (brand.includes('Xiaomi') || brand.includes('ZTE') || brand.includes('ASUS')) brandOffset = 2;
-        if (brand.includes('Apple')) brandOffset = -3;
-        if (brand.includes('Samsung')) brandOffset = 1;
+        if (strBrand.includes('Xiaomi') || strBrand.includes('ZTE') || strBrand.includes('ASUS')) brandOffset = 2;
+        if (strBrand.includes('Apple')) brandOffset = -3;
+        if (strBrand.includes('Samsung')) brandOffset = 1;
     }
 
     const rand = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min;
@@ -975,17 +1016,17 @@ function generarLocalMatematico(brand, type, useDpi, useBtn) {
     const camVal = rand(130, 185);
 
     let dpiCalculado = "Stock";
-    if (useDpi.includes('Con DPI')) {
+    if (strDpi.includes('Con DPI')) {
         const dpiBase = (baseMin >= SENSI_VALORES.ALTA.baseMin) ? rand(520, 580) : ((baseMin >= SENSI_VALORES.MEDIA.baseMin) ? rand(460, 520) : rand(410, 460));
         dpiCalculado = Math.min(593, dpiBase);
     }
 
     let btnCalculado = "Omitido";
-    if (useBtn.includes('Pequeño')) {
+    if (strBtn.includes('Pequeño')) {
         btnCalculado = rand(SENSI_VALORES.BOTON.PEQUENO.min, SENSI_VALORES.BOTON.PEQUENO.max) + "%";
-    } else if (useBtn.includes('Medio')) {
+    } else if (strBtn.includes('Medio')) {
         btnCalculado = rand(SENSI_VALORES.BOTON.MEDIO.min, SENSI_VALORES.BOTON.MEDIO.max) + "%";
-    } else if (useBtn.includes('Grande')) {
+    } else if (strBtn.includes('Grande')) {
         btnCalculado = rand(SENSI_VALORES.BOTON.GRANDE.min, SENSI_VALORES.BOTON.GRANDE.max) + "%";
     }
 
@@ -1002,45 +1043,58 @@ function generarLocalMatematico(brand, type, useDpi, useBtn) {
 }
 
 function actualizarUI(data, sensiType) {
+    if (!data || typeof data !== 'object') return;
+    const strType = String(sensiType || '');
+
     let minS = SENSI_VALORES.MEDIA.baseMin,
         maxS = SENSI_VALORES.MEDIA.baseMax,
         awmMin = SENSI_VALORES.MEDIA.awmMin,
         awmMax = SENSI_VALORES.MEDIA.awmMax;
 
-    if (sensiType.includes('Baja')) {
+    if (strType.includes('Baja')) {
         minS = SENSI_VALORES.BAJA.baseMin;
         maxS = SENSI_VALORES.BAJA.baseMax;
         awmMin = SENSI_VALORES.BAJA.awmMin;
         awmMax = SENSI_VALORES.BAJA.awmMax;
-    } else if (sensiType.includes('Alta')) {
+    } else if (strType.includes('Alta')) {
         minS = SENSI_VALORES.ALTA.baseMin;
         maxS = SENSI_VALORES.ALTA.baseMax;
         awmMin = SENSI_VALORES.ALTA.awmMin;
         awmMax = SENSI_VALORES.ALTA.awmMax;
     }
 
-    const genVal = !isNaN(data.gen) ? clamp(data.gen, minS, maxS) : data.gen;
-    const redVal = !isNaN(data.red) ? clamp(data.red, minS, maxS) : data.red;
-    const m2xVal = !isNaN(data.m2x) ? clamp(data.m2x, minS, maxS) : data.m2x;
-    const m4xVal = !isNaN(data.m4x) ? clamp(data.m4x, minS, maxS) : data.m4x;
-    const awmVal = !isNaN(data.awm) ? clamp(data.awm, awmMin, awmMax) : data.awm;
-    const camVal = data.cam;
+    const genVal = !isNaN(parseInt(data.gen, 10)) ? clamp(data.gen, minS, maxS) : (data.gen || '--');
+    const redVal = !isNaN(parseInt(data.red, 10)) ? clamp(data.red, minS, maxS) : (data.red || '--');
+    const m2xVal = !isNaN(parseInt(data.m2x, 10)) ? clamp(data.m2x, minS, maxS) : (data.m2x || '--');
+    const m4xVal = !isNaN(parseInt(data.m4x, 10)) ? clamp(data.m4x, minS, maxS) : (data.m4x || '--');
+    const awmVal = !isNaN(parseInt(data.awm, 10)) ? clamp(data.awm, awmMin, awmMax) : (data.awm || '--');
+    const camVal = data.cam !== undefined ? data.cam : '--';
 
-    let dpiVal = data.dpi;
+    let dpiVal = data.dpi !== undefined ? data.dpi : '--';
     if (!isNaN(parseInt(dpiVal, 10)) && parseInt(dpiVal, 10) > 593) dpiVal = 593;
 
-    const btnVal = data.btn;
+    const btnVal = data.btn !== undefined ? data.btn : '--';
 
-    if (DOM.r_gen) DOM.r_gen.textContent = genVal;
-    if (DOM.r_red) DOM.r_red.textContent = redVal;
-    if (DOM.r_2x) DOM.r_2x.textContent = m2xVal;
-    if (DOM.r_4x) DOM.r_4x.textContent = m4xVal;
-    if (DOM.r_awm) DOM.r_awm.textContent = awmVal;
-    if (DOM.r_cam) DOM.r_cam.textContent = camVal;
-    if (DOM.r_dpi) DOM.r_dpi.textContent = dpiVal;
-    if (DOM.r_btn) DOM.r_btn.textContent = btnVal;
+    const elemGen = DOM.r_gen || document.getElementById('r_gen');
+    const elemRed = DOM.r_red || document.getElementById('r_red');
+    const elem2x = DOM.r_2x || document.getElementById('r_2x');
+    const elem4x = DOM.r_4x || document.getElementById('r_4x');
+    const elemAwm = DOM.r_awm || document.getElementById('r_awm');
+    const elemCam = DOM.r_cam || document.getElementById('r_cam');
+    const elemDpi = DOM.r_dpi || document.getElementById('r_dpi');
+    const elemBtn = DOM.r_btn || document.getElementById('r_btn');
+    const customNoteBox = DOM.customNoteBox || document.getElementById('customNoteBox');
 
-    if (DOM.customNoteBox) DOM.customNoteBox.style.display = 'block';
+    if (elemGen) elemGen.textContent = genVal;
+    if (elemRed) elemRed.textContent = redVal;
+    if (elem2x) elem2x.textContent = m2xVal;
+    if (elem4x) elem4x.textContent = m4xVal;
+    if (elemAwm) elemAwm.textContent = awmVal;
+    if (elemCam) elemCam.textContent = camVal;
+    if (elemDpi) elemDpi.textContent = dpiVal;
+    if (elemBtn) elemBtn.textContent = btnVal;
+
+    if (customNoteBox) customNoteBox.style.display = 'block';
 
     const resultadoCalculado = {
         gen: genVal,
