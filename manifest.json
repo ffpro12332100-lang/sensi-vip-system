@@ -1,0 +1,24 @@
+{
+  "name": "SENSI VIP SYSTEM",
+  "short_name": "SENSI VIP",
+  "description": "El mejor generador de sensibilidad para este 2026. Crea y ajusta sensibilidades perfectas para Free Fire.",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#000000",
+  "theme_color": "#000000",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "https://ffpro12332100-lang.github.io/sensi-vip-system/a.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "https://ffpro12332100-lang.github.io/sensi-vip-system/a.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}
