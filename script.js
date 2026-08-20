@@ -200,20 +200,20 @@ let SERVIDOR_ACTIVO = true;
 
 const SENSI_VALORES = {
     BAJA: {
-        baseMin: 130,
-        baseMax: 145,
+        baseMin: 123,
+        baseMax: 158,
         awmMin: 50,
         awmMax: 60
     },
     MEDIA: {
-        baseMin: 165,
-        baseMax: 182,
+        baseMin: 160,
+        baseMax: 180,
         awmMin: 126,
         awmMax: 142
     },
     ALTA: {
-        baseMin: 188,
-        baseMax: 197,
+        baseMin: 180,
+        baseMax: 196,
         awmMin: 130,
         awmMax: 156
     },
