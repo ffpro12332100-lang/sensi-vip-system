@@ -202,25 +202,25 @@ const SENSI_VALORES = {
     BAJA: {
         baseMin: 123,
         baseMax: 158,
-        awmMin: 50,
-        awmMax: 60
+        awmMin: 60,
+        awmMax: 77
     },
     MEDIA: {
         baseMin: 160,
         baseMax: 180,
         awmMin: 126,
-        awmMax: 142
+        awmMax: 145
     },
     ALTA: {
         baseMin: 180,
         baseMax: 196,
         awmMin: 130,
-        awmMax: 156
+        awmMax: 159
     },
     BOTON: {
         PEQUENO: {
-            min: 33,
-            max: 39
+            min: 31,
+            max: 40
         },
         MEDIO: {
             min: 41,
@@ -233,7 +233,7 @@ const SENSI_VALORES = {
     }
 };
 
-const MAX_INTENTOS = 6;
+const MAX_INTENTOS = 3;
 const TIEMPO_BLOQUEO_SEG = 60;
 let intentosFallidos = 0;
 let temporizadorBloqueo = null;
